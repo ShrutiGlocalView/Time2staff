@@ -30,21 +30,33 @@ export default class LoginPage extends Component {
   
 
   login = async()=>{
-   
-    var response = await EmailController.UserRegistration(this.state.email,this.state.password,'1');
+    var { navigation } = this.props;
+    var signUp = navigation.getParam('signUp', 'NO-ID');
+    var loginType = navigation.getParam('signUpType','NO-ID');
+    var response;
+    if(signUp){
+     response = await EmailController.UserRegistration(this.state.email,this.state.password,loginType);
      console.log(response);
+    }else{
+     response = await EmailController.UserLogin(this.state.email,this.state.password);
+       console.log(response);
+       if(response.StatusCode= 200){
+         
+       }
+    } 
 
   }
 
   validate=()=>{
     var validate = true;
-    console.log('in validate')
+    
     if(this.state.email == ''){
-      console.log('weuehidijjpidjp')
+      
       this.setState({emailError:'Mandatory Field'});
       validate = false;
     }
     if(this.state.password == ''){
+      
       this.setState({passwordError:'cannot have an empty password'});
       validate = false
     }
@@ -73,7 +85,7 @@ export default class LoginPage extends Component {
 
   _renderTextInput=(label,onChangeText,errorMessage,secureTextEntry)=>{
     console.log(label,errorMessage);
-    return(<View>
+    return(<View> 
       <FormLabel labelStyle={styles.labelStyle}>{label}</FormLabel>
       <FormInput onChangeText = {(text)=>{onChangeText(text)}}
                  secureTextEntry = {secureTextEntry}/>
@@ -90,18 +102,24 @@ export default class LoginPage extends Component {
                                    
     return (
         <View style={styles.container}>
-          {this._renderTextInput('Email',(text)=>{this.setState({email:text})},this.state.emailError,false)}
+          {this._renderTextInput('Email',
+                                  (text)=>{this.setState({email:text})
+                                          },
+                                  this.state.emailError,
+                                  false)}
           {this._renderTextInput('Password',
                                   (text)=>{ if(!signUp){
                                              this.setState({repeatPassword:text,
                                                             password:text});
                                             }else{
                                               this.setState({password:text})
-                                            } 
-                                           },
-                                  
+                                           }},
+                                  this.state.passwordError,
                                   true)}
-          {this._renderConfirmPassword('Repeat Password',(text)=>{this.setState({repeatPassword:text})},'',true)}
+          {this._renderConfirmPassword('Repeat Password',
+                                      (text)=>{this.setState({repeatPassword:text})},
+                                      '',
+                                      true)}
           <Button rounded
                   raised
                   large

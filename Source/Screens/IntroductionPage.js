@@ -14,7 +14,7 @@ import {
   AccessToken,
   LoginManager
 } from 'react-native-fbsdk';
-
+import EmailController from '../Controller/EmailController';
 export default class IntroductionPage extends Component {
   constructor(props) {
     super(props);
@@ -40,15 +40,25 @@ export default class IntroductionPage extends Component {
                 alert("login has error: " + result.error);
               } else if (result.isCancelled) {
                 alert("login is cancelled.");
-              } else {
+              } else { 
                 console.log(JSON.stringify(result));
                 AccessToken.getCurrentAccessToken().then(
                   (data) => {
-                    alert(data.accessToken.toString())
+                    var accessToken = data.accessToken.toString();
+                    
+                    this.initUser(accessToken);
                   }
                 )
               }
-            }
+   }
+  
+  
+  initUser=async(token)=> {
+    var response = await fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + token);
+    var responseJson = await response.json();
+    var loginResponse = await EmailController.UserLogin(responseJson.email,responseJson.id);
+    console.log(loginResponse);
+  }
 
   renderLinkedButton=()=>{
     return(
@@ -76,7 +86,7 @@ export default class IntroductionPage extends Component {
                   containerViewStyle={styles.buttonContainer}
                   title = 'I want a job'
                   buttonStyle={[styles.button,{backgroundColor: "#265b91"}]}
-                  onPress={()=>{this.props.navigation.navigate('LoginPage',{signUpType:"Staff",signUp:true})}}
+                  onPress={()=>{this.props.navigation.navigate('LoginPage',{signUpType:"0",signUp:true})}}
                   textStyle = {{color:'white',
                                 fontSize:25}}
           />
@@ -86,7 +96,7 @@ export default class IntroductionPage extends Component {
                   containerViewStyle={styles.buttonContainer}
                   title = 'I need staff'
                   buttonStyle={[styles.button,{backgroundColor:'white'}]}
-                  onPress={()=>{this.props.navigation.navigate('LoginPage',{signUpType:"Client",signUp:true})}}
+                  onPress={()=>{this.props.navigation.navigate('LoginPage',{signUpType:"1",signUp:true})}}
                   textStyle = {{color:'black',
                                 fontSize:25}}
          />
@@ -103,7 +113,8 @@ export default class IntroductionPage extends Component {
          
             <LoginButton
               onLoginFinished={(error,result)=>this.onLoginFinished(error,result)}
-              onLogoutFinished={() => alert("logout.")}/>
+              onLogoutFinished={() => alert("logout.")}
+              readPermissions={['public_profile','email']}/>
          
        
         </View>)
