@@ -3,7 +3,7 @@ var EmailController = {
             // const { UserName }  = this.state ;
            //console.log('ddgwdkydou',UserEmail+' '+UserPassword+' '+UserRole);
            try{
-               var url = 'http://time2staff.com/AppAPI/config/user_registration.php';
+               var url = 'http://time2staff.com/AppAPI/config/userRegistrationAPI.php';
                var body = JSON.stringify({email: UserEmail,
                                            password: UserPassword,
                                            role:UserRole
@@ -29,12 +29,13 @@ var EmailController = {
 
      UserLogin : async(UserEmail,UserPassword) =>{
             // const { UserName }  = this.state ;
-           //console.log('ddgwdkydou',UserEmail+' '+UserPassword+' '+UserRole);
+           console.log('ddgwdkydou',UserEmail+' '+UserPassword);
            try{
-               var url = 'http://time2staff.com/AppAPI/config/loginClass.php';
+               var url = 'http://localhost/time2staff_web/AppAPI/config/loginAPI.php';
                var body = JSON.stringify({email: UserEmail,
                                            password: UserPassword,
-                                         });      
+                                         });  
+               console.log(body);                              
                var response = await fetch(url, { method: 'POST',
                                                  headers: {
                                                    'Accept': 'application/json',
