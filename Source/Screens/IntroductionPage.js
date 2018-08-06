@@ -5,16 +5,19 @@ import {
   Image,
   StatusBar,
   TouchableOpacity,
-  Linking
+  Linking,
+  AsyncStorage
 } from 'react-native';
+
 import {Button, Tile} from 'react-native-elements';
-import LinkedInModal from 'react-native-linkedin'
+import LinkedInModal from 'react-native-linkedin';
 import {
   LoginButton,
   AccessToken,
   LoginManager
 } from 'react-native-fbsdk';
 import EmailController from '../Controller/EmailController';
+import SaveProfile from '../Controller/SaveProfile';
 export default class IntroductionPage extends Component {
   constructor(props) {
     super(props);
@@ -23,15 +26,27 @@ export default class IntroductionPage extends Component {
 
   componentDidMount() {
    
-      Linking.getInitialURL().then((url) => {
+//       Linking.getInitialURL().then((url) => {
          
-        if (url) {
-          console.log('Initial url is: ' + url);
-        }
-      }).catch(err => console.error('An error occurred', err));
+//         if (url) {
+//           console.log('Initial url is: ' + url);
+//         }
+//       }).catch(err => console.error('An error occurred', err));
+      this.getCountries();
+    
    }
 
+   getCountries = async()=>{
+     try{
+       var response = await SaveProfile.getCountries();
+       //console.log(response.countries);
+       await AsyncStorage.setItem('Countries',JSON.stringify(response.countries));
+      
 
+     }catch(e){
+       console.log(e)
+     }
+   }
 
   onLoginFinished = (error, result) => {
 
@@ -101,7 +116,7 @@ export default class IntroductionPage extends Component {
                                 fontSize:25}}
          />
          <Button
-                 onPress={()=>{this.props.navigation.push('LoginPage',{signUpType:"",signUp:false})}}
+                 onPress={()=>this.props.navigation.navigate('App')}
                  buttonStyle={{backgroundColor: "transparent"}}
                  title = 'Already have an account? Sign In'
                  textStyle = {styles.signIn}
@@ -117,10 +132,11 @@ export default class IntroductionPage extends Component {
               readPermissions={['public_profile','email']}/>
          
        
-        </View>)
+        </View>
+        )
   }
 }
-
+//this.props.navigation.push('LoginPage',{signUpType:"",signUp:false})
 // LoginManager.logInWithReadPermissions(['public_profile']).then(
 //   function(result) {
 //       if (result.isCancelled) {

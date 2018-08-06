@@ -8,17 +8,14 @@ import {
 } from 'react-navigation';
 import IntroductionPage from '../Screens/IntroductionPage';
 import LoginPage from '../Screens/LoginPage';
-
+import CompleteLogin from '../Screens/CompleteLogin';
+import Profile from '../Screens/Profile';
   const AppNavigator = createStackNavigator({
-    IntroductionPage:{
-      screen:IntroductionPage
-    },
-    Login:{
-      screen:LoginPage
-    }
-
-   },{
-    headerMode:'none'
-   });
+       CompleteLogin:CompleteLogin,
+       Profile:Profile
+    },{
+      headerMode:'none',
+      initialRouteName:'Profile'
+    });
 
 export default AppNavigator;

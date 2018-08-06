@@ -15,7 +15,7 @@ import LoginPage from '../Screens/LoginPage';
     },
     LoginPage:{
       screen:LoginPage
-    }
+    },
 
    },{
     initialRouteName:'IntroductionPage', 

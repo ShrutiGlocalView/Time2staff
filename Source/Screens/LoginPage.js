@@ -41,7 +41,9 @@ export default class LoginPage extends Component {
      response = await EmailController.UserLogin(this.state.email,this.state.password);
        console.log(response);
        if(response.StatusCode= 200){
-         
+         this.props.navigation.navigate('App');
+       }else{
+         console.log(response)
        }
     } 
 
@@ -65,14 +67,17 @@ export default class LoginPage extends Component {
   }
 
   _renderConfirmPassword = (label,onChangeText,errorMessage,secureTextEntry)=>{
-    console.log(errorMessage);
+    //console.log(errorMessage);
     const { navigation } = this.props;
     const signUp = navigation.getParam('signUp', 'NO-ID');
     if(signUp){
      return(<View>
       <FormLabel labelStyle={styles.labelStyle}>{label}</FormLabel>
       <FormInput onChangeText = {(text)=>{onChangeText(text)}}
-                 secureTextEntry = {secureTextEntry}/>
+                 secureTextEntry = {secureTextEntry}
+                 placeholder = 'placeholder'
+                 placeholderTextColor = '#000000'
+                 containerStyle = {{backgroundColor:'#ffffff'}}/>
       <FormValidationMessage>{errorMessage}</FormValidationMessage>           
 
       </View>
@@ -84,7 +89,7 @@ export default class LoginPage extends Component {
   }
 
   _renderTextInput=(label,onChangeText,errorMessage,secureTextEntry)=>{
-    console.log(label,errorMessage);
+    //console.log(label,errorMessage);
     return(<View> 
       <FormLabel labelStyle={styles.labelStyle}>{label}</FormLabel>
       <FormInput onChangeText = {(text)=>{onChangeText(text)}}
