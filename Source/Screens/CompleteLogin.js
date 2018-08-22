@@ -50,7 +50,7 @@ export default class CompleteLogin extends Component {
     })
 
     this.setState({countries:list});
-    console.log(this.state.countries);
+    
 
 
   }

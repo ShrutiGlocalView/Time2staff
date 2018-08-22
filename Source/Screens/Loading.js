@@ -30,21 +30,5 @@ const styles= StyleSheet.create({
     backgroundColor: '#D4cdb1',
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  logo:{
-    height:'40%',
-    width:'40%',
-  },
-  button:{
-      height:60,
-      borderRadius:30
-  },
-  buttonContainer:{backgroundColor: "transparent",
-    marginTop: 20,
-    width:'90%'
-  },
-  signIn:{color:'#265b91',
-               fontSize:20,
-               textDecorationLine:'underline'
   }
 });

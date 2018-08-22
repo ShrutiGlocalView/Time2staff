@@ -8,14 +8,14 @@ import {
 } from 'react-navigation';
 import AppNavigator from './AppNavigator';
 import AuthNavigator from './AuthNavigator';
-import Loading from '../Screens/Loading';
+import SplashScreen from '../Screens/SplashScreen';
 
   const RootNavigator = createSwitchNavigator({
-    Authloading:Loading,
+      AuthLoading:SplashScreen,
       App:AppNavigator,
       Auth:AuthNavigator
     },{
-      initialRouteName:'Auth'
+      initialRouteName:'AuthLoading'
     });
 
 export default RootNavigator;

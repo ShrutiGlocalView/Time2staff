@@ -16,6 +16,7 @@ export default class LoginPage extends Component {
       email:'',
       password:'',
       repeatPassword:'',
+      showRepeatPassword: true,
       emailError:'',
       passwordError:'',
     }
@@ -23,8 +24,6 @@ export default class LoginPage extends Component {
 
 
   componentDidMount() {
-      //{backgroundColor: "#265b91"},
-      //{backgroundColor: "white"},
   }
 
   
@@ -105,7 +104,8 @@ export default class LoginPage extends Component {
     const signUp = navigation.getParam('signUp', 'NO-ID');
     
                                    
-    return (
+    return (<View>
+        <Text style = {{fontSize: 20, fontWeight: '500', padding: 15,  backgroundColor: '#F57F17', textAlign: 'center', color: 'white'}}>Create account</Text>
         <View style={styles.container}>
           {this._renderTextInput('Email',
                                   (text)=>{this.setState({email:text})
@@ -139,7 +139,7 @@ export default class LoginPage extends Component {
                                  }
                             }              
           />
-         
+         </View>
         </View>
         )
   }
@@ -166,5 +166,12 @@ const styles= StyleSheet.create({
   labelStyle:{
     color:'#265b91',
     fontSize:18
+  },
+  textInputStyle: {
+    borderBottomColor: '#265b91', 
+    borderBottomWidth: 2,
+     padding: 0, 
+     margin: 0
+
   }
 });

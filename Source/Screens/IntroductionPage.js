@@ -17,6 +17,9 @@ import {
   LoginManager
 } from 'react-native-fbsdk';
 import EmailController from '../Controller/EmailController';
+
+import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
+
 import SaveProfile from '../Controller/SaveProfile';
 export default class IntroductionPage extends Component {
   constructor(props) {
@@ -25,16 +28,37 @@ export default class IntroductionPage extends Component {
   }
 
   componentDidMount() {
-   
+    
+      GoogleSignin.configure({
+        scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
+        // iosClientId: '<FROM DEVELOPER CONSOLE>', // only for iOS
+        webClientId: "966508246263-43vkhmudcmti3jnbv3c41r51pdpok87o.apps.googleusercontent.com", // client ID of type WEB for your server (needed to verify user ID and offline access)
+        // offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+        // hostedDomain: '', // specifies a hosted domain restriction
+        // forceConsentPrompt: true, // [Android] if you want to show the authorization prompt at each login
+        // accountName: '', // [Android] specifies an account name on the device that should be used
+      })
+    }
+    
+      signIn = async () => {
+        var user, token;
+        // console.log('hiii'); 
+          user = await GoogleSignin.signIn();
+          token = user.accessToken;
+          console.log("ACCESS TOKEN HERE: s", token);
+          await AsyncStorage.setItem('token_key', user.accessToken);
+          const gotToken = await AsyncStorage.getItem('token_key');
+          alert("token is:"+  " "+ gotToken);
+          this.setState({ user });
+          this.getCountries();
+
+      };
 //       Linking.getInitialURL().then((url) => {
          
 //         if (url) {
 //           console.log('Initial url is: ' + url);
 //         }
 //       }).catch(err => console.error('An error occurred', err));
-      this.getCountries();
-    
-   }
 
    getCountries = async()=>{
      try{
@@ -49,7 +73,6 @@ export default class IntroductionPage extends Component {
    }
 
   onLoginFinished = (error, result) => {
-
               if (error) {
                 console.log(error.toString());
                 alert("login has error: " + result.error);
@@ -75,19 +98,7 @@ export default class IntroductionPage extends Component {
     console.log(loginResponse);
   }
 
-  renderLinkedButton=()=>{
-    return(
-     <Image style={{width:'50%',height:40,padding:10,borderRadius:5}}
-                  resizeMethod='resize'
-                  source={require('../../Assets/LISignIn.png')}
-                  />
-    )
-  }          
-
-
   render() {
-    
-
     return (
         <View style={styles.container}>
           
@@ -113,24 +124,24 @@ export default class IntroductionPage extends Component {
                   buttonStyle={[styles.button,{backgroundColor:'white'}]}
                   onPress={()=>{this.props.navigation.navigate('LoginPage',{signUpType:"1",signUp:true})}}
                   textStyle = {{color:'black',
-                                fontSize:25}}
-         />
+                                fontSize:25}} />
          <Button
                  onPress={()=>this.props.navigation.navigate('App')}
                  buttonStyle={{backgroundColor: "transparent"}}
                  title = 'Already have an account? Sign In'
                  textStyle = {styles.signIn}
-                 
-                
-        />
+          />
+          <LoginButton
+            onLoginFinished={(error,result)=>this.onLoginFinished(error,result)}
+            onLogoutFinished={() => alert("logout.")}
+            readPermissions={['public_profile','email']}/>
+
+          <GoogleSigninButton
+            style={{ width: 230, height: 48, marginTop: 10 }}
+            size={GoogleSigninButton.Size.Wide}
+            color={GoogleSigninButton.Color.Dark}
+            onPress={()=> {this.signIn()}} />
         
-        
-         
-            <LoginButton
-              onLoginFinished={(error,result)=>this.onLoginFinished(error,result)}
-              onLogoutFinished={() => alert("logout.")}
-              readPermissions={['public_profile','email']}/>
-         
        
         </View>
         )
