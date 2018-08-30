@@ -14,7 +14,12 @@ import {
   Modal
 } from 'react-native';
 import {Avatar,Button,FormLabel,FormInput,List,ListItem} from 'react-native-elements';
-import InputField from '../Components/InputField';
+import Icon from 'react-native-vector-icons/Ionicons';
+
+import {
+  createStackNavigator,
+} from 'react-navigation';
+
 
 
 export default class ProfessionalInfo extends Component {
@@ -32,7 +37,14 @@ export default class ProfessionalInfo extends Component {
       
   }
 
+  // iconPressed = () => {
+  //   this.props.navigation.navigate('AddNewSkills')
+  //   alert("Hello...");
+    
+  // }
+
   render() {
+    const { navigate } = this.props.navigation;
     var Job_title =[{name:'chef',skills:['0','3']},
               {name:'waiter',skills:['1','2']},
               {name:'bartender',skills:['1','4']},
@@ -48,9 +60,20 @@ export default class ProfessionalInfo extends Component {
     
     return (
         <View style = {styles.container}>
+        <View style = {styles.container1}>
          <FormLabel labelStyle = {styles.labelStyle}>My Skills</FormLabel>
+         <Icon
+              name="ios-add-circle" 
+              color="#4F8EF7" 
+              size= {28} 
+              style= {{ marginLeft: 'auto',  }}
+              onPress ={null}
+                              
+              /> 
+         </View>
+
          <ScrollView>
-         <List containerStyle={{backgroundColor:'white',borderRadius:5,borderTopWidth: 0, borderBottomWidth: 0 }}
+         <List containerStyle={{backgroundColor:'white',borderRadius:5,borderTopWidth: 0, borderBottomWidth: 0}}
                wrapperStyle = {{borderTopWidth:0,marginTop:0,backgroundColor:'red'}}> 
             {Job_title.map((item,i)=>{
                   return(
@@ -85,9 +108,11 @@ const styles= StyleSheet.create({
   labelStyle:{
     color:'#265b91',
     fontSize:18,
-    marginTop:0,marginBottom:0,marginLeft:6,marginRight:6
+    marginTop:0,marginBottom:8,marginLeft:6,marginRight:6
   },
-  
+
+  container1: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  }  
 });
-//             <TouchableOpacity style = {{height:30,width:'25%',backgroundColor:'red'}}
-//                               onPress = {()=>this.showDatePicker()}/>

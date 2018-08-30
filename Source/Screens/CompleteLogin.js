@@ -33,7 +33,7 @@ export default class CompleteLogin extends Component {
         email:'',
         phoneNumber:'',
         countries:[],
-        visible:false,
+        visible: false,
         emailError:'',
         textError: '', 
         gender: ['Male', 'Female'],
@@ -107,6 +107,10 @@ export default class CompleteLogin extends Component {
       list.push({key:item.id,label:item.name})
     })
     this.setState({countries:list});
+  }
+
+  onSelect = () => {
+    alert("pressed...")
   }
 
    showDatePicker = async()=>{
@@ -224,11 +228,10 @@ export default class CompleteLogin extends Component {
                                  containerStyle = {{backgroundColor:'transparent', borderColor: 'blue'}}
                                  value = 'country'
                                  />
-            </TouchableOpacity>    
-          
+            </TouchableOpacity> 
           <ModalFilterPicker
               visible = {this.state.visible}
-              onSelect = {(picked)=>{  console.log(picked);
+                onSelect = {(picked)=>{  console.log(picked);
 									   var selectedValue = this.state.countries[--picked];
 									   this.setState({country:selectedValue});
 									   console.log(this.state.country);

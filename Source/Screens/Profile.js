@@ -16,6 +16,7 @@ import InputField from '../Components/InputField';
 import ProfileTab from '../Navigators/ProfileTab';
 //import ImagePicker from 'react-native-image-picker';
 var ImagePicker = require('react-native-image-picker');
+
 export default class IntroductionPage extends Component {
   constructor(props) {
     super(props);
@@ -108,7 +109,8 @@ export default class IntroductionPage extends Component {
           <ProfileTab/>
         </View>               
 
-        </View>)
+        </View>
+        )
   }
 }
 

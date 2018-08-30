@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.branch.referral.Branch;
-
+import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
 
 public class MainApplication extends Application implements ReactApplication {
   private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
@@ -44,6 +44,7 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new RNGoogleSigninPackage(),
             new ImagePickerPackage(),
+            new ReactNativeDocumentPicker(),
 
             new RNBranchPackage(),
             new VectorIconsPackage(),

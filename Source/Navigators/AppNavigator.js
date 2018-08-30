@@ -10,9 +10,11 @@ import IntroductionPage from '../Screens/IntroductionPage';
 import LoginPage from '../Screens/LoginPage';
 import CompleteLogin from '../Screens/CompleteLogin';
 import Profile from '../Screens/Profile';
-  const AppNavigator = createStackNavigator({
+import AddNewSkills from '../Screens/AddNewSkills';
+
+const AppNavigator = createStackNavigator({
        CompleteLogin:CompleteLogin,
-       Profile:Profile
+       Profile:Profile,
     },{
       headerMode:'none',
       initialRouteName:'Profile'

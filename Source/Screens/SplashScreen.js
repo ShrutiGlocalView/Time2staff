@@ -37,7 +37,6 @@ export default class SplashScreen extends Component {
               style ={styles.logo}
               source={require('../../Assets/logo_round.png')}
               resizeMode = 'contain'/>
-                {/* <Text style = {styles.text}>Time2Staff</Text> */}
            </View>
        );
    }
