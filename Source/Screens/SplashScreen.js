@@ -1,9 +1,15 @@
 import React, {Component} from 'react';
-import {View, Text, Image ,StyleSheet} from 'react-native';
+import {View, 
+        Text, 
+        Image,
+        StyleSheet,
+        AsyncStorage
+       } from 'react-native';
 import {createStackNavigator} from 'react-navigation';
 import IntroductionPage from './IntroductionPage';
 import jobTitlesController from '../Controller/jobTitlesController';
-
+import SaveProfile from '../Controller/SaveProfile';
+import requestLocationPermission,{getLocation} from '../Controller/Location';
 //const job_titles_request = new Request("http://dev.time2staff.com/api/job_titles");
     
 export default class SplashScreen extends Component {
@@ -14,8 +20,9 @@ export default class SplashScreen extends Component {
     }
 
     componentWillMount() {
-
+        this.getCountries();    
         this.getJobDetails();
+        this.getPermission();
         const { navigate } = this.props.navigation;
         if(1) //something we can check to show splash screen
            {
@@ -26,9 +33,29 @@ export default class SplashScreen extends Component {
 
     }
 
+    getPermission = async()=>{
+     //console.log(navigator);
+     var granted = await requestLocationPermission();
+     if(granted === 'granted'){
+        await getLocation(navigator);
+     }
+    }
+
     getJobDetails = async()=>{
         var response = jobTitlesController.job_titles();
     }
+
+    getCountries = async()=>{
+     try{
+       var response = await SaveProfile.getCountries();
+       //console.log(response.countries);
+       await AsyncStorage.setItem('Countries',JSON.stringify(response.countries));
+      
+
+     }catch(e){
+       console.log(e)
+     }
+   }
 
     render(){
        return (

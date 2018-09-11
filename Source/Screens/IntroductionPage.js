@@ -1,26 +1,23 @@
 import React, { Component } from 'react';
 import {
   View,
-  StyleSheet,
-  Image,
+  StyleSheet, 
+  Image, 
   StatusBar,
-  TouchableOpacity,
-  Linking,
-  AsyncStorage
-} from 'react-native';
-
+  TouchableOpacity, 
+  Linking, 
+  AsyncStorage } from 'react-native';
 import {Button, Tile} from 'react-native-elements';
 import LinkedInModal from 'react-native-linkedin';
 import {
-  LoginButton,
-  AccessToken,
-  LoginManager
+  LoginButton, AccessToken, LoginManager
 } from 'react-native-fbsdk';
 import EmailController from '../Controller/EmailController';
 
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
-
 import SaveProfile from '../Controller/SaveProfile';
+
+
 export default class IntroductionPage extends Component {
   constructor(props) {
     super(props);

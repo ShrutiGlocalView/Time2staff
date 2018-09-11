@@ -4,14 +4,15 @@ import {
   StyleSheet
 } from 'react-native';
 import {
-  createStackNavigator,
+  createBottomTabNavigator,
+  createDrawerNavigator
 } from 'react-navigation';
 import IntroductionPage from '../Screens/IntroductionPage';
 import LoginPage from '../Screens/LoginPage';
-import CompleteLogin from '../Screens/CompleteLogin';
+import HomePage from '../Screens/HomePage';
 import Profile from '../Screens/Profile';
-  const AppNavigator = createStackNavigator({
-       CompleteLogin:CompleteLogin,
+  const AppNavigator = createDrawerNavigator({
+       Home:HomePage,
        Profile:Profile
     },{
       headerMode:'none',

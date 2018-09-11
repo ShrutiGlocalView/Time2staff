@@ -2,14 +2,14 @@ import React from 'react';
 import { createMaterialTopTabNavigator } from 'react-navigation';
 import CompleteLogin from '../Screens/CompleteLogin';
 import BillingInfo from '../Screens/BillingInfo';
-import ProfessionalInfo from '../Screens/ProfessionalInfo';
+//import ProfessionalInfo from '../Screens/ProfessionalInfo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import ProfessionalInfoTab from './ProfessionalInfoTab';
 var ProfileTab = createMaterialTopTabNavigator(
   {
     PersonalInfo: CompleteLogin,
     BillingInfo: BillingInfo,
-    ProfessionalInfo:ProfessionalInfo
+    ProfessionalInfoTab:ProfessionalInfoTab
   },
   {
     navigationOptions: ({ navigation }) => ({
@@ -21,24 +21,25 @@ var ProfileTab = createMaterialTopTabNavigator(
         } else if (routeName === 'BillingInfo') {
           iconName = `ios-options${focused ? '' : '-outline'}`;
         }
-
-        return <Ionicons name={iconName} size={25} color={tintColor} />;
+        else {
+          iconName = `ios-list${focused ? '' : '-outline'}`;
+        }
+        return <Ionicons name={iconName} size={20} color={tintColor} />;
       },
 
       
     }),
     tabBarOptions: {
-      activeTintColor: '#265b91',
+      activeTintColor: 'white',
       inactiveTintColor: 'white',
       showIcon:true,
       style: {
         height:60,  
-        backgroundColor: '#ff6815',
+        backgroundColor: '#F57F17',
       },
       labelStyle: {
         fontSize: 10,
       },
-
     },
   }
 );

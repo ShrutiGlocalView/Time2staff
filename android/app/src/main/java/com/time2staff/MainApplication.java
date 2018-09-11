@@ -5,10 +5,11 @@ import android.app.Application;
 import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactApplication;
+import com.heanoria.library.reactnative.locationenabler.RNAndroidLocationEnablerPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.imagepicker.ImagePickerPackage;
 import io.branch.rnbranch.RNBranchPackage;
-
+import com.airbnb.android.react.maps.MapsPackage;
 
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
@@ -42,12 +43,16 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNAndroidLocationEnablerPackage(),
+
+
             new RNGoogleSigninPackage(),
             new ImagePickerPackage(),
 
             new RNBranchPackage(),
             new VectorIconsPackage(),
-            new FBSDKPackage(getCallbackManager())
+            new FBSDKPackage(getCallbackManager()),
+            new MapsPackage()
       );
     }
 

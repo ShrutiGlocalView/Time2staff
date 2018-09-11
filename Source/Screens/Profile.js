@@ -16,6 +16,7 @@ import InputField from '../Components/InputField';
 import ProfileTab from '../Navigators/ProfileTab';
 //import ImagePicker from 'react-native-image-picker';
 var ImagePicker = require('react-native-image-picker');
+
 export default class IntroductionPage extends Component {
   constructor(props) {
     super(props);
@@ -104,19 +105,21 @@ export default class IntroductionPage extends Component {
                       onPress={() => this.onAvatarClick()}
                       activeOpacity={0.7}
           />
-          <View style={{height:'100%',width:'100%'}}>        
+          <View style={{height:'100%',width:'100%',}}>        
           <ProfileTab/>
         </View>               
 
-        </View>)
+        </View>
+        )
   }
 }
 
 const styles= StyleSheet.create({
   container: {
-    paddingTop:32,
+    paddingTop: 40,
     paddingBottom:32,
-    backgroundColor: '#D4cdb1',
+    backgroundColor: '#F57F17',
+    // backgroundColor: '#D4cdb1',
     justifyContent: 'center',
     alignItems: 'center',
     height:'100%'
@@ -142,3 +145,4 @@ const styles= StyleSheet.create({
     fontSize:18
   }
 });
+
