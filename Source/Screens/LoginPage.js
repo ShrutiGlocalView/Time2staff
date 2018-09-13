@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
+  TextInput,
   StyleSheet,
   Image,
   StatusBar
@@ -26,11 +27,9 @@ export default class LoginPage extends Component {
   componentDidMount() {
   }
 
-  
-
   login = async()=>{
     var { navigation } = this.props;
-    var signUp = navigation.getParam('signUp', 'NO-ID');
+    var signUp = navigation.getParam('signUp', false);
     var loginType = navigation.getParam('signUpType','NO-ID');
     var response;
     if(signUp){
@@ -39,10 +38,11 @@ export default class LoginPage extends Component {
     }else{
      response = await EmailController.UserLogin(this.state.email,this.state.password);
        console.log(response);
-       if(response.StatusCode= 200){
-         this.props.navigation.navigate('App');
+       if(response.StatusCode != 200){
+         navigate('Profile'); // it should go on another stack
        }else{
          console.log(response)
+         alert("Wrong usermail or password!")
        }
     } 
 
@@ -68,31 +68,37 @@ export default class LoginPage extends Component {
   _renderConfirmPassword = (label,onChangeText,errorMessage,secureTextEntry)=>{
     //console.log(errorMessage);
     const { navigation } = this.props;
-    const signUp = navigation.getParam('signUp', 'NO-ID');
+    const signUp = navigation.getParam('signUp', false);
+    // const logIn = navigation.getParam('logIn', 'NO_ID');
     if(signUp){
-     return(<View>
-      <FormLabel labelStyle={styles.labelStyle}>{label}</FormLabel>
-      <FormInput onChangeText = {(text)=>{onChangeText(text)}}
+      console.log(signUp);
+      return(<View>
+        < FormLabel labelStyle={styles.labelStyle}>{label}</FormLabel>
+        <FormInput onChangeText = {(text)=>{onChangeText(text)}}
                  secureTextEntry = {secureTextEntry}
-                 placeholder = 'placeholder'
-                 placeholderTextColor = '#000000'
-                 containerStyle = {{backgroundColor:'#ffffff'}}/>
-      <FormValidationMessage>{errorMessage}</FormValidationMessage>           
+                 placeholder = {label}
+                 placeholderTextColor = 'grey'
+                 containerStyle = {styles.textInputStyle}/>
+        <FormValidationMessage>{errorMessage}</FormValidationMessage>           
 
       </View>
       )
-    }else{
-      
+    }else{      
       return <View/>
     }
   }
 
   _renderTextInput=(label,onChangeText,errorMessage,secureTextEntry)=>{
     //console.log(label,errorMessage);
-    return(<View> 
+    return(<View>
       <FormLabel labelStyle={styles.labelStyle}>{label}</FormLabel>
       <FormInput onChangeText = {(text)=>{onChangeText(text)}}
-                 secureTextEntry = {secureTextEntry}/>
+                 secureTextEntry = {secureTextEntry}
+                 placeholder = {label}
+                 placeholderTextColor = 'grey'
+                //  inputStyle = {{color: 'white', fontFamily: ''}}
+                //  placeholderTextColor = 'white'
+                 containerStyle = {styles.textInputStyle} />
       <FormValidationMessage>{errorMessage}</FormValidationMessage>           
 
       </View>
@@ -101,11 +107,12 @@ export default class LoginPage extends Component {
 
   render() {
     const { navigation } = this.props;
-    const signUp = navigation.getParam('signUp', 'NO-ID');
+    const signUp = navigation.getParam('signUp', false);
     
-                                   
-    return (<View>
-        <Text style = {{fontSize: 20, fontWeight: '500', padding: 15,  backgroundColor: '#F57F17', textAlign: 'center', color: 'white'}}>Create account</Text>
+    if(signUp){                        
+     return (
+	<View>
+          <Text style = {{fontSize: 20, fontWeight: '500', padding: 15,  backgroundColor: '#F57F17', textAlign: 'center', color: 'white'}}>Create account</Text>
         <View style={styles.container}>
           {this._renderTextInput('Email',
                                   (text)=>{this.setState({email:text})
@@ -124,7 +131,7 @@ export default class LoginPage extends Component {
           {this._renderConfirmPassword('Repeat Password',
                                       (text)=>{this.setState({repeatPassword:text})},
                                       '',
-                                      true)}
+                                      false)}
           <Button rounded
                   raised
                   large
@@ -139,10 +146,53 @@ export default class LoginPage extends Component {
                                  }
                             }              
           />
-         </View>
+         
         </View>
-        )
-  }
+	</View>
+        )}else {
+          return (
+            <View>
+          <Text style = {{fontSize: 20, fontWeight: '500', padding: 15,  backgroundColor: '#F57F17', textAlign: 'center', color: 'white'}}>Sign In</Text>
+            <View style={styles.container}>
+              {this._renderTextInput('Email',
+                                      (text)=>{this.setState({email:text})
+                                              },
+                                      this.state.emailError,
+                                      false)}
+              {this._renderTextInput('Password',
+                                      (text)=>{ if(!signUp){
+                                                 this.setState({repeatPassword:text,
+                                                                password:text});
+                                                }else{
+                                                  this.setState({password:text})
+                                               }},
+                                      this.state.passwordError,
+                                      true)}
+              <Button
+                 onPress={()=>this.props.navigation.navigate('App')}
+                 buttonStyle={{backgroundColor: "transparent", marginTop: 20}}
+                 title = 'Forgot password?'
+                 textStyle = {{textAlign: 'right'}} />
+              <Button rounded
+                      raised
+                      large
+                      disabled = {this.state.password == this.state.repeatPassword?false:true}
+                      containerViewStyle={styles.buttonContainer}
+                      title = 'Submit'
+                      buttonStyle={[styles.button,{backgroundColor: "#265b91"}]}
+                      textStyle = {{color:'white',
+                                    fontSize:25}}
+                      onPress = {()=>{if(this.validate())
+                                        this.login();
+                                     }
+                                }              
+              />
+             
+            </View>
+            </View>
+            )
+        }
+}
 }
 
 
@@ -151,8 +201,9 @@ const styles= StyleSheet.create({
   container: {
     height:'100%',
     backgroundColor: '#D4cdb1',
-    justifyContent: 'center',
-    alignItems: 'center'
+    //justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 40
   },
   button:{
       height:60,
@@ -164,6 +215,8 @@ const styles= StyleSheet.create({
     width:'90%'
   },
   labelStyle:{
+    margin: 0,
+    padding: 0,
     color:'#265b91',
     fontSize:18
   },

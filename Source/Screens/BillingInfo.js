@@ -2,21 +2,18 @@ import React, { Component } from 'react';
 import {
   View,
   StyleSheet,
-  Image,
-  StatusBar,
   TouchableOpacity,
-  Linking,
-  DatePickerAndroid,
-  Picker,
   ScrollView,
   Text,
   AsyncStorage
 } from 'react-native';
-import {Avatar,Button,FormLabel,FormInput, FormValidationMessage} from 'react-native-elements';
+import {
+  FormLabel,
+  FormInput,
+  FormValidationMessage
+} from 'react-native-elements';
 import ModalFilterPicker from 'react-native-modal-filter-picker';
-
-import InputField from '../Components/InputField';
-
+import {Icon} from 'react-native-elements';
 
 export default class BillingInfo extends Component {
   constructor(props) {
@@ -77,7 +74,8 @@ export default class BillingInfo extends Component {
   }
 
   saveDetails = ()=>{
-    alert("you pressed it!!!")
+    // alert("you pressed it!!!")
+    this.props.navigation.navigate('professionalInfo')
   }
 
   loadCountryDetails = async()=>{
@@ -92,10 +90,12 @@ export default class BillingInfo extends Component {
 
   render() {
     return (
-        <ScrollView contentContainerStyle = {styles.container}>
+      <View Style = {styles.container}>
+      <Text style = {styles.header}>Billing Info</Text>
+        <ScrollView>
           <FormLabel labelStyle = {styles.labelStyle}>Select a Tax Country</FormLabel>
               <TouchableOpacity onPress={()=>this.setState({visible:true})}
-                                style={{width: '50%', borderBottomColor: '#265b91',  
+                                style={{width: '95%', borderBottomColor: '#265b91',  
                                 borderBottomWidth: 2,
                                  padding: 0, 
                                  marginLeft: 10 }}>
@@ -119,11 +119,6 @@ export default class BillingInfo extends Component {
                   options = {this.state.countries}
                   selectedOption = '0' 
               />
-           {/* {this._renderTextInput('Tax Country',
-                                  (text)=>{this.setState({taxCountry:text})
-                                          },
-                                  this.state.textError,
-                                  false)} */}
           {this._renderTextInput('Tax Percentage',
                                   (text)=>{this.setState({taxPercent:text})
                                           },
@@ -141,30 +136,49 @@ export default class BillingInfo extends Component {
                                   this.state.textError,
                                   false)}
 
-          <Button rounded
-                  raised
-                  large
-                  containerViewStyle={styles.buttonContainer}
-                  title = 'Submit'
-                  buttonStyle={[styles.button,{backgroundColor: "#265b91"}]}
-                  textStyle = {{color:'white',
-                                fontSize:25}}
-                  onPress = {()=> {if(this.validate())
-                                      this.saveDetails()
-                                  }
-                              }              
-          />
-
-        </ScrollView>)
+        </ScrollView>
+<View style= {{flexDirection: 'row'}}>
+<View style={{ alignSelf:'flex-start',bottom:0,zIndex:1000, left: 10, marginTop: 30, marginBottom: 0}}>
+            <TouchableOpacity 
+               onPress={() => {
+                  this.props.navigation.goBack();
+                  }}>
+                <Icon
+                reverse
+                name='arrow-left'
+                type='material-community'
+                color='#ff7f2a'
+                size= {25}
+                />
+            </TouchableOpacity>
+          </View>
+<View style={{ alignSelf:'flex-end',bottom:0,zIndex:1000, left: 210, right:10, marginTop: 30, marginBottom: 0}}>
+            <TouchableOpacity 
+               onPress={() => {
+                // if (this.validate())
+                  this.saveDetails()}}>
+                <Icon
+                reverse
+                name='arrow-right'
+                type='material-community'
+                color='#ff7f2a'
+                size= {25}
+                />
+            </TouchableOpacity>
+          </View>
+      </View>
+      </View>        
+        )
   }
 }
 
 const styles= StyleSheet.create({
   container: {
-   
-    backgroundColor: '#D4cdb1',
-   
-    
+    backgroundColor: '#ffffff',    
+  },
+  header:{
+    fontSize: 40, 
+    margin: 10
   },
   logo:{
     height:'40%',
@@ -200,9 +214,6 @@ width:'90%'
     borderBottomWidth: 2,
      padding: 0, 
      margin: 0
-
   },
-  
+
 });
-//             <TouchableOpacity style = {{height:30,width:'25%',backgroundColor:'red'}}
-//                               onPress = {()=>this.showDatePicker()}/>

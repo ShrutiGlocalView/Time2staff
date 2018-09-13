@@ -2,17 +2,8 @@ import React, { Component } from 'react';
 import {
   View,
   StyleSheet,
-  Image,
-  StatusBar,
-  TouchableOpacity,
-  Linking,
-  DatePickerAndroid,
-  Picker,
-  ScrollView,
-  Text
 } from 'react-native';
-import {Avatar,Button,FormLabel} from 'react-native-elements';
-import InputField from '../Components/InputField';
+import {Avatar} from 'react-native-elements';
 import ProfileTab from '../Navigators/ProfileTab';
 //import ImagePicker from 'react-native-image-picker';
 var ImagePicker = require('react-native-image-picker');
@@ -38,25 +29,6 @@ export default class IntroductionPage extends Component {
   componentDidMount() {
       
    }
-
-   showDatePicker = async()=>{
-     try {
-        const {action, year, month, day} = await DatePickerAndroid.open({
-          // Use `new Date()` for current date.
-          // May 25 2020. Month 0 is January.
-          date: new Date(2020, 4, 25)
-        });
-        if (action !== DatePickerAndroid.dismissedAction) {
-          console.log(year+' '+month+' '+day);
-        }
-      } catch ({code, message}) {
-        console.warn('Cannot open date picker', message);
-      }
-
-      
-   }
-
-  
 
   onAvatarClick = ()=>{
       var options = {
@@ -123,26 +95,6 @@ const styles= StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height:'100%'
-  },
-  logo:{
-    height:'40%',
-    width:'40%',
-  },
-  button:{
-      height:60,
-      borderRadius:30
-  },
-  buttonContainer:{backgroundColor: "transparent",
-    marginTop: 20,
-    width:'90%'
-  },
-  signIn:{color:'#265b91',
-               fontSize:20,
-               textDecorationLine:'underline'
-  },
-  labelStyle:{
-    color:'#265b91',
-    fontSize:18
   }
 });
 

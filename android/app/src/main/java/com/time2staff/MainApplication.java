@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.branch.referral.Branch;
+import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
 
 
 public class MainApplication extends Application implements ReactApplication {
@@ -45,10 +46,10 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new RNAndroidLocationEnablerPackage(),
 
-
             new RNGoogleSigninPackage(),
             new ImagePickerPackage(),
-
+            new ReactNativeDocumentPicker(),
+            
             new RNBranchPackage(),
             new VectorIconsPackage(),
             new FBSDKPackage(getCallbackManager()),

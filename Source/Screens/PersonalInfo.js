@@ -15,7 +15,7 @@ import SaveProfile from '../Controller/SaveProfile';
 import ModalFilterPicker from 'react-native-modal-filter-picker';
 import { Icon } from 'react-native-elements';
 
-export default class CompleteLogin extends Component {
+export default class PersonalInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -119,6 +119,7 @@ export default class CompleteLogin extends Component {
   saveDetails = async () => {
     var response = await SaveProfile.personalInfo(this.state.firstName, this.state.lastName, this.state.sex, this.state.dateOfBirth, this.state.country, 'kjdkjd', 'dhfkefj', 'wjdqwi', this.state.address, this.state.zipcode, this.state.city, this.state.phoneNumber, 'efhwefhw')
     console.log(response);
+    this.props.navigation.navigate('billingInfo');
   }
   genderSelection = () => {
     return (
@@ -151,7 +152,9 @@ export default class CompleteLogin extends Component {
   }
   render() {
     return (
-      <ScrollView contentContainerStyle={styles.container}>
+      <View Style={styles.container}>
+        <Text style = {styles.header}>Personal Info</Text>
+        <ScrollView >
         {this._renderTextInput('First Name',
           (text) => {
             this.setState({ firstName: text })
@@ -221,17 +224,19 @@ export default class CompleteLogin extends Component {
           },
           this.state.textError,
           false)}
-        <FormLabel labelStyle={styles.labelStyle}>Select a Country</FormLabel>
-        <TouchableOpacity onPress={() => this.setState({ visible: true })}
-          style={{ marginRight: 16, width: '45%' }}>
-          <FormInput
-            editable={false}
-            placeholder='Country'
-            placeholderTextColor='grey'
-            borderBottomColor='blue'
-            containerStyle={{ backgroundColor: 'transparent', borderColor: 'blue' }}
-            value='country'
-          />
+        <FormLabel labelStyle = {styles.labelStyle}>Select a Tax Country</FormLabel>
+              <TouchableOpacity onPress={()=>this.setState({visible:true})}
+                                style={{width: '95%', borderBottomColor: '#265b91',  
+                                borderBottomWidth: 2,
+                                 padding: 0, 
+                                 marginLeft: 10 }}>
+                  <FormInput 
+                                    editable={false}
+                                    placeholder = 'Tax Country'
+                                    placeholderTextColor = 'grey'
+                                    borderBottomColor = 'blue'
+                                    // containerStyle = {{backgroundColor:'transparent', borderColor: 'blue'}}
+                                    />
         </TouchableOpacity>
         <ModalFilterPicker
           visible={this.state.visible}
@@ -252,7 +257,22 @@ export default class CompleteLogin extends Component {
           },
           this.state.textError,
           false)}
-        <Button rounded
+          <View style={{alignSelf:'flex-end',bottom:30,zIndex:1000, right: 10, marginTop: 30, marginBottom: 50}}>
+            <TouchableOpacity 
+               onPress={() => {
+                // if (this.validate())
+                  this.saveDetails()}}>
+                <Icon
+                reverse
+                name='arrow-right'
+                type='material-community'
+                color='#ff7f2a'
+                size= {25}
+                />
+            </TouchableOpacity>
+          </View> 
+         
+        {/* <Button rounded
           raised
           large
           containerViewStyle={styles.buttonContainer}
@@ -267,13 +287,19 @@ export default class CompleteLogin extends Component {
               this.saveDetails()
           }
           }
-        />
-      </ScrollView>)
+        /> */}
+      </ScrollView>
+      </View>
+      )
   }
 }
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
+  },
+  header:{
+    fontSize: 40, 
+    margin: 10
   },
   logo: {
     height: '40%',
@@ -287,7 +313,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     backgroundColor: "transparent",
     marginTop: 20,
-    width: '90%'
+    width: '90%',
+    marginBottom: 15,
   },
   signIn: {
     color: '#265b91',
@@ -359,6 +386,6 @@ const styles = StyleSheet.create({
   btn: {
     flexDirection: 'row',
     marginRight: 4,
-    marginTop: 14
+    marginTop: 14,
   }
 });

@@ -1,164 +1,205 @@
 import React, { Component } from 'react';
-
 import {
-    View, 
+    View,
     StyleSheet,
+    FlatList,
+    Text,
+    ScrollView,
     TouchableOpacity,
-    ActivityIndicator, 
-      FlatList, 
-      ScrollView, 
-      Text, 
-      Button
-        } from 'react-native';
-import { FormLabel, List, ListItem } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/Ionicons';        
-export default class ProfessionalInfo extends Component{
-    constructor(props) {
-        super(props);
-        this.state={
-            modalJobTitle:'',
-            modalSkill:'',
-            modalExp:'',
-            modalvisible:false
-        }
+} from 'react-native';
+import { Icon } from 'react-native-elements';
+import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
+
+const filternames = [{
+    "id": 1,
+    "filtername": "Food service management"
+}, {
+    "id": 2,
+    "filtername": "Food science"
+}, {
+    "id": 3,
+    "filtername": "Local foods"
+}, {
+    "id": 4,
+    "filtername": "Food pricings"
+}];
+
+export default class ProfessionalInfo extends Component {
+
+    FlatListItemSeparator = () => {
+        return (
+            <View
+                style={{
+                    borderWidth: 1,
+                    borderColor: "#f1f1f1",
+                }}
+            />
+        );
     }
-    
+    saveDetails = () => {
+        alert("you pressed it!!!")
+        // this.props.navigation.navigate('professionalInfo')
+    }
     render() {
-    const { navigate } = this.props.navigation;
-    var Job_title =[{name:'chef',skills:['0','3']},
-                {name:'waiter',skills:['1','2']},
-                {name:'bartender',skills:['1','4']},
-                {name:'sous chef',skills:['2','3']}
-                ];
-
-    var skills = [{name:'alcohol license',id:'0'},
-                {name:'hard working',id:'1'},
-                {name:'public engagement',id:'2'},
-                {name:'polite',id:'3'},
-                {name:'intelligent',id:'4'}
-                ];
-
-    documentPicker = () => { }
-    
-    
-    return (
-        <ScrollView contentContainerStyle = {{padding: 10, backgroundColor:'#D4cdb1' }}>
-        <View style = {styles.container1}>
-            <FormLabel labelStyle = {styles.labelStyle}>My Skills</FormLabel>
-            <Icon
-                name="ios-add-circle" 
-                color="#4F8EF7" 
-                size= {28} 
-                style= {{ marginLeft: 'auto',  }}
-                onPress ={() => this.props.navigation.navigate('AddSkills')}             
-                /> 
-            </View>
-
-            <ScrollView>
-            <List containerStyle={{backgroundColor:'white',borderRadius:5,borderTopWidth: 0, borderBottomWidth: 0}}
-                wrapperStyle = {{borderTopWidth:0,marginTop:0,backgroundColor:'red'}}> 
-            {Job_title.map((item,i)=>{
-                    return(
-                    <View key ={i}>
-                    <ListItem title = {item.name} 
-                                subtitle = 'experience'
-                                key ={i}
-                                badge={{ value: 3, textStyle: { color: 'orange' } }}/>
-                    </View>
-                    )})
-                }
-            </List>
-
-            </ScrollView>
-            <View style = {styles.container1}>
-            <FormLabel labelStyle = {styles.labelStyle}>My Documents</FormLabel>
-            <Icon
-                name="ios-add-circle" 
-                color="#4F8EF7" 
-                size= {28} 
-                style= {{ marginLeft: 'auto',  }}
-                onPress ={ () => DocumentPicker.show({
-                    filetype: [DocumentPickerUtil.allFiles()],
-                  },(error,res) => {
-                    // Android
-                    console.log(
-                       res.uri,
-                       res.type, // mime type
-                       res.fileName,
-                       res.fileSize
-                    );
-                    docUrl = res.uri
-                    console.warn(docUrl)
-                  })}
-                              
-                /> 
-            </View>
-            <ScrollView>
-                <List containerStyle={{backgroundColor:'white',borderRadius:5,borderTopWidth: 0, borderBottomWidth: 0, marginBottom: 40}}
-                    wrapperStyle = {{borderTopWidth:0,marginTop:0,backgroundColor:'red'}}> 
-                {Job_title.map((res,i)=>{
-                        return(
-                        <View key ={i}>
-                        <ListItem title = {res.fileName} 
-                                    subtitle = 'experience'
-                                    key ={i}
-                                    badge={{ value: 3, textStyle: { color: 'orange' } }}/>
+        return (
+            <View style={{ backgroundColor: '#ffffff', height: '100%' }}>
+                <Text style={styles.header}>Professional Info</Text>
+                <ScrollView>
+                    <View style={styles.containerSkills}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.heading}>Your Skills</Text>
+                            <Icon
+                                style={styles.iconAdd}
+                                name='add-circle'
+                                type='ionicons'
+                                color='#517fa4'
+                                size={30}
+                                onPress={() => this.props.navigation.navigate('AddSkills')}
+                            />
                         </View>
-                        )})
-                    }
-                </List>
-            </ScrollView>
-        </ScrollView>
+                        <View style={styles.containerList}>
+                            <FlatList
+                                data={filternames}
+                                ItemSeparatorComponent={this.FlatListItemSeparator}
+                                renderItem={({ item }) =>
+                                    <View style={styles.containerListItem}>
+                                        <Text style={styles.listItemTextLeft}>{item.filtername}
+                                        </Text>
+                                        <Text style={styles.listItemTextRight}></Text>
+                                        <Icon
+                                            style={styles.listItemIcon}
+                                            name='delete-circle'
+                                            type='material-community'
+                                            color='#517fa4'
+                                            size={25}
+                                        />
+                                    </View>}
+                                keyExtractor={(item, index) => index}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.containerDocument}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.heading}>Your Documents</Text>
+                            <Icon
+                                style={styles.iconAdd}
+                                name='add-circle'
+                                type='ionicons'
+                                color='#517fa4'
+                                size={30}
+                                onPress={() => DocumentPicker.show({
+                                    filetype: [DocumentPickerUtil.allFiles()],
+                                }, (error, res) => {
+                                    // Android
+                                    console.log(
+                                        res.uri,
+                                        res.type, // mime type
+                                        res.fileName,
+                                        res.fileSize
+                                    );
+                                    docUrl = res.uri
+                                    console.warn(docUrl)
+                                })}
+
+                            />
+                        </View>
+                        <View style={styles.containerList}>
+                            <FlatList
+                                data={filternames}
+                                ItemSeparatorComponent={this.FlatListItemSeparator}
+                                renderItem={({ item }) =>
+                                    <View style={styles.containerListItem}>
+                                        <Text style={styles.listItemTextLeft}>{item.filtername}
+                                        </Text>
+                                        <Text style={styles.listItemTextRight}></Text>
+                                        <Icon
+                                            style={styles.listItemIcon}
+                                            name='delete-circle'
+                                            type='material-community'
+                                            color='#517fa4'
+                                            size={25}
+                                        />
+                                    </View>}
+                                keyExtractor={(item, index) => index}
+                            />
+                        </View>
+                    </View>
+                    <View style= {{flexDirection: 'row'}}>
+<View style={{ alignSelf:'flex-start',bottom:0,zIndex:1000, left: 10, marginTop: 30, marginBottom: 0}}>
+            <TouchableOpacity 
+               onPress={() => {
+                  this.props.navigation.goBack();
+                  }}>
+                <Icon
+                reverse
+                name='arrow-left'
+                type='material-community'
+                color='#ff7f2a'
+                size= {25}
+                />
+            </TouchableOpacity>
+          </View>
+<View style={{ alignSelf:'flex-end',bottom:0,zIndex:1000, left: 210, right:10, marginTop: 30, marginBottom: 0}}>
+            <TouchableOpacity 
+               onPress={() => {
+                // if (this.validate())
+                  this.saveDetails()}}>
+                <Icon
+                reverse
+                name='check'
+                type='material-community'
+                color='#ff7f2a'
+                size= {25}
+                />
+            </TouchableOpacity>
+          </View>
+      </View>
+                </ScrollView>
+            </View>
         )
     }
 }
 
-const styles= StyleSheet.create({
-    container: {
-        backgroundColor: '#D4cdb1',  
+const styles = StyleSheet.create({
+    header: {
+        fontSize: 40,
+        margin: 10
+    }, containerSkills: {
+        marginLeft: 10,
+        marginRight: 10,
+        marginTop: 20
+    }, iconAdd: {
+        marginLeft: 10,
+        marginRight: 10,
+        marginTop: 20,
+        marginBottom: 20
+    }, heading: {
+        marginLeft: 10,
+        marginRight: 'auto',
+        fontSize: 18,
+        fontWeight: 'bold'
+    }, containerList: {
+        borderWidth: 1,
+        borderRadius: 5,
+        marginTop: 10,
+        borderColor: '#D3D3D3'
+    }, containerListItem: {
+        marginLeft: 10,
+        marginTop: 10,
+        marginBottom: 10,
+        marginRight: 10,
+        flexDirection: 'row'
+    }, listItemTextLeft: {
+        fontSize: 16,
+    }, listItemTextRight: {
+        marginLeft: 'auto',
+        marginRight: 15,
+    }, listItemIcon: {
+        marginRight: 10
+    }, containerDocument: {
+        marginLeft: 10,
+        marginRight: 10,
+        marginTop: 20,
+        marginBottom: 20
     },
-
-    labelStyle:{
-        color:'#265b91',
-        fontSize:18,
-        marginTop:0,marginBottom:8,marginLeft:6,marginRight:6
-    },
-
-    container1: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        
-    },
-    popupTitle: {
-        fontSize: 20,
-        fontWeight: '500',
-        padding: 15,
-        backgroundColor: '#F57F17',
-        textAlign: 'center',
-        color: 'white',
-    },
-    popupDialogContainer: {
-        alignItems: 'center', 
-        color: 'green',
-    },
-    popupText: {
-        fontSize: 10,
-        fontWeight: '500',
-        padding: 15,
-        margin: 10,
-        width: 100,
-        backgroundColor: '#D4cdb1',
-        borderRadius: 40,
-        color: 'black',
-    },
-    popupView: {
-        flexDirection:'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 15,
-    },
-    popupIcon: {
-        marginHorizontal: 20,
-    }
-
 });

@@ -5,11 +5,13 @@ import BillingInfo from '../Screens/BillingInfo';
 //import ProfessionalInfo from '../Screens/ProfessionalInfo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ProfessionalInfoTab from './ProfessionalInfoTab';
+
+
 var ProfileTab = createMaterialTopTabNavigator(
   {
     PersonalInfo: CompleteLogin,
     BillingInfo: BillingInfo,
-    ProfessionalInfoTab:ProfessionalInfoTab
+    ProfessionalInfo: ProfessionalInfoTab,
   },
   {
     navigationOptions: ({ navigation }) => ({
