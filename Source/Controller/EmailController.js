@@ -1,12 +1,14 @@
 var EmailController = {
-    UserRegistration : async(UserEmail,UserPassword,UserRole) =>{
+    UserRegistration : async(UserEmail,UserPassword,UserType,FirstName,LastName) =>{
             // const { UserName }  = this.state ;
            //console.log('ddgwdkydou',UserEmail+' '+UserPassword+' '+UserRole);
            try{
-               var url = 'http://time2staff.com/AppAPI/config/userRegistrationAPI.php';
+               var url = 'http://192.168.0.113/time2staff-ngx-laravel/public/api/users/register';
                var body = JSON.stringify({email: UserEmail,
                                            password: UserPassword,
-                                           role:UserRole
+                                           user_type:UserType,
+                                           firstname:FirstName,
+                                           lastname: LastName
                           });      
                var response = await fetch(url, { method: 'POST',
                                                  headers: {

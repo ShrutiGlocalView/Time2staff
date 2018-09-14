@@ -43,11 +43,11 @@ export default class PersonalInfo extends Component {
 
   validate = (text) => {
     var validate = true;
-    const mailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (mailReg.test(text) === false) {
-      this.setState({ emailError: 'Enter a valid email' });
-      validate = false;
-    }
+    // const mailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    // if (mailReg.test(text) === false) {
+    //   this.setState({ emailError: 'Enter a valid email' });
+    //   validate = false;
+    // }
     if (this.state.firstName == '') {
       this.setState({ textError: 'Mandatory Field' });
       validate = false
@@ -260,7 +260,7 @@ export default class PersonalInfo extends Component {
           <View style={{alignSelf:'flex-end',bottom:30,zIndex:1000, right: 10, marginTop: 30, marginBottom: 50}}>
             <TouchableOpacity 
                onPress={() => {
-                // if (this.validate())
+                if (this.validate())
                   this.saveDetails()}}>
                 <Icon
                 reverse
@@ -295,7 +295,7 @@ export default class PersonalInfo extends Component {
 }
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#ffffff', height: '100%' 
   },
   header:{
     fontSize: 40, 

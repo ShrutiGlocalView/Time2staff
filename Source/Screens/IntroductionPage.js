@@ -106,9 +106,8 @@ export default class IntroductionPage extends Component {
             onPress={() => { this.props.navigation.navigate('LoginPage', { signUpType: "0", signUp: true }) }}
             textStyle={{
               color: 'white',
-              fontSize: 25
+              fontSize: 15
             }}
-
           />
 
         </View>
@@ -124,7 +123,7 @@ export default class IntroductionPage extends Component {
             onPress={() => { this.props.navigation.navigate('LoginPage', { signUpType: "1", signUp: true }) }}
             textStyle={{
               color: 'white',
-              fontSize: 25
+              fontSize: 15
             }} />
 
         </View>
@@ -179,7 +178,7 @@ const styles = StyleSheet.create({
     width: '40%',
   },
   button: {
-    height: 40,
+    height: 50,
     borderRadius: 30
   },
   buttonContainer: {
