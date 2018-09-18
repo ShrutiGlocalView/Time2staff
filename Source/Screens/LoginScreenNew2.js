@@ -6,9 +6,11 @@ import {
     StyleSheet,
     Image,
     TouchableOpacity,
+    TouchableHighlight,
     ScrollView,
 } from 'react-native';
-import { Button, Icon, FormInput, FormValidationMessage, FormLabel } from 'react-native-elements';
+import { Button, Icon, FormInput, FormValidationMessage, FormLabel, Modal } from 'react-native-elements';
+
 import {
     LoginButton,
     AccessToken,
@@ -24,6 +26,7 @@ export default class LoginScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            modalVisible: false,
             firstname: '',
             lastname: '',
             email: '',
@@ -100,6 +103,14 @@ export default class LoginScreen extends Component {
             loginErrorMessage: response.error,
         })
         console.log(response.error);
+    }
+
+    setModalVisible(visible) {
+        this.setState({modalVisible: visible});
+      }    
+
+    forgotPasssword = () =>{
+
     }
 
     signIn = async () => {
@@ -205,7 +216,7 @@ export default class LoginScreen extends Component {
 
     renderLoginModule = () => {
         if (this.state.selectedButton == 'login') {
-            return (
+             return (
                 <View style={{ width: '100%', margin: 10 }}>
                     <TextInput
                         style={{ borderColor: 'gray', borderBottomWidth: 1, margin: 10 }}
@@ -223,7 +234,12 @@ export default class LoginScreen extends Component {
                         inlineImageLeft='lock'
                         inlineImagePadding={10} />
                         <FormValidationMessage>{this.state.loginErrorMessage}</FormValidationMessage>
-                    <Text style={{ alignSelf: 'flex-end', margin: 10, }}>Forgot password</Text>
+                        <TouchableOpacity 
+                    style = {{alignSelf: 'flex-end', margin: 10}}
+                    onPress={this.forgotPasssword}>
+                        <Text>Forgot password</Text>
+                    </TouchableOpacity>
+                    {/* <Text style={{ alignSelf: 'flex-end', margin: 10, }}>Forgot password</Text> */}
                     <Button
                         fontSize={12}
                         title='Login'
@@ -267,6 +283,7 @@ export default class LoginScreen extends Component {
             )
         }
     }
+
     render() {
         return (
 
