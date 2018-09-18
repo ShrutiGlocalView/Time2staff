@@ -8,8 +8,10 @@ import {
     TouchableOpacity,
     TouchableHighlight,
     ScrollView,
+    KeyboardAvoidingView,
+    Modal,
 } from 'react-native';
-import { Button, Icon, FormInput, FormValidationMessage, FormLabel, Modal } from 'react-native-elements';
+import { Button, Icon, FormInput, FormValidationMessage, FormLabel } from 'react-native-elements';
 
 import {
     LoginButton,
@@ -34,6 +36,8 @@ export default class LoginScreen extends Component {
             repeatPassword: '',
             showRepeatPassword: true,
             textError: '',
+            firstnameError:'',
+            lastnameError:'',
             emailError: '',
             passwordError: '',
             confirmPasswordError: '',
@@ -41,6 +45,7 @@ export default class LoginScreen extends Component {
             userRole: 'staff',
             selectedButton: 'login',
             loginErrorMessage:'',
+            forgotPasswordMessage: '',
 
         }
     }
@@ -87,6 +92,7 @@ export default class LoginScreen extends Component {
         var response;
         response = await EmailController.UserRegistration(this.state.email, this.state.password, this.state.userRole, this.state.firstname, this.state.lastname);
         emailErrorVar = response.errors.email;
+        passwordErrorVar = response.errors.password;
         this.validate();
         if (emailErrorVar != '') {
             this.setState({
@@ -95,6 +101,14 @@ export default class LoginScreen extends Component {
         }
         // this.validate();
         console.log(response.errors.email);
+        if (passwordErrorVar != '') {
+            this.setState({
+                passwordError: passwordErrorVar
+            })
+        }
+        // this.validate();
+        console.log(response.errors.password);
+
     }
 
     login = async () => {
@@ -107,15 +121,19 @@ export default class LoginScreen extends Component {
 
     setModalVisible(visible) {
         this.setState({modalVisible: visible});
-      }    
+      }
 
-    forgotPasssword = () =>{
-
+    forgotPasssword = async () =>{
+        response = await EmailController.ForgotPassword(this.state.email);
+        forgotPasswordMessage = this.setState({
+            forgotPasswordMessage: response.errors.email[1],
+        })
+        console.log(response.errors.email);
     }
 
     signIn = async () => {
         var user, token;
-        // console.log('hiii'); 
+        // console.log('hiii');
         user = await GoogleSignin.signIn();
         token = user.accessToken;
         console.log("ACCESS TOKEN HERE: s", token);
@@ -124,7 +142,7 @@ export default class LoginScreen extends Component {
         alert("token is:" + " " + gotToken);
         this.setState({ user });
         this.getCountries();
-    
+
       };
 
     validate = (text) => {
@@ -133,28 +151,48 @@ export default class LoginScreen extends Component {
         if (mailReg.test(text) === true) {
             this.setState({ emailError: 'Enter a valid email' });
             validate = false;
+        } else{
+            this.setState({ emailError: '' });
+            validate = true;
         }
-        if (this.state.firstname == '' || this.state.lastname == '') {
-            this.setState({ textError: 'Mandatory Field' });
+        if (this.state.firstname == '') {
+            this.setState({ firstnameError: 'Mandatory Field' });
             validate = false
+        }else {
+            this.setState({ firstnameError: '' });
+            validate = true
         }
+
+        if (this.state.lastname == '') {
+            this.setState({ lastnameError: 'Mandatory Field' });
+            validate = false
+        }else {
+            this.setState({ lastnameError: '' });
+            validate = true
+        }
+
         if (this.state.email == '') {
             this.setState({ emailError: 'Mandatory Field' });
             validate = false;
+        }else{
+            this.setState({ emailError: '' });
+            validate = true;
         }
         if (this.state.password == '') {
             this.setState({ passwordError: 'cannot have an empty password' });
             validate = false
+        }else{
+            this.setState({ passwordError: '' });
+            validate = true
         }
         if (this.state.repeatPassword != this.state.password) {
             this.setState({ confirmPasswordError: 'Password does not match' });
             validate = false
+        }else{
+            this.setState({ confirmPasswordError: '' });
+            validate = true
         }
-        // if (this.state.repeatPassword == this.state.password) {
-        //   this.setState({ confirmPasswordError: '' });
-        //   validate = false
-        // }
-        return validate
+        return validate;
     }
 
     userTypeSelection = () => {
@@ -191,7 +229,9 @@ export default class LoginScreen extends Component {
     _renderTextInput = (label, onChangeText, errorMessage, secureTextEntry) => {
         //console.log(label,errorMessage);
         return (<View>
-            <FormInput onChangeText={(text) => { onChangeText(text) }}
+            <FormInput onChangeText={(text) => { onChangeText(text)
+                this.validate();
+            }}
                 secureTextEntry={secureTextEntry}
                 placeholder={label}
                 placeholderTextColor='grey'
@@ -203,7 +243,13 @@ export default class LoginScreen extends Component {
 
     _renderConfirmPassword = (label, onChangeText, errorMessage, secureTextEntry) => {
         return (<View>
-            <FormInput onChangeText={(text) => { onChangeText(text) }}
+            <FormInput onChangeText={(text) => { onChangeText(text)
+                    if (this.state.repeatPassword != this.state.password) {
+                        this.setState({ confirmPasswordError: 'Password does not match' });
+                    }else{
+                        this.setState({ confirmPasswordError: '' });
+                    }
+               }}
                 secureTextEntry={secureTextEntry}
                 placeholder={label}
                 placeholderTextColor='grey'
@@ -220,7 +266,8 @@ export default class LoginScreen extends Component {
                 <View style={{ width: '100%', margin: 10 }}>
                     <TextInput
                         style={{ borderColor: 'gray', borderBottomWidth: 1, margin: 10 }}
-                        onChangeText={(email) => this.setState({ email })}
+                        onChangeText={(email) => this.setState({ email })
+                            }
                         value={this.state.email}
                         placeholder='Username or Email'
                         inlineImageLeft='email'
@@ -234,9 +281,11 @@ export default class LoginScreen extends Component {
                         inlineImageLeft='lock'
                         inlineImagePadding={10} />
                         <FormValidationMessage>{this.state.loginErrorMessage}</FormValidationMessage>
-                        <TouchableOpacity 
-                    style = {{alignSelf: 'flex-end', margin: 10}}
-                    onPress={this.forgotPasssword}>
+                        <TouchableOpacity
+                    style = {{alignSelf: 'flex-end', margin: 10,}}
+                    onPress={() => {
+                        this.setModalVisible(true);
+                    }}>
                         <Text>Forgot password</Text>
                     </TouchableOpacity>
                     {/* <Text style={{ alignSelf: 'flex-end', margin: 10, }}>Forgot password</Text> */}
@@ -258,10 +307,10 @@ export default class LoginScreen extends Component {
                     </View>
                     {this._renderTextInput('First name',
                         (text) => {this.setState({ firstname: text })},
-                        this.state.textError, false)}
+                        this.state.firstnameError, false)}
                     {this._renderTextInput('Last name',
                         (text) => {this.setState({ lastname: text })},
-                        this.state.textError, false)}
+                        this.state.lastnameError, false)}
                     {this._renderTextInput('Email',
                         (text) => {this.setState({ email: text })},
                         this.state.emailError, false)}
@@ -286,7 +335,6 @@ export default class LoginScreen extends Component {
 
     render() {
         return (
-
             <View style={{ width: '100%', height: '100%', alignItems: 'center' }}>
                 <Image
                     style={styles.logo}
@@ -330,6 +378,47 @@ export default class LoginScreen extends Component {
                 </View>
                 <View style={{ width: '92%', height: 1, borderWidth: 1, borderColor: '#f1f1f1' }}></View>
                 {this.renderLoginModule()}
+                <Modal
+
+                    animationType="slide"
+                    transparent={false}
+                    visible={this.state.modalVisible}
+                    onRequestClose={() => {
+                        this.setModalVisible(!this.state.modalVisible);
+                        this.setState({forgotPasswordMessage: ''})
+                    }}>
+                    <View style={{margin: 22}}>
+
+                            <View style={{ width: '100%', margin: 10 }}>
+                                <Text style={{fontSize: 20}}>Forgot Password</Text>
+                                <Text style={{marginTop: 10}}>Please enter your email address. You will receive a link to create a new password via email.</Text>
+                                <TextInput
+                                    style={{ borderColor: 'gray', borderBottomWidth: 1, margin: 10 }}
+                                    onChangeText={(email) => this.setState({ email })}
+                                    value={this.state.email}
+                                    placeholder='Email address'
+                                    inlineImageLeft='email'
+                                    inlineImagePadding={10} />
+                                <FormValidationMessage>{this.state.forgotPasswordMessage}</FormValidationMessage>
+                                <Button
+                                    fontSize={12}
+                                    title='Send now'
+                                    onPress={() => {
+                                        this.forgotPasssword();
+                                    }}
+                                    buttonStyle={{ backgroundColor: 'orange',  marginTop: 20 }} />
+                                <Button
+                                    fontSize={12}
+                                    title='Go back'
+                                    onPress={() => {
+                                        this.setModalVisible(!this.state.modalVisible);
+                                        this.setState({forgotPasswordMessage: ''})
+                                    }}
+                                    buttonStyle={{ backgroundColor: 'orange',  marginTop: 10 }} />
+
+                            </View>
+                        </View>
+                </Modal>
             </View>
         );
     }
