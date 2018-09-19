@@ -41,24 +41,56 @@ export default class PersonalInfo extends Component {
     this.loadCountryDetails();
   }
 
-  validate = (text) => {
-    var validate = true;
-    // const mailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    // if (mailReg.test(text) === false) {
-    //   this.setState({ emailError: 'Enter a valid email' });
-    //   validate = false;
-    // }
-    if (this.state.firstName == '') {
-      this.setState({ textError: 'Mandatory Field' });
-      validate = false
-    }
-    if (this.state.phoneNumber == '' || this.state.phoneNumber.length < 10 || this.state.phoneNumber.length > 10) {
-      this.setState({ phoneError: 'Invalid Number' });
-      validate = false
-    }
-    return validate
-  }
-  
+//   validate = (text) => {
+//     var validate = true;
+//     const mailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+//     if (mailReg.test(text) === true) {
+//         this.setState({ emailError: 'Enter a valid email' });
+//         validate = false;
+//     } else{
+//         this.setState({ emailError: '' });
+//         validate = true;
+//     }
+//     if (this.state.firstname == '') {
+//         this.setState({ firstnameError: 'Mandatory Field' });
+//         validate = false
+//     }else {
+//         this.setState({ firstnameError: '' });
+//         validate = true
+//     }
+
+//     if (this.state.lastname == '') {
+//         this.setState({ lastnameError: 'Mandatory Field' });
+//         validate = false
+//     }else {
+//         this.setState({ lastnameError: '' });
+//         validate = true
+//     }
+
+//     if (this.state.email == '') {
+//         this.setState({ emailError: 'Mandatory Field' });
+//         validate = false;
+//     }else{
+//         this.setState({ emailError: '' });
+//         validate = true;
+//     }
+//     if (this.state.password == '') {
+//         this.setState({ passwordError: 'cannot have an empty password' });
+//         validate = false
+//     }else{
+//         this.setState({ passwordError: '' });
+//         validate = true
+//     }
+//     if (this.state.repeatPassword != this.state.password) {
+//         this.setState({ confirmPasswordError: 'Password does not match' });
+//         validate = false
+//     }else{
+//         this.setState({ confirmPasswordError: '' });
+//         validate = true
+//     }
+//     return validate;
+// }
+
   _renderTextInput = (label, onChangeText, errorMessage, secureTextEntry) => {
     //console.log(label,errorMessage);
     return (<View>
@@ -116,11 +148,14 @@ export default class PersonalInfo extends Component {
       console.warn('Cannot open date picker', message);
     }
   }
+
   saveDetails = async () => {
     var response = await SaveProfile.personalInfo(this.state.firstName, this.state.lastName, this.state.sex, this.state.dateOfBirth, this.state.country, 'kjdkjd', 'dhfkefj', 'wjdqwi', this.state.address, this.state.zipcode, this.state.city, this.state.phoneNumber, 'efhwefhw')
     console.log(response);
+    // ========validation is not working properly==========
     this.props.navigation.navigate('billingInfo');
   }
+
   genderSelection = () => {
     return (
       this.state.gender.map((data, key) => {
@@ -150,155 +185,136 @@ export default class PersonalInfo extends Component {
       }
       ))
   }
+
   render() {
     return (
       <View Style={styles.container}>
-        <Text style = {styles.header}>Personal Info</Text>
+        <Text style={styles.header}>Personal Info</Text>
         <ScrollView >
-        {this._renderTextInput('First Name',
-          (text) => {
-            this.setState({ firstName: text })
-          },
-          this.state.textError,
-          false)}
-        {this._renderTextInput('Last Name',
-          (text) => {
-            this.setState({ lastName: text })
-          },
-          this.state.textError,
-          false)
-        }
-        {this._renderTextInput('Email',
-          (text) => {
-            this.setState({ email: text })
-          },
-          this.state.emailError,
-          false)}
-        <View>
-          < FormLabel labelStyle={styles.labelStyle}>Contact</FormLabel>
-          <PhoneInput
-            style={styles.phoneInputStyle}
-            textStyle={{ color: 'grey' }}
-            ref='phone' />
-        </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-          <FormLabel labelStyle={styles.genderStyle}>Gender</FormLabel>
-          <this.genderSelection />
-        </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-          <FormLabel labelStyle={styles.labelStyle}>DOB</FormLabel>
-          <TouchableOpacity onPress={() => this.showDatePicker()} style={{ height: '100%', }}>
-            <View style={{ flexDirection: 'row', }}>
-              <FormInput onChangeText={(text) => { this.setState({ dateOfBirth: text }) }}
-                containerStyle={{ marginTop: 14, width: '45%', paddingRight: 8, }}
-                editable={false}
-                placeholder='yyyy-mm-dd'
-                placeholderTextColor='grey'
-                value={this.state.dateOfBirth}
-              />
-              <Icon name="calendar" type="simple-line-icon" color="#4F8EF7" style={{ marginTop: 90, paddingLeft: 10 }} />
-            </View>
-          </TouchableOpacity>
-        </View>
-        {this._renderTextInput('Address line 1',
-          (text) => {
-            this.setState({ city: text })
-          },
-          this.state.textError,
-          false)}
+          {this._renderTextInput('First Name',
+            (text) => {
+              this.setState({ firstName: text })
+            },
+            this.state.textError,
+            false)}
+          {this._renderTextInput('Last Name',
+            (text) => {
+              this.setState({ lastName: text })
+            },
+            this.state.textError,
+            false)
+          }
+          {this._renderTextInput('Email',
+            (text) => {
+              this.setState({ email: text })
+            },
+            this.state.emailError,
+            false)}
+          <View>
+            < FormLabel labelStyle={styles.labelStyle}>Contact</FormLabel>
+            <PhoneInput
+              style={styles.phoneInputStyle}
+              textStyle={{ color: 'grey' }}
+              ref='phone' />
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+            <FormLabel labelStyle={styles.genderStyle}>Gender</FormLabel>
+            <this.genderSelection />
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+            <FormLabel labelStyle={styles.labelStyle}>DOB</FormLabel>
+            <TouchableOpacity onPress={() => this.showDatePicker()} style={{ height: '100%', }}>
+              <View style={{ flexDirection: 'row', }}>
+                <FormInput onChangeText={(text) => { this.setState({ dateOfBirth: text }) }}
+                  containerStyle={{ marginTop: 14, width: '45%', paddingRight: 8, }}
+                  editable={false}
+                  placeholder='yyyy-mm-dd'
+                  placeholderTextColor='grey'
+                  value={this.state.dateOfBirth}
+                />
+                <Icon name="calendar" type="simple-line-icon" color="#4F8EF7" style={{ marginTop: 90, paddingLeft: 10 }} />
+              </View>
+            </TouchableOpacity>
+          </View>
+          {this._renderTextInput('Address line 1',
+            (text) => {
+              this.setState({ city: text })
+            },
+            this.state.textError,
+            false)}
           {this._renderTextInput('Address line 2',
-          (text) => {
-            this.setState({ city: text })
-          },
-          this.state.textError,
-          false)}
-        {/* {this._renderAddressInput('Address',
-          (text) => {
-            this.setState({ address: text })
-          },
-          this.state.textError,
-          false)} */}
-        {this._renderTextInput('City/Region',
-          (text) => {
-            this.setState({ city: text })
-          },
-          this.state.textError,
-          false)}
-        <FormLabel labelStyle = {styles.labelStyle}>Select a Tax Country</FormLabel>
-              <TouchableOpacity onPress={()=>this.setState({visible:true})}
-                                style={{width: '95%', borderBottomColor: '#265b91',  
-                                borderBottomWidth: 2,
-                                 padding: 0, 
-                                 marginLeft: 10 }}>
-                  <FormInput 
-                                    editable={false}
-                                    placeholder = 'Tax Country'
-                                    placeholderTextColor = 'grey'
-                                    borderBottomColor = 'blue'
-                                    // containerStyle = {{backgroundColor:'transparent', borderColor: 'blue'}}
-                                    />
-        </TouchableOpacity>
-        <ModalFilterPicker
-          visible={this.state.visible}
-          onSelect={(picked) => {
-            console.log(picked);
-            var selectedValue = this.state.countries[--picked];
-            this.setState({ country: selectedValue });
-            console.log(this.state.country);
-            console.log(this.state.country);
-          }}
-          onCancel={() => this.setState({ visible: false })}
-          options={this.state.countries}
-          selectedOption='0'
-        />
-        {this._renderTextInput('Zip Code',
-          (text) => {
-            this.setState({ zipcode: text })
-          },
-          this.state.textError,
-          false)}
-          <View style={{alignSelf:'flex-end',bottom:30,zIndex:1000, right: 10, marginTop: 30, marginBottom: 50}}>
-            <TouchableOpacity 
-               onPress={() => {
-                if (this.validate())
-                  this.saveDetails()}}>
-                <Icon
+            (text) => {
+              this.setState({ city: text })
+            },
+            this.state.textError,
+            false)}
+          {this._renderTextInput('City/Region',
+            (text) => {
+              this.setState({ city: text })
+            },
+            this.state.textError,
+            false)}
+          <FormLabel labelStyle={styles.labelStyle}>Select a Tax Country</FormLabel>
+          <TouchableOpacity onPress={() => this.setState({ visible: true })}
+            style={{
+              width: '95%', borderBottomColor: '#265b91',
+              borderBottomWidth: 2,
+              padding: 0,
+              marginLeft: 10
+            }}>
+            <FormInput
+              editable={false}
+              placeholder='Tax Country'
+              placeholderTextColor='grey'
+              borderBottomColor='blue'
+            // containerStyle = {{backgroundColor:'transparent', borderColor: 'blue'}}
+            />
+          </TouchableOpacity>
+          <ModalFilterPicker
+            visible={this.state.visible}
+            onSelect={(picked) => {
+              console.log(picked);
+              var selectedValue = this.state.countries[--picked];
+              this.setState({ country: selectedValue });
+              console.log(this.state.country);
+              console.log(this.state.country);
+            }}
+            onCancel={() => this.setState({ visible: false })}
+            options={this.state.countries}
+            selectedOption='0'
+          />
+          {this._renderTextInput('Zip Code',
+            (text) => {
+              this.setState({ zipcode: text })
+            },
+            this.state.textError,
+            false)}
+          <View style={{ alignSelf: 'flex-end', bottom: 30, zIndex: 1000, right: 10, marginTop: 30, marginBottom: 50 }}>
+            <TouchableOpacity
+              onPress={() => {
+               // if (this.validate())
+                  this.saveDetails()
+              }}>
+              <Icon
                 reverse
                 name='arrow-right'
                 type='material-community'
                 color='#ff7f2a'
-                size= {25}
-                />
+                size={25}
+              />
             </TouchableOpacity>
-          </View> 
-         
-        {/* <Button rounded
-          raised
-          large
-          containerViewStyle={styles.buttonContainer}
-          title='Submit'
-          buttonStyle={[styles.button, { backgroundColor: "#265b91" }]}
-          textStyle={{
-            color: 'white',
-            fontSize: 25
-          }}
-          onPress={() => {
-            if (this.validate())
-              this.saveDetails()
-          }
-          }
-        /> */}
-      </ScrollView>
+          </View>
+        </ScrollView>
       </View>
-      )
+    )
   }
 }
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ffffff', height: '100%' 
+    backgroundColor: '#ffffff', height: '100%'
   },
-  header:{
-    fontSize: 40, 
+  header: {
+    fontSize: 40,
     margin: 10
   },
   logo: {

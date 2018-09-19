@@ -73,6 +73,8 @@ export default class LoginScreen extends Component {
             (data) => {
               var accessToken = data.accessToken.toString();
               this.initUser(accessToken);
+              console.log('-------------------');
+              console.log(accessToken);
             }
           )
         }
@@ -113,6 +115,12 @@ export default class LoginScreen extends Component {
         loginErrorMessage = this.setState({
             loginErrorMessage: response.error,
         })
+        console.log('---------------------------')
+        if(response.hasOwnProperty('status')){
+            console.log('status is showed...')
+            this.props.navigation.navigate('CompleteProfileNavigator')
+        }else{
+            console.log('status is not showed...')}
         console.log(response.error);
     }
 
@@ -341,7 +349,7 @@ export default class LoginScreen extends Component {
                     style={{ width: '90%', height: 40, marginTop: 0 }}
                     onLoginFinished={(error, result) => this.onLoginFinished(error, result)}
                     onLogoutFinished={() => alert("logout.")}
-                    readPermissions={['public_profile', 'email']} />
+                    readPermissions={['public_profile']} />
 
                 <GoogleSigninButton
                     style={{ width: '90%', height: 40, marginTop: 10 }}

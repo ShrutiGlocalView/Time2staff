@@ -138,7 +138,9 @@ export default class IntroductionPage extends Component {
         <LoginButton
           onLoginFinished={(error, result) => this.onLoginFinished(error, result)}
           onLogoutFinished={() => alert("logout.")}
-          readPermissions={['public_profile', 'email']} />
+          // readPermissions={['public_profile', 'email']} 
+          setReadPermissions={["email", "public_profile", "user_friends"]}
+          />
 
         <GoogleSigninButton
           style={{ width: 200, height: 40, marginTop: 10 }}
