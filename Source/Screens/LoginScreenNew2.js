@@ -6,12 +6,11 @@ import {
     StyleSheet,
     Image,
     TouchableOpacity,
-    TouchableHighlight,
     ScrollView,
-    KeyboardAvoidingView,
     Modal,
 } from 'react-native';
 import { Button, Icon, FormInput, FormValidationMessage, FormLabel } from 'react-native-elements';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 
 import {
     LoginButton,
@@ -85,8 +84,6 @@ export default class LoginScreen extends Component {
         var loginResponse = await EmailController.UserLogin(responseJson.email, responseJson.id);
         console.log(loginResponse);
       }
-
-
 
     signup = async () => {
         var response;
@@ -335,7 +332,7 @@ export default class LoginScreen extends Component {
 
     render() {
         return (
-            <View style={{ width: '100%', height: '100%', alignItems: 'center' }}>
+            <KeyboardAwareScrollView contentContainerStyle={{ width: '100%', height: '100%', alignItems: 'center' }}>
                 <Image
                     style={styles.logo}
                     source={require('../../Assets/logo_round.png')}
@@ -419,7 +416,7 @@ export default class LoginScreen extends Component {
                             </View>
                         </View>
                 </Modal>
-            </View>
+            </KeyboardAwareScrollView>
         );
     }
 }
