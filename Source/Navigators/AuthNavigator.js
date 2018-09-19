@@ -7,18 +7,16 @@ import {
   createStackNavigator,
 } from 'react-navigation';
 import IntroductionPage from '../Screens/IntroductionPage';
-import LoginPage from '../Screens/LoginPage';
+import LoginScreen from '../Screens/LoginScreenNew2';
 
   const AuthNavigator = createStackNavigator({
-    IntroductionPage:{
-      screen:IntroductionPage
-    },
-    LoginPage:{
-      screen:LoginPage
+    
+    LoginScreen:{
+      screen:LoginScreen
     },
 
    },{
-    initialRouteName:'IntroductionPage', 
+    initialRouteName:'LoginScreen', 
     headerMode:'none'
    });
 

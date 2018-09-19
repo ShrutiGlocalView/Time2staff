@@ -92,6 +92,13 @@ export default class LoginScreen extends Component {
         var response;
         response = await EmailController.UserRegistration(this.state.email, this.state.password, this.state.userRole, this.state.firstname, this.state.lastname);
         emailErrorVar = response.errors.email;
+        console.log('nay')
+        if(response.hasOwnProperty('error')){
+            console.log('yay')
+            this.setState({
+                emailError: emailErrorVar
+            })
+        }
         passwordErrorVar = response.errors.password;
         this.validate();
         if (emailErrorVar != '') {
@@ -113,10 +120,20 @@ export default class LoginScreen extends Component {
 
     login = async () => {
         response = await EmailController.UserLogin(this.state.email, this.state.password);
-        loginErrorMessage = this.setState({
-            loginErrorMessage: response.error,
-        })
-        console.log(response.error);
+        if(response.hasOwnProperty('error')){
+                console.log('yay')
+                this.setState({
+                    emailError: emailErrorVar
+                })
+
+            loginErrorMessage = this.setState({
+                loginErrorMessage: response.error,
+            })
+            console.log(response.error);
+        }else{
+            console.log('yaya')
+            this.props.navigation.navigate('App')
+        }
     }
 
     setModalVisible(visible) {
@@ -426,8 +443,8 @@ export default class LoginScreen extends Component {
 
 const styles = StyleSheet.create({
     logo: {
-        height: '30%',
-        width: '30%',
+        height: '20%',
+        width: '20%',
         marginTop: 5,
         marginBottom: 2,
     },
