@@ -28,6 +28,7 @@ export default class LoginScreen extends Component {
         super(props);
         this.state = {
             modalVisible: false,
+            registerModalVisible: false,
             firstname: '',
             lastname: '',
             email: '',
@@ -126,6 +127,9 @@ export default class LoginScreen extends Component {
 
     setModalVisible(visible) {
         this.setState({modalVisible: visible});
+      }
+      setRegisterModalVisible(visible) {
+        this.setState({registerModalVisible: visible});
       }
 
     forgotPasssword = async () =>{
@@ -340,7 +344,7 @@ export default class LoginScreen extends Component {
 
     render() {
         return (
-            <KeyboardAwareScrollView contentContainerStyle={{ width: '100%', height: '100%', alignItems: 'center' }}>
+            <KeyboardAwareScrollView contentContainerStyle={{ width: '100%', height: '100%', alignItems: 'center',}}>
                 <Image
                     style={styles.logo}
                     source={require('../../Assets/logo_round.png')}
@@ -376,15 +380,17 @@ export default class LoginScreen extends Component {
                     <Button
                         fontSize={12}
                         title='Register'
+                        // onPress={() => {
+                        //     this.setState({ selectedButton: 'reg' });
+                        // }}
                         onPress={() => {
-                            this.setState({ selectedButton: 'reg' });
+                            this.setRegisterModalVisible(true);
                         }}
                         buttonStyle={{ backgroundColor: this.state.selectedButton == 'login' ? 'grey' : 'orange' }} />
                 </View>
                 <View style={{ width: '92%', height: 1, borderWidth: 1, borderColor: '#f1f1f1' }}></View>
                 {this.renderLoginModule()}
                 <Modal
-
                     animationType="slide"
                     transparent={false}
                     visible={this.state.modalVisible}
@@ -424,6 +430,47 @@ export default class LoginScreen extends Component {
                             </View>
                         </View>
                 </Modal>
+
+                <Modal
+                    animationType="slide"
+                    transparent={false}
+                    visible={this.state.registerModalVisible}
+                    onRequestClose={() => {
+                        this.setRegisterModalVisible(!this.state.registerModalVisible);
+                        // this.setState({forgotPasswordMessage: ''})
+                    }}>
+                    <View style={{margin: 22}}>
+                    <Text style = {{fontSize: 40, fontWeight: '300'}}>Register</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                        <FormLabel labelStyle={styles.userTypeStyle}>User type</FormLabel>
+                        <this.userTypeSelection />
+                    </View>
+                    {this._renderTextInput('First name',
+                        (text) => {this.setState({ firstname: text })},
+                        this.state.firstnameError, false)}
+                    {this._renderTextInput('Last name',
+                        (text) => {this.setState({ lastname: text })},
+                        this.state.lastnameError, false)}
+                    {this._renderTextInput('Email',
+                        (text) => {this.setState({ email: text })},
+                        this.state.emailError, false)}
+                    {this._renderTextInput('Password',
+                        (text) => {this.setState({ password: text })},
+                        this.state.passwordError, false)}
+                    {this._renderConfirmPassword('Repeat Password',
+                        (text) => { this.setState({ repeatPassword: text })},
+                        this.state.confirmPasswordError, false)}
+                    <Button
+                        fontSize={12}
+                        title='Sign up'
+                        buttonStyle={{ backgroundColor: 'orange' }}
+                        onPress={() => {
+                            if (this.validate())
+                                this.signup()
+                        }} />                            
+                    </View>
+                </Modal>
+
             </KeyboardAwareScrollView>
         );
     }
