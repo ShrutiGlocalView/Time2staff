@@ -7,16 +7,17 @@ import {
   createBottomTabNavigator,
   createDrawerNavigator
 } from 'react-navigation';
-import IntroductionPage from '../Screens/IntroductionPage';
+
 import LoginPage from '../Screens/LoginPage';
 import HomePage from '../Screens/HomePage';
 import Profile from '../Screens/Profile';
+import CompleteProfileNavigator from './CompleteProfileNavigator';
   const AppNavigator = createDrawerNavigator({
        Home:HomePage,
-       Profile:Profile
+       CompleteProfileNavigator:CompleteProfileNavigator
     },{
       headerMode:'none',
-      initialRouteName:'Profile'
+      initialRouteName:'CompleteProfileNavigator'
     });
 
 export default AppNavigator;
