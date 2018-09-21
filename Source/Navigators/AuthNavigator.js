@@ -8,9 +8,14 @@ import {
 } from 'react-navigation';
 import LoginScreen from '../Screens/LoginScreenNew2';
 import CompleteProfileNavigator from './CompleteProfileNavigator'
-  const AuthNavigator = createStackNavigator({
+import ConfirmEmail from '../Screens/ConfirmEmail';
+
+const AuthNavigator = createStackNavigator({
     LoginScreen:{
       screen:LoginScreen
+    },
+    ConfirmEmail: {
+      screen: ConfirmEmail
     },
     CompleteProfileNavigator: {
       screen: CompleteProfileNavigator
@@ -21,3 +26,4 @@ import CompleteProfileNavigator from './CompleteProfileNavigator'
    });
 
 export default AuthNavigator;
+

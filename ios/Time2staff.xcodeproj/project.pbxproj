@@ -59,6 +59,7 @@
 		C4F1FB265D60426AAC78E75D /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A063463B6B724E56B494ED18 /* SafariServices.framework */; };
 		49005546B5874F7F9D565288 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91A1D47D76AA48DDBEE30403 /* SystemConfiguration.framework */; };
 		60659E74FE82454F8B6BF3B7 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EE6C384A9BF4E93BB9E41C3 /* AddressBook.framework */; };
+		0032550BF4B04568A95419E6 /* libRNSnackbar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D3163D4C7ED2478F9232B268 /* libRNSnackbar.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -392,6 +393,8 @@
 		A063463B6B724E56B494ED18 /* SafariServices.framework */ = {isa = PBXFileReference; name = "SafariServices.framework"; path = "System/Library/Frameworks/SafariServices.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
 		91A1D47D76AA48DDBEE30403 /* SystemConfiguration.framework */ = {isa = PBXFileReference; name = "SystemConfiguration.framework"; path = "System/Library/Frameworks/SystemConfiguration.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
 		4EE6C384A9BF4E93BB9E41C3 /* AddressBook.framework */ = {isa = PBXFileReference; name = "AddressBook.framework"; path = "System/Library/Frameworks/AddressBook.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		6059747C2882493FAC0A3C0D /* RNSnackbar.xcodeproj */ = {isa = PBXFileReference; name = "RNSnackbar.xcodeproj"; path = "../node_modules/react-native-snackbar/ios/RNSnackbar.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		D3163D4C7ED2478F9232B268 /* libRNSnackbar.a */ = {isa = PBXFileReference; name = "libRNSnackbar.a"; path = "libRNSnackbar.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -430,6 +433,7 @@
 				C4F1FB265D60426AAC78E75D /* SafariServices.framework in Frameworks */,
 				49005546B5874F7F9D565288 /* SystemConfiguration.framework in Frameworks */,
 				60659E74FE82454F8B6BF3B7 /* AddressBook.framework in Frameworks */,
+				0032550BF4B04568A95419E6 /* libRNSnackbar.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -627,6 +631,7 @@
 				C5D86DC850A740099BDE45FF /* RCTFBSDKLogin.xcodeproj */,
 				99DC7064E1E044599FCA6604 /* RNImagePicker.xcodeproj */,
 				CE4E1A8FDA464127AC6A483E /* RNGoogleSignin.xcodeproj */,
+				6059747C2882493FAC0A3C0D /* RNSnackbar.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1285,6 +1290,7 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Time2staff.app/Time2staff";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1294,6 +1300,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fbsdklogin/iOS",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
+					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 				);
 			};
 			name = Debug;
@@ -1314,6 +1321,7 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Time2staff.app/Time2staff";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1323,6 +1331,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fbsdklogin/iOS",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
+					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 				);
 			};
 			name = Release;
@@ -1350,6 +1359,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fbsdklogin/iOS",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
+					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 				);
 			};
 			name = Debug;
@@ -1376,6 +1386,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fbsdklogin/iOS",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
+					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 				);
 			};
 			name = Release;
@@ -1405,6 +1416,7 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1414,6 +1426,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fbsdklogin/iOS",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
+					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 				);
 			};
 			name = Debug;
@@ -1443,6 +1456,7 @@
 				TVOS_DEPLOYMENT_TARGET = 9.2;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1452,6 +1466,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fbsdklogin/iOS",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
+					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 				);
 			};
 			name = Release;
@@ -1480,6 +1495,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1489,6 +1505,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fbsdklogin/iOS",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
+					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 				);
 			};
 			name = Debug;
@@ -1517,6 +1534,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1526,6 +1544,7 @@
 					"$(SRCROOT)/../node_modules/react-native-fbsdklogin/iOS",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
+					"$(SRCROOT)/../node_modules/react-native-snackbar/ios",
 				);
 			};
 			name = Release;

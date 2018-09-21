@@ -26,6 +26,7 @@
     "react-native-popup-dialog": "^0.15.0",
     "react-native-searchable-dropdown": "^1.0.4",
     "react-native-sectioned-multi-select": "^0.5.2",
+    "react-native-snackbar": "^0.5.1",
     "react-native-vector-icons": "^4.6.0",
     "react-navigation": "^2.7.0",
     "save": "^2.3.2"

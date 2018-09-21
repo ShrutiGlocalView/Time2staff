@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { Button, Icon, FormInput, FormValidationMessage, FormLabel } from 'react-native-elements';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
+import Snackbar from 'react-native-snackbar';
 
 import {
     LoginButton,
@@ -20,7 +21,6 @@ import {
     GoogleSignin,
     GoogleSigninButton
 } from 'react-native-google-signin';
-
 import EmailController from '../Controller/EmailController';
 
 export default class LoginScreen extends Component {
@@ -89,16 +89,14 @@ export default class LoginScreen extends Component {
       }
 
     signup = async () => {
-        var response;
         response = await EmailController.UserRegistration(this.state.email, this.state.password, this.state.userRole, this.state.firstname, this.state.lastname);
-        emailErrorVar = response.errors.email;
-        console.log('nay')
-        if(response.hasOwnProperty('error')){
-            console.log('yay')
-            this.setState({
-                emailError: emailErrorVar
-            })
+        console.log('--------');
+        if(response.hasOwnProperty('status')){
+            console.log('status is showed...')
+            this.setRegisterModalVisible(!this.state.registerModalVisible);
+            this.props.navigation.navigate('ConfirmEmail');
         }
+        emailErrorVar = response.errors.email;
         passwordErrorVar = response.errors.password;
         this.validate();
         if (emailErrorVar != '') {
@@ -106,16 +104,11 @@ export default class LoginScreen extends Component {
                 emailError: emailErrorVar
             })
         }
-        // this.validate();
-        console.log(response.errors.email);
         if (passwordErrorVar != '') {
             this.setState({
                 passwordError: passwordErrorVar
             })
         }
-        // this.validate();
-        console.log(response.errors.password);
-
     }
 
     login = async () => {
@@ -123,7 +116,6 @@ export default class LoginScreen extends Component {
         loginErrorMessage = this.setState({
             loginErrorMessage: response.error,
         })
-        console.log('---------------------------')
         if(response.hasOwnProperty('status')){
             console.log('status is showed...')
             this.props.navigation.navigate('CompleteProfileNavigator')
@@ -141,9 +133,27 @@ export default class LoginScreen extends Component {
 
     forgotPasssword = async () =>{
         response = await EmailController.ForgotPassword(this.state.email);
+        if(response.hasOwnProperty('status')){
+            Snackbar.show({
+                title: 'Reset password mail is sent.',
+                duration: Snackbar.LENGTH_INDEFINITE,
+                action: ({
+                    title: 'Dismiss',
+                    color: 'orange',
+                    onPress: () => {
+                        this.setModalVisible(!this.state.modalVisible);
+                    }
+                })
+              });
+        }
+        if (this.state.email == ''){
+            forgotPasswordMessage = this.setState({
+                forgotPasswordMessage: response.errors.email,
+            })
+        }else{
         forgotPasswordMessage = this.setState({
             forgotPasswordMessage: response.errors.email[1],
-        })
+        })}
         console.log(response.errors.email);
     }
 
@@ -406,12 +416,11 @@ export default class LoginScreen extends Component {
                         this.setState({forgotPasswordMessage: ''})
                     }}>
                     <View style={{margin: 22}}>
-
                             <View style={{ width: '100%', margin: 10 }}>
                                 <Text style={{fontSize: 20}}>Forgot Password</Text>
                                 <Text style={{marginTop: 10}}>Please enter your email address. You will receive a link to create a new password via email.</Text>
                                 <TextInput
-                                    style={{ borderColor: 'gray', borderBottomWidth: 1, margin: 10 }}
+                                    style={{ borderColor: 'gray', borderBottomWidth: 1, margin: 10, marginBottom: 2 }}
                                     onChangeText={(email) => this.setState({ email })}
                                     value={this.state.email}
                                     placeholder='Email address'
@@ -425,15 +434,6 @@ export default class LoginScreen extends Component {
                                         this.forgotPasssword();
                                     }}
                                     buttonStyle={{ backgroundColor: 'orange',  marginTop: 20 }} />
-                                <Button
-                                    fontSize={12}
-                                    title='Go back'
-                                    onPress={() => {
-                                        this.setModalVisible(!this.state.modalVisible);
-                                        this.setState({forgotPasswordMessage: ''})
-                                    }}
-                                    buttonStyle={{ backgroundColor: 'orange',  marginTop: 10 }} />
-
                             </View>
                         </View>
                 </Modal>
@@ -485,8 +485,8 @@ export default class LoginScreen extends Component {
 
 const styles = StyleSheet.create({
     logo: {
-        height: '20%',
-        width: '20%',
+        height: '30%',
+        width: '30%',
         marginTop: 5,
         marginBottom: 2,
     },
