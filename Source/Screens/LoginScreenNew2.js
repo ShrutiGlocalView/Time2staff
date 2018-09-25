@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
     Text,
     View,
@@ -8,9 +8,16 @@ import {
     TouchableOpacity,
     ScrollView,
     Modal,
+    ActivityIndicator,
 } from 'react-native';
-import { Button, Icon, FormInput, FormValidationMessage, FormLabel,SocialIcon } from 'react-native-elements';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
+import { 
+    Button, 
+    Icon, 
+    FormInput, 
+    FormValidationMessage, 
+    FormLabel,
+    SocialIcon 
+} from 'react-native-elements';
 import ForgotPasswordDialog from '../Components/ForgotPasswordDialog';
 import VerifyEmail from '../Components/VerifyEmail'
 import {
@@ -21,13 +28,15 @@ import {
     GoogleSignin,
     GoogleSigninButton
 } from 'react-native-google-signin';
-
 import EmailController from '../Controller/EmailController';
+import Snackbar from 'react-native-snackbar';
+import Indicator from '../Components/Indicator';
 
 export default class LoginScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isLoading: false,
             modalVisible: false,
             registerModalVisible: false,
             firstname: '',
@@ -59,9 +68,16 @@ export default class LoginScreen extends Component {
     }
 
     render() {
+        if(this.state.isLoading){
+           return <Indicator />
+            // return(
+            //     <View style={{alignItems: 'center', justifyContent: 'center', backgroundColor: 'white', flex: 1}}>
+            //         <ActivityIndicator size="large" color="#0000ff"/>
+            //     </View>
+            // )
+        }
         return (
             <View style={styles.container}>
-                
                 <View style = {{alignItems:'center',height:'100%',width:'100%',padding:16}}>
                 <Image
                     style={styles.logo}
@@ -183,18 +199,35 @@ export default class LoginScreen extends Component {
 
     }
 
+    
+
     login = async () => {
+        if(!this.state.isLoading){
+            this.setState({
+                isLoading: true
+            })
+        }
         response = await EmailController.UserLogin(this.state.email, this.state.password);
         loginErrorMessage = this.setState({
-            loginErrorMessage: response.error,
+            loginErrorMessage: response.message,
         })
-        console.log('---------------------------')
-        if(response.hasOwnProperty('status')){
-            console.log('status is showed...')
-            this.props.navigation.navigate('CompleteProfileNavigator')
+        if(response.status == 'pending'){
+            Snackbar.show({
+                title: 'Account is not verified.\nResend varification email?',
+                duration: Snackbar.LENGTH_INDEFINITE,
+                action: ({
+                    title: 'Resend',
+                    color: 'orange',
+                    onPress: () => {
+                        response = EmailController.ResendEmail(this.state.email);
+                    }
+                })
+              });
+        }else if(response.status == 'success'){
+            this.props.navigation.navigate('CompleteProfileNavigator' )
         }else{
-            console.log('status is not showed...')}
-        console.log(response.error);
+            console.log(response.error);
+        }
     }
 
     setModalVisible(visible){
@@ -367,10 +400,10 @@ export default class LoginScreen extends Component {
                         <Button
                             fontSize={18}
                             title='Login'
-                            buttonStyle={{ backgroundColor: 'orange', marginBottom: 20 }}
+                            buttonStyle={{ backgroundColor: 'orange', marginBottom: 20, marginTop: 20 }}
                             onPress={() => {
-                                    this.login()
-                                }} />
+                             this.login()
+                                }}/>
                 </View>
             )
         } else {
@@ -407,8 +440,6 @@ export default class LoginScreen extends Component {
             )
         }
     }
-
-   
 
     renderRegisterModule = () =>{
         return(<Modal

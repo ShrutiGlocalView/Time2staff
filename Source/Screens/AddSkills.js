@@ -3,18 +3,12 @@ import SearchableDropDown from 'react-native-searchable-dropdown';
 import {
     View, 
     StyleSheet,
-    TouchableOpacity,
     ActivityIndicator, 
-      FlatList, 
-      ScrollView, 
       Text, 
       Button
         } from 'react-native';
-import { FormLabel, List, ListItem } from 'react-native-elements';
 import PopupDialog, {DialogTitle} from 'react-native-popup-dialog';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
-import {createStackNavigator} from 'react-navigation';
 
 
 let docUrl = "file://whatever/com.bla.bla/file.ext"

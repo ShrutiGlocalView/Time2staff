@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import EmailController from '../Controller/EmailController';
 import { Button, Icon, FormInput, FormValidationMessage, FormLabel,SocialIcon } from 'react-native-elements';
+import Snackbar from 'react-native-snackbar';
+
 export default class ForgotPasswordDialog extends Component{
     constructor(props){
         super(props);
