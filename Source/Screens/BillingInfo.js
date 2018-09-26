@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     height: '100%' 
   },
   header: {
-    fontSize: 40,
+    fontSize: 25,
     margin: 10
   },
   logo: {

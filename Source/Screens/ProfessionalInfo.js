@@ -162,7 +162,7 @@ export default class ProfessionalInfo extends Component {
 
 const styles = StyleSheet.create({
     header: {
-        fontSize: 40,
+        fontSize: 25,
         margin: 10
     }, containerSkills: {
         marginLeft: 10,

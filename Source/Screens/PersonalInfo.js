@@ -311,10 +311,11 @@ export default class PersonalInfo extends Component {
 }
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ffffff', height: '100%'
+    backgroundColor: '#ffffff', 
+    height: '100%',
   },
   header: {
-    fontSize: 40,
+    fontSize: 25,
     margin: 10
   },
   logo: {
