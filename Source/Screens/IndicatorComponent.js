@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Button } from 'react-native';
 import { ViewPager } from 'rn-viewpager';
 
 import StepIndicator from 'react-native-step-indicator';
 
 import PersonalInfo from './PersonalInfo';
-import BillingInfo from '../Screens/BillingInfo';
-import ProfessionalInfo from '../Screens/ProfessionalInfo';
+import BillingInfo from './BillingInfo';
+import ProfessionalInfo from './ProfessionalInfo';
 
-const PAGES = [<PersonalInfo />, <BillingInfo />, <ProfessionalInfo />];
+const PAGES = [<PersonalInfo onNextPressed={() => this.viewPager.setPage(1)} />, <BillingInfo />, <ProfessionalInfo />];
 
 const firstIndicatorStyles = {
     stepIndicatorSize: 25,
@@ -32,12 +32,12 @@ const firstIndicatorStyles = {
     currentStepLabelColor: 'orange'
 }
 
-export default class App extends Component {
+export default class IndicatorComponent extends Component {
 
     constructor() {
         super();
         this.state = {
-            currentPage: 0
+            currentPage: 0,
         }
     }
 
@@ -55,15 +55,20 @@ export default class App extends Component {
                 <View style={styles.stepIndicator}>
                     <StepIndicator customStyles={firstIndicatorStyles}
                         currentPosition={this.state.currentPage}
-                        labels={["Profile", "Billing\nDetails", "Prpfessional\nDetails"]} 
-                        stepCount ={3}/>
+                        labels={["Profile", "Billing\nDetails", "Professional\nDetails"]}
+                        stepCount={3} />
                 </View>
                 <ViewPager
-                    style={{ flexGrow: 1}}
+                    style={{ flexGrow: 1 }}
                     ref={(viewPager) => { this.viewPager = viewPager }}
                     onPageSelected={(page) => { this.setState({ currentPage: page.position }) }}
                 >
-                    {PAGES.map((page) => this.renderViewPagerPage(page))}
+                    <View>
+                        {[<PersonalInfo onNextPressed={() => this.viewPager.setPage(1)} />,
+                        <BillingInfo />,
+                        <ProfessionalInfo />]}
+                    </View>
+                    {/* {PAGES.map((page) => this.renderViewPagerPage(page))} */}
                 </ViewPager>
             </View>
         );
@@ -71,7 +76,7 @@ export default class App extends Component {
 
     renderViewPagerPage = (data) => {
         return (
-            <View style={styles.page}>
+            <View>
                 <View>{data}</View>
             </View>
         )
@@ -86,9 +91,4 @@ const styles = StyleSheet.create({
     stepIndicator: {
         marginVertical: 10,
     },
-    page: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    }
 });

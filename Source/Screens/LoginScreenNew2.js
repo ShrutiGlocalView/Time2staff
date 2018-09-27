@@ -230,12 +230,12 @@ export default class LoginScreen extends Component {
         this.setState({ registerModalVisible: visible });
     }
 
-    forgotPasssword = async () =>{
+    forgotPasssword = async () => {
         response = await EmailController.ForgotPassword(this.state.email);
         this.setState({
             forgotPasswordButtonPressed: false
         })
-        if(response.hasOwnProperty('status')){
+        if (response.hasOwnProperty('status')) {
             Snackbar.show({
                 title: 'Reset password mail is sent.',
                 duration: Snackbar.LENGTH_INDEFINITE,
@@ -247,16 +247,17 @@ export default class LoginScreen extends Component {
                         this.setModalVisible(!this.state.modalVisible);
                     }
                 })
-              });
+            });
         }
-        if (this.state.email == ''){
+        if (this.state.email == '') {
             forgotPasswordMessage = this.setState({
                 forgotPasswordMessage: response.errors.email,
             })
-        }else{
-        forgotPasswordMessage = this.setState({
-            forgotPasswordMessage: response.errors.email[1],
-        })}
+        } else {
+            forgotPasswordMessage = this.setState({
+                forgotPasswordMessage: response.errors.email[1],
+            })
+        }
         console.log(response.errors.email);
     }
 
@@ -357,24 +358,17 @@ export default class LoginScreen extends Component {
 
     _renderTextInput = (label, onChangeText, errorMessage, secureTextEntry, inlineImage) => {
         //console.log(label,errorMessage);
-        return (<View>
-            {/* <FormInput onChangeText={(text) => {
-                onChangeText(text)
-                this.validate();
-            }}
-                secureTextEntry={secureTextEntry}
-                placeholder={label}
-                placeholderTextColor='grey'
-                containerStyle={styles.textInputStyle} /> */}
-                <TextInput onChangeText={ (text) => { onChangeText(text) }}
-                secureTextEntry={secureTextEntry}
-                placeholder={label}
-                placeholderTextColor='grey'
-                inlineImageLeft={inlineImage}
-                inlineImagePadding={10}
-                style={{ borderColor: 'gray', borderBottomWidth: 1, margin: 0, borderBottomColor: 'orange' }} />
-            <FormValidationMessage>{errorMessage}</FormValidationMessage>
-        </View>
+        return (
+            <View>
+                <TextInput onChangeText={(text) => { onChangeText(text) }}
+                    secureTextEntry={secureTextEntry}
+                    placeholder={label}
+                    placeholderTextColor='grey'
+                    inlineImageLeft={inlineImage}
+                    inlineImagePadding={10}
+                    style={{ borderColor: 'gray', borderBottomWidth: 1, margin: 0, borderBottomColor: 'orange' }} />
+                <FormValidationMessage>{errorMessage}</FormValidationMessage>
+            </View>
         )
     }
 
@@ -408,21 +402,12 @@ export default class LoginScreen extends Component {
     renderLoginModule = () => {
         return (
             <View style={{ width: '100%', margin: 10 }}>
-                <TextInput
-                    style={{ alignItems: 'center', borderBottomColor: 'orange', borderBottomWidth: 1, marginBottom: 10 }}
-                    onChangeText={(email) => this.setState({ email })}
-                    value={this.state.email}
-                    placeholder='Email'
-                    inlineImageLeft='email'
-                    inlineImagePadding={10} />
-                <TextInput
-                    style={{ alignItems: 'center', borderBottomColor: 'orange', borderBottomWidth: 1, marginBottom: 0 }}
-                    onChangeText={(password) => this.setState({ password })}
-                    value={this.state.password}
-                    placeholder='Password'
-                    secureTextEntry={true}
-                    inlineImageLeft='lock'
-                    inlineImagePadding={10} />
+                {this._renderTextInput('Email',
+                    (text) => { this.setState({ email: text }) },
+                    this.state.emailError, false, 'email')}
+                {this._renderTextInput('Password',
+                    (text) => { this.setState({ password: text }) },
+                    this.state.passwordError, true, 'lock')}
                 <FormValidationMessage>{this.state.loginErrorMessage}</FormValidationMessage>
 
                 <Button
@@ -433,12 +418,8 @@ export default class LoginScreen extends Component {
                     onPress={() => {
                         this.setState({
                             loginButtonPressed: true
-                        })
-                            this.login()
-
-                        // if(this.validate()){
-                        //     this.login()
-                        // }
+                        });
+                        this.login();
                     }} />
             </View>
         )

@@ -124,36 +124,37 @@ export default class ProfessionalInfo extends Component {
                             />
                         </View>
                     </View>
-                    <View style= {{flexDirection: 'row'}}>
-<View style={{ alignSelf:'flex-start',bottom:0,zIndex:1000, left: 10, marginTop: 30, marginBottom: 0}}>
-            <TouchableOpacity 
-               onPress={() => {
-                  this.props.navigation.goBack();
-                  }}>
-                <Icon
-                reverse
-                name='arrow-left'
-                type='material-community'
-                color='#ff7f2a'
-                size= {25}
-                />
-            </TouchableOpacity>
-          </View>
-<View style={{ alignSelf:'flex-end',bottom:0,zIndex:1000, left: 210, right:10, marginTop: 30, marginBottom: 0}}>
-            <TouchableOpacity 
-               onPress={() => {
-                // if (this.validate())
-                  this.saveDetails()}}>
-                <Icon
-                reverse
-                name='check'
-                type='material-community'
-                color='#ff7f2a'
-                size= {25}
-                />
-            </TouchableOpacity>
-          </View>
-      </View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <View style={{ alignSelf: 'flex-start', bottom: 0, zIndex: 1000, left: 10, marginTop: 30, marginBottom: 0 }}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.props.navigation.goBack();
+                                }}>
+                                <Icon
+                                    reverse
+                                    name='arrow-left'
+                                    type='material-community'
+                                    color='#ff7f2a'
+                                    size={25}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{ alignSelf: 'flex-end', bottom: 0, zIndex: 1000, left: 210, right: 10, marginTop: 30, marginBottom: 0 }}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    // if (this.validate())
+                                    this.saveDetails()
+                                }}>
+                                <Icon
+                                    reverse
+                                    name='check'
+                                    type='material-community'
+                                    color='#ff7f2a'
+                                    size={25}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
                 </ScrollView>
             </View>
         )
@@ -164,42 +165,51 @@ const styles = StyleSheet.create({
     header: {
         fontSize: 25,
         margin: 10
-    }, containerSkills: {
+    }, 
+    containerSkills: {
         marginLeft: 10,
         marginRight: 10,
         marginTop: 20
-    }, iconAdd: {
-        marginLeft: 10,
-        marginRight: 10,
-        marginTop: 20,
-        marginBottom: 20
-    }, heading: {
-        marginLeft: 10,
-        marginRight: 'auto',
-        fontSize: 18,
-        fontWeight: 'bold'
-    }, containerList: {
-        borderWidth: 1,
-        borderRadius: 5,
-        marginTop: 10,
-        borderColor: '#D3D3D3'
-    }, containerListItem: {
-        marginLeft: 10,
-        marginTop: 10,
-        marginBottom: 10,
-        marginRight: 10,
-        flexDirection: 'row'
-    }, listItemTextLeft: {
-        fontSize: 16,
-    }, listItemTextRight: {
-        marginLeft: 'auto',
-        marginRight: 15,
-    }, listItemIcon: {
-        marginRight: 10
-    }, containerDocument: {
+    },
+    iconAdd: {
         marginLeft: 10,
         marginRight: 10,
         marginTop: 20,
         marginBottom: 20
     },
+    heading: {
+        marginLeft: 10,
+        marginRight: 'auto',
+        fontSize: 18,
+        fontWeight: 'bold'
+    },
+    containerList: {
+        borderWidth: 1,
+        borderRadius: 5,
+        marginTop: 10,
+        borderColor: '#D3D3D3'
+    },
+     containerListItem: {
+        marginLeft: 10,
+        marginTop: 10,
+        marginBottom: 10,
+        marginRight: 10,
+        flexDirection: 'row'
+    }, 
+    listItemTextLeft: {
+        fontSize: 16,
+    }, 
+    listItemTextRight: {
+        marginLeft: 'auto',
+        marginRight: 15,
+    }, 
+    listItemIcon: {
+        marginRight: 10
+    }, 
+    containerDocument: {
+        marginLeft: 10,
+        marginRight: 10,
+        marginTop: 20,
+        marginBottom: 20
+    }
 });

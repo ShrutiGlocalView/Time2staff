@@ -4,11 +4,11 @@ import {
 import BillingInfo from '../Screens/BillingInfo';
 import ProfessionalInfo from '../Screens/ProfessionalInfo';
 import PersonalInfo from '../Screens/PersonalInfo';
-import StepIndicatorTest from '../Screens/StepIndicatorTest';
+import IndicatorComponent from '../Screens/IndicatorComponent';
 
 var CompleteProfileNavigator = createStackNavigator({
     // personalInfo: PersonalInfo,
-    personalInfo: StepIndicatorTest,
+    personalInfo: IndicatorComponent,
     billingInfo: BillingInfo,
     professionalInfo: ProfessionalInfo,
 },{

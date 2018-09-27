@@ -158,7 +158,7 @@ export default class BillingInfo extends Component {
               />
             </TouchableOpacity>
           </View>
-          <View style={{ alignSelf: 'flex-end', bottom: 0, zIndex: 1000, left: 210, right: 10, marginTop: 30, marginBottom: 0 }}>
+          <View style={{ alignSelf: 'flex-end', bottom: 0, zIndex: 1000, left: 210, right: 10, marginTop: 30,  }}>
             <TouchableOpacity
               onPress={() => {
                 // if (this.validate())

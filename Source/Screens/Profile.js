@@ -3,7 +3,7 @@ import {
   View,
   StyleSheet,
 } from 'react-native';
-import {Avatar} from 'react-native-elements';
+import { Avatar } from 'react-native-elements';
 import ProfileTab from '../Navigators/ProfileTab';
 //import ImagePicker from 'react-native-image-picker';
 var ImagePicker = require('react-native-image-picker');
@@ -11,38 +11,38 @@ var ImagePicker = require('react-native-image-picker');
 export default class IntroductionPage extends Component {
   constructor(props) {
     super(props);
-    this.state={
-        avatarSource:'', 
-        firstName:'',
-        lastName:'',
-        sex:'M',
-        dateOfBirth:'',
-        address:'',
-        zipcode:'',
-        country:'',
-        city:'',
-        email:'',
-        phoneNumber:'',
+    this.state = {
+      avatarSource: '',
+      firstName: '',
+      lastName: '',
+      sex: 'M',
+      dateOfBirth: '',
+      address: '',
+      zipcode: '',
+      country: '',
+      city: '',
+      email: '',
+      phoneNumber: '',
     }
   }
 
   componentDidMount() {
-      
-   }
 
-  onAvatarClick = ()=>{
-      var options = {
-          title: 'Select Avatar',
-          customButtons: [
-            {name: 'fb', title: 'Choose Photo from Facebook'},
-          ],
-          storageOptions: {
-            skipBackup: true,
-            path: 'images'
-          }
-        }
+  }
 
-      ImagePicker.showImagePicker(options, (response) => {
+  onAvatarClick = () => {
+    var options = {
+      title: 'Select Avatar',
+      customButtons: [
+        { name: 'fb', title: 'Choose Photo from Facebook' },
+      ],
+      storageOptions: {
+        skipBackup: true,
+        path: 'images'
+      }
+    }
+
+    ImagePicker.showImagePicker(options, (response) => {
       console.log('Response = ', response);
 
       if (response.didCancel) {
@@ -65,36 +65,36 @@ export default class IntroductionPage extends Component {
         });
       }
     });
-  } 
+  }
 
   render() {
     return (
-        <View style = {styles.container}>
-          <Avatar
-                      large
-                      rounded
-                      source = {this.state.avatarSource}
-                      onPress={() => this.onAvatarClick()}
-                      activeOpacity={0.7}
-          />
-          <View style={{height:'100%',width:'100%',}}>        
-          <ProfileTab/>
-        </View>               
-
+      <View style={styles.container}>
+        <Avatar
+          large
+          rounded
+          source={this.state.avatarSource}
+          onPress={() => this.onAvatarClick()}
+          activeOpacity={0.7}
+        />
+        <View style={{ height: '100%', width: '100%', }}>
+          <ProfileTab />
         </View>
-        )
+
+      </View>
+    )
   }
 }
 
-const styles= StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     paddingTop: 40,
-    paddingBottom:32,
+    paddingBottom: 32,
     backgroundColor: '#F57F17',
     // backgroundColor: '#D4cdb1',
     justifyContent: 'center',
     alignItems: 'center',
-    height:'100%'
+    height: '100%'
   }
 });
 
