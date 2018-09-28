@@ -8,7 +8,7 @@ import PersonalInfo from './PersonalInfo';
 import BillingInfo from './BillingInfo';
 import ProfessionalInfo from './ProfessionalInfo';
 
-const PAGES = [<PersonalInfo onNextPressed={() => this.viewPager.setPage(1)} />, <BillingInfo />, <ProfessionalInfo />];
+
 
 const firstIndicatorStyles = {
     stepIndicatorSize: 25,
@@ -50,6 +50,22 @@ export default class IndicatorComponent extends Component {
     }
 
     render() {
+        const USER_EMAIL = this.props.navigation.getParam('USER_EMAIL', 'test email');
+        console.log("UsEr EmAiL:::" + USER_EMAIL); 
+        const PAGES = [
+            <PersonalInfo
+                USER_EMAIL = {()=> USER_EMAIL}
+                onNextPressed={() => this.viewPager.setPage(1)}
+            />,
+            <BillingInfo
+                onNextPressed={() => { this.viewPager.setPage(2) }}
+                onPrevPressed={() => { this.viewPager.setPage(0) }}
+            />,
+            <ProfessionalInfo
+                onNextPressed={() => { console.log("pressed successfully...") }}
+                onPrevPressed={() => { this.viewPager.setPage(1) }}
+            />
+        ];
         return (
             <View style={styles.container}>
                 <View style={styles.stepIndicator}>
@@ -63,12 +79,13 @@ export default class IndicatorComponent extends Component {
                     ref={(viewPager) => { this.viewPager = viewPager }}
                     onPageSelected={(page) => { this.setState({ currentPage: page.position }) }}
                 >
-                    <View>
+                    {/* <View>
                         {[<PersonalInfo onNextPressed={() => this.viewPager.setPage(1)} />,
                         <BillingInfo />,
                         <ProfessionalInfo />]}
-                    </View>
-                    {/* {PAGES.map((page) => this.renderViewPagerPage(page))} */}
+                    </View> */}
+
+                    {PAGES.map((page) => this.renderViewPagerPage(page))}
                 </ViewPager>
             </View>
         );

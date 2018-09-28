@@ -40,10 +40,10 @@ var SaveProfile = {
      },
 
      getCountries : async() =>{
-         var url = 'http://dev.time2staff.com/api/countries';
+         var url = 'http://18.191.97.114/api/defaults';
            try{
                      
-               var response = await fetch(url, { method: 'POST',
+               var response = await fetch(url, { method: 'GET',
                                                  headers: {
                                                    'Accept': 'application/json',
                                                    'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ var SaveProfile = {
                });
                
                var responseJson = await response.json();
-               //console.log(JSON.stringify(responseJson));
+            //    console.log(JSON.stringify(responseJson));
                                               
 
            }catch(e){

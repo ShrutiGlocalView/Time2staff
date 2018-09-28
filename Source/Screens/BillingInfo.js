@@ -75,7 +75,8 @@ export default class BillingInfo extends Component {
 
   saveDetails = () => {
     // alert("you pressed it!!!")
-    this.props.navigation.navigate('professionalInfo')
+    // this.props.navigation.navigate('professionalInfo')
+    this.props.onNextPressed();
   }
 
   loadCountryDetails = async () => {
@@ -147,7 +148,8 @@ export default class BillingInfo extends Component {
           <View style={{ alignSelf: 'flex-start', bottom: 0, zIndex: 1000, left: 10, marginTop: 30, marginBottom: 0 }}>
             <TouchableOpacity
               onPress={() => {
-                this.props.navigation.goBack();
+                // this.props.navigation.goBack();
+                this.props.onPrevPressed();
               }}>
               <Icon
                 reverse

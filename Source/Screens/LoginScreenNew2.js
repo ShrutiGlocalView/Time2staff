@@ -67,6 +67,14 @@ export default class LoginScreen extends Component {
         })
     }
 
+    resetStateVar = () =>{
+        this.setState({
+            emailError: '',
+            passwordError: '',
+            loginErrorMessage: '',
+        })
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -199,10 +207,18 @@ export default class LoginScreen extends Component {
 
     login = async () => {
         response = await EmailController.UserLogin(this.state.email, this.state.password);
-        loginErrorMessage = this.setState({
-            loginErrorMessage: response.message,
-            loginButtonPressed: false
-        })
+        if(response.hasOwnProperty('errors')){
+            loginErrorMessage = this.setState({
+                loginErrorMessage: response.errors.username[0],
+                loginButtonPressed: false
+            })
+        }else if(response.hasOwnProperty('error')){
+            loginErrorMessage = this.setState({
+                loginErrorMessage: response.message,
+                loginButtonPressed: false
+            })
+        }
+        
         if (response.status == 'pending') {
             Snackbar.show({
                 title: 'Account is not verified.\nResend varification email?',
@@ -216,7 +232,14 @@ export default class LoginScreen extends Component {
                 })
             });
         } else if (response.status == 'success') {
-            this.props.navigation.navigate('CompleteProfileNavigator')
+            this.setState({
+                loginButtonPressed: false
+            })
+            USER_EMAIL = response.user_data.email;
+            this.props.navigation.navigate('CompleteProfileNavigator',
+                { USER_EMAIL: response.user_data.email })
+            console.log(USER_EMAIL);
+
         } else {
             console.log(response.error);
         }
@@ -275,52 +298,65 @@ export default class LoginScreen extends Component {
 
     };
 
+    // validate = (text) => {
+    //     var validate = true;
+    //     const mailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    //     if (mailReg.test(text) === true) {
+    //         this.setState({ emailError: 'Enter a valid email' });
+    //         validate = false;
+    //     } else {
+    //         this.setState({ emailError: '' });
+    //         validate = true;
+    //     }
+    //     if (this.state.firstname == '') {
+    //         this.setState({ firstnameError: 'Mandatory Field' });
+    //         validate = false
+    //     } else {
+    //         this.setState({ firstnameError: '' });
+    //         validate = true
+    //     }
+
+    //     if (this.state.lastname == '') {
+    //         this.setState({ lastnameError: 'Mandatory Field' });
+    //         validate = false
+    //     } else {
+    //         this.setState({ lastnameError: '' });
+    //         validate = true
+    //     }
+
+    //     if (this.state.email == '') {
+    //         this.setState({ emailError: 'Mandatory Field' });
+    //         validate = false;
+    //     } else {
+    //         this.setState({ emailError: '' });
+    //         validate = true;
+    //     }
+    //     if (this.state.password == '') {
+    //         this.setState({ passwordError: 'cannot have an empty password' });
+    //         validate = false
+    //     } else {
+    //         this.setState({ passwordError: '' });
+    //         validate = true
+    //     }
+    //     if (this.state.repeatPassword != this.state.password) {
+    //         this.setState({ confirmPasswordError: 'Password does not match' });
+    //         validate = false
+    //     } else {
+    //         this.setState({ confirmPasswordError: '' });
+    //         validate = true
+    //     }
+    //     return validate;
+    // }
+
     validate = (text) => {
         var validate = true;
-        const mailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if (mailReg.test(text) === true) {
-            this.setState({ emailError: 'Enter a valid email' });
-            validate = false;
-        } else {
-            this.setState({ emailError: '' });
-            validate = true;
-        }
-        if (this.state.firstname == '') {
-            this.setState({ firstnameError: 'Mandatory Field' });
-            validate = false
-        } else {
-            this.setState({ firstnameError: '' });
-            validate = true
-        }
-
-        if (this.state.lastname == '') {
-            this.setState({ lastnameError: 'Mandatory Field' });
-            validate = false
-        } else {
-            this.setState({ lastnameError: '' });
-            validate = true
-        }
-
         if (this.state.email == '') {
-            this.setState({ emailError: 'Mandatory Field' });
+            this.setState({ emailError: 'Email is required' });
             validate = false;
-        } else {
-            this.setState({ emailError: '' });
-            validate = true;
         }
         if (this.state.password == '') {
-            this.setState({ passwordError: 'cannot have an empty password' });
+            this.setState({ passwordError: 'Password is required' });
             validate = false
-        } else {
-            this.setState({ passwordError: '' });
-            validate = true
-        }
-        if (this.state.repeatPassword != this.state.password) {
-            this.setState({ confirmPasswordError: 'Password does not match' });
-            validate = false
-        } else {
-            this.setState({ confirmPasswordError: '' });
-            validate = true
         }
         return validate;
     }
@@ -372,32 +408,7 @@ export default class LoginScreen extends Component {
         )
     }
 
-    // _renderConfirmPassword = (label, onChangeText, errorMessage, secureTextEntry) => {
-    //     return (<View>
-    //         {/* <FormInput onChangeText={(text) => {
-    //             onChangeText(text)
-    //             if (this.state.repeatPassword != this.state.password) {
-    //                 this.setState({ confirmPasswordError: 'Password does not match' });
-    //             } else {
-    //                 this.setState({ confirmPasswordError: '' });
-    //             }
-    //         }}
-    //             secureTextEntry={secureTextEntry}
-    //             placeholder={label}
-    //             placeholderTextColor='grey'
-    //             containerStyle={styles.textInputStyle} /> */}
-    //             <TextInput onChangeText={ (text) => { onChangeText(text) }}
-    //             secureTextEntry={secureTextEntry}
-    //             placeholder={label}
-    //             placeholderTextColor='grey'
-    //             inlineImageLeft={inlineImage}
-    //             inlineImagePadding={10}
-    //             style={{ borderColor: 'gray', borderBottomWidth: 1, margin: 0 }} />
-    //         <FormValidationMessage>{errorMessage}</FormValidationMessage>
-
-    //     </View>
-    //     )
-    // }
+   
 
     renderLoginModule = () => {
         return (
@@ -416,10 +427,13 @@ export default class LoginScreen extends Component {
                     loading={this.state.loginButtonPressed ? true : false}
                     buttonStyle={{ backgroundColor: 'orange', marginBottom: 20, marginTop: 20 }}
                     onPress={() => {
-                        this.setState({
-                            loginButtonPressed: true
-                        });
-                        this.login();
+                        this.resetStateVar();
+                        if (this.validate()) {
+                            this.setState({
+                                loginButtonPressed: true
+                            });
+                            this.login();
+                        }
                     }} />
             </View>
         )

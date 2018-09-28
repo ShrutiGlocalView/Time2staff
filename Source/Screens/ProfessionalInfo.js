@@ -128,7 +128,8 @@ export default class ProfessionalInfo extends Component {
                         <View style={{ alignSelf: 'flex-start', bottom: 0, zIndex: 1000, left: 10, marginTop: 30, marginBottom: 0 }}>
                             <TouchableOpacity
                                 onPress={() => {
-                                    this.props.navigation.goBack();
+                                    // this.props.navigation.goBack();
+                                    this.props.onPrevPressed();
                                 }}>
                                 <Icon
                                     reverse
@@ -143,7 +144,8 @@ export default class ProfessionalInfo extends Component {
                             <TouchableOpacity
                                 onPress={() => {
                                     // if (this.validate())
-                                    this.saveDetails()
+                                    // this.saveDetails()
+                                    this.props.onNextPressed();
                                 }}>
                                 <Icon
                                     reverse

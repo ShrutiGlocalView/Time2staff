@@ -48,7 +48,8 @@ export default class SplashScreen extends Component {
     getCountries = async()=>{
      try{
        var response = await SaveProfile.getCountries();
-       //console.log(response.countries);
+       console.log("bfdfdfjkdjgkdjgkd::::::")
+       console.log(JSON.stringify(response.countries));
        await AsyncStorage.setItem('Countries',JSON.stringify(response.countries));
       
 
