@@ -7,6 +7,7 @@ import {
     Image,
     TouchableOpacity,
     Modal,
+    ScrollView,
 } from 'react-native';
 import {
     Button,
@@ -42,6 +43,8 @@ export default class LoginScreen extends Component {
             firstname: '',
             lastname: '',
             email: '',
+            registerEmail: '',
+            registerPassword: '',
             password: '',
             repeatPassword: '',
             showRepeatPassword: true,
@@ -49,8 +52,10 @@ export default class LoginScreen extends Component {
             firstnameError: '',
             lastnameError: '',
             emailError: '',
+            registerEmailError: '',
             passwordError: '',
-            confirmPasswordError: '',
+            registerPasswordError: '',
+            confirmPasswordError: '' ,
             userType: ['Staff', 'Client'],
             userRole: 'staff',
             selectedButton: 'login',
@@ -67,11 +72,16 @@ export default class LoginScreen extends Component {
         })
     }
 
-    resetStateVar = () =>{
+    resetStateVar = () => {
         this.setState({
             emailError: '',
             passwordError: '',
             loginErrorMessage: '',
+            registerEmailError: '',
+            firstnameError: '',
+            lastnameError: '',
+            registerPasswordError: '',
+            confirmPasswordError: '',
         })
     }
 
@@ -207,18 +217,18 @@ export default class LoginScreen extends Component {
 
     login = async () => {
         response = await EmailController.UserLogin(this.state.email, this.state.password);
-        if(response.hasOwnProperty('errors')){
+        if (response.hasOwnProperty('errors')) {
             loginErrorMessage = this.setState({
                 loginErrorMessage: response.errors.username[0],
                 loginButtonPressed: false
             })
-        }else if(response.hasOwnProperty('error')){
+        } else if (response.hasOwnProperty('error')) {
             loginErrorMessage = this.setState({
                 loginErrorMessage: response.message,
                 loginButtonPressed: false
             })
         }
-        
+
         if (response.status == 'pending') {
             Snackbar.show({
                 title: 'Account is not verified.\nResend varification email?',
@@ -236,9 +246,11 @@ export default class LoginScreen extends Component {
                 loginButtonPressed: false
             })
             USER_EMAIL = response.user_data.email;
+            USER_ID = response.user_data.id;
             this.props.navigation.navigate('CompleteProfileNavigator',
-                { USER_EMAIL: response.user_data.email })
+                { USER_EMAIL: response.user_data.email, USER_ID: USER_ID })
             console.log(USER_EMAIL);
+            console.log(USER_ID);
 
         } else {
             console.log(response.error);
@@ -298,56 +310,6 @@ export default class LoginScreen extends Component {
 
     };
 
-    // validate = (text) => {
-    //     var validate = true;
-    //     const mailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    //     if (mailReg.test(text) === true) {
-    //         this.setState({ emailError: 'Enter a valid email' });
-    //         validate = false;
-    //     } else {
-    //         this.setState({ emailError: '' });
-    //         validate = true;
-    //     }
-    //     if (this.state.firstname == '') {
-    //         this.setState({ firstnameError: 'Mandatory Field' });
-    //         validate = false
-    //     } else {
-    //         this.setState({ firstnameError: '' });
-    //         validate = true
-    //     }
-
-    //     if (this.state.lastname == '') {
-    //         this.setState({ lastnameError: 'Mandatory Field' });
-    //         validate = false
-    //     } else {
-    //         this.setState({ lastnameError: '' });
-    //         validate = true
-    //     }
-
-    //     if (this.state.email == '') {
-    //         this.setState({ emailError: 'Mandatory Field' });
-    //         validate = false;
-    //     } else {
-    //         this.setState({ emailError: '' });
-    //         validate = true;
-    //     }
-    //     if (this.state.password == '') {
-    //         this.setState({ passwordError: 'cannot have an empty password' });
-    //         validate = false
-    //     } else {
-    //         this.setState({ passwordError: '' });
-    //         validate = true
-    //     }
-    //     if (this.state.repeatPassword != this.state.password) {
-    //         this.setState({ confirmPasswordError: 'Password does not match' });
-    //         validate = false
-    //     } else {
-    //         this.setState({ confirmPasswordError: '' });
-    //         validate = true
-    //     }
-    //     return validate;
-    // }
-
     validate = (text) => {
         var validate = true;
         if (this.state.email == '') {
@@ -356,6 +318,35 @@ export default class LoginScreen extends Component {
         }
         if (this.state.password == '') {
             this.setState({ passwordError: 'Password is required' });
+            validate = false
+        }
+        return validate;
+    }
+
+    validateRegister = () => {
+        var validate = true;
+        if (this.state.firstname == '') {
+            this.setState({ firstnameError: 'Please enter first name' });
+            validate = false;
+        }
+        if (this.state.lastname == '') {
+            this.setState({ lastnameError: 'Please enter last name' });
+            validate = false;
+        }
+        if (this.state.registerEmail == '') {
+            this.setState({ registerEmailError: 'Please enter email' });
+            validate = false;
+        }
+        if (this.state.registerPassword == '') {
+            this.setState({ registerPasswordError: 'Please enter password' });
+            validate = false
+        }
+        if (this.state.repeatPassword == '') {
+            this.setState({ confirmPasswordError: 'Please reconfirm password'});
+            validate = false
+        }
+        if (this.state.repeatPassword != this.state.registerPassword) {
+            this.setState({ passwordError: 'Password does not match' });
             validate = false
         }
         return validate;
@@ -393,7 +384,6 @@ export default class LoginScreen extends Component {
     }
 
     _renderTextInput = (label, onChangeText, errorMessage, secureTextEntry, inlineImage) => {
-        //console.log(label,errorMessage);
         return (
             <View>
                 <TextInput onChangeText={(text) => { onChangeText(text) }}
@@ -408,15 +398,13 @@ export default class LoginScreen extends Component {
         )
     }
 
-   
-
     renderLoginModule = () => {
         return (
             <View style={{ width: '100%', margin: 10 }}>
-                {this._renderTextInput('Email',
+                {this._renderTextInput('Email*',
                     (text) => { this.setState({ email: text }) },
                     this.state.emailError, false, 'email')}
-                {this._renderTextInput('Password',
+                {this._renderTextInput('Password*',
                     (text) => { this.setState({ password: text }) },
                     this.state.passwordError, true, 'lock')}
                 <FormValidationMessage>{this.state.loginErrorMessage}</FormValidationMessage>
@@ -448,41 +436,44 @@ export default class LoginScreen extends Component {
                 this.setRegisterModalVisible(!this.state.registerModalVisible);
                 // this.setState({forgotPasswordMessage: ''})
             }}>
-            <View style={{ margin: 22 }}>
-                <Text style={{ fontSize: 40, fontWeight: '300' }}>Register</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                    <FormLabel labelStyle={styles.userTypeStyle}>User type</FormLabel>
-                    <this.userTypeSelection />
+            <ScrollView>
+                <View style={{ margin: 22 }}>
+                    <Text style={{ fontSize: 40, fontWeight: '300' }}>Register</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                        <FormLabel labelStyle={styles.userTypeStyle}>User type</FormLabel>
+                        <this.userTypeSelection />
+                    </View>
+                    {this._renderTextInput('First name',
+                        (text) => { this.setState({ firstname: text }) },
+                        this.state.firstnameError, false, 'face')}
+                    {this._renderTextInput('Last name',
+                        (text) => { this.setState({ lastname: text }) },
+                        this.state.lastnameError, false, 'face')}
+                    {this._renderTextInput('Email',
+                        (text) => { this.setState({ registerEmail: text }) },
+                        this.state.registerEmailError, false, 'email')}
+                    {this._renderTextInput('Password',
+                        (text) => { this.setState({ registerPassword: text }) },
+                        this.state.registerPasswordError, true, 'lock')}
+                    {this._renderTextInput('Confirm Password',
+                        (text) => { this.setState({ repeatPassword: text }) },
+                        this.state.confirmPasswordError, true, 'lock')}
+                    <Button
+                        fontSize={12}
+                        title='Sign up'
+                        loading={this.state.signupButtonPressed ? true : false}
+                        buttonStyle={{ backgroundColor: 'orange' }}
+                        onPress={() => {
+                            this.resetStateVar();
+                            if (this.validateRegister()) {
+                                this.signup();
+                                this.setState({
+                                    signupButtonPressed: true
+                                });
+                            }
+                        }} />
                 </View>
-                {this._renderTextInput('First name',
-                    (text) => { this.setState({ firstname: text }) },
-                    this.state.firstnameError, false, 'face')}
-                {this._renderTextInput('Last name',
-                    (text) => { this.setState({ lastname: text }) },
-                    this.state.lastnameError, false, 'face')}
-                {this._renderTextInput('Email',
-                    (text) => { this.setState({ email: text }) },
-                    this.state.emailError, false, 'email')}
-                {this._renderTextInput('Password',
-                    (text) => { this.setState({ password: text }) },
-                    this.state.passwordError, true, 'lock')}
-                {this._renderTextInput('Repeat Password',
-                    (text) => { this.setState({ repeatPassword: text }) },
-                    this.state.confirmPasswordError, true, 'lock')}
-                <Button
-                    fontSize={12}
-                    title='Sign up'
-                    loading={this.state.signupButtonPressed ? true : false}
-                    buttonStyle={{ backgroundColor: 'orange' }}
-                    onPress={() => {
-                        if (this.validate()) {
-                            this.signup();
-                            this.setState({
-                                signupButtonPressed: true
-                            });
-                        }
-                    }} />
-            </View>
+            </ScrollView>
         </Modal>
         )
     }

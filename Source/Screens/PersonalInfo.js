@@ -22,36 +22,56 @@ import { Icon } from 'react-native-elements';
 import ProfileImagePicker from '../Components/ProfileImagePicker';
 import CountryPicker from 'react-native-phone-input/lib/countryPicker';
 
+
+
+
 export default class PersonalInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
       firstName: '',
       lastName: '',
-      sex: 'M',
-      dateOfBirth: '',
-      address: '',
-      zipcode: '',
-      city: '',
       email: '',
       phoneNumber: '',
+      sex: 'M',
+      dateOfBirth: '',
+      address1: '',
+      address2: '',
+      city: '',
+      zipcode: '',
       countries: [],
       visible: false,
-      emailError: '',
       textError: '',
       firstnameError: '',
       lastnameError: '',
-      emailError: '',
+      phoneNumberError: '',
+      address1Error: '',
+      address2Error: '',
+      cityError: '',
+      zipcodeError: '',
       gender: ['Male', 'Female'],
       checked: 0
     }
   }
 
+  
   componentDidMount() {
     this.loadCountryDetails();
   }
 
-  validate = (text) => {
+  resetStateVar = () => {
+    this.setState({
+      firstnameError : '',
+      lastnameError: '',
+      phoneNumberError: '',
+      address1Error: '',
+      address2Error: '',
+      cityError: '',
+      zipcodeError: '',
+    })
+  }
+
+  validate = () => {
     var validate = true;
     const mailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -63,15 +83,22 @@ export default class PersonalInfo extends Component {
       this.setState({ lastnameError: 'Please enter last name' })
       validate = false;
     }
-    // if (this.state.email == '') {
-    //   this.setState({ emailError: 'Please enter an email' })
-    //   validate = false;
-    // }
-    // text = this.state.email
-    // if (mailReg.test(text) === true) {
-    //   this.setState({ emailError: 'Enter a valid email' });
-    //   validate = false;
-    // }
+    if(this.state.address1 == ''){
+      this.setState({address1Error: 'Please enter address line 1'})
+      validate = false;
+    }
+    if(this.state.address2 == ''){
+      this.setState({address2Error: 'Please enter address line 2'})
+      validate = false;
+    }
+    if(this.state.city == ''){
+      this.setState({cityError : 'Please enter city or region'})
+      validate = false;
+    }
+    if(this.state.zipcode == ''){
+      this.setState({zipcodeError: 'Please enter zipcode'})
+      validate = false;
+    }
     return validate;
   }
 
@@ -84,23 +111,6 @@ export default class PersonalInfo extends Component {
         secureTextEntry={secureTextEntry}
         placeholderTextColor='grey'
         containerStyle={styles.textInputStyle} />
-      <FormValidationMessage>{errorMessage}</FormValidationMessage>
-    </View>
-    )
-  }
-
-  _renderAddressInput = (label, onChangeText, errorMessage, secureTextEntry) => {
-    //console.log(label,errorMessage);
-    return (<View>
-      <FormLabel labelStyle={styles.labelStyle}>{label}</FormLabel>
-      <FormInput onChangeText={(text) => { onChangeText(text) }}
-        placeholder={label}
-        secureTextEntry={secureTextEntry}
-        placeholderTextColor='grey'
-        multiline={true}
-        numberOfLines={4}
-        containerStyle={styles.addressInputStyle}
-      />
       <FormValidationMessage>{errorMessage}</FormValidationMessage>
     </View>
     )
@@ -135,10 +145,21 @@ export default class PersonalInfo extends Component {
     }
   }
 
-  saveDetails = async () => {
-    var response = await SaveProfile.personalInfo(this.state.firstName, this.state.lastName, this.state.sex, this.state.dateOfBirth, this.state.country, 'kjdkjd', 'dhfkefj', 'wjdqwi', this.state.address, this.state.zipcode, this.state.city, this.state.phoneNumber, 'efhwefhw')
-    console.log(response);
-    // ========validation is not working properly==========
+  saveDetails =  async () => {
+    const user_id = this.props.USER_ID();
+
+    var response = await SaveProfile.personalInfo(user_id,
+      this.state.firstName, 
+      this.state.lastName, 
+      this.state.sex, 
+      this.state.dateOfBirth, 
+      this.state.country, 'kjdkjd', 'dhfkefj', 'wjdqwi', 
+      this.state.address, 
+      this.state.zipcode, 
+      this.state.city, 
+      this.state.phoneNumber, 'efhwefhw'
+    )
+    console.log("https://www.time2staff.in.net/api/business/"+user_id);
   }
 
   genderSelection = () => {
@@ -172,6 +193,8 @@ export default class PersonalInfo extends Component {
   }
 
   render() {
+    const user_id = this.props.USER_ID();
+    console.log("user_id is: "+ user_id)
     return (
       <View Style={styles.container}>
         <Text style={styles.header}>Personal Info</Text>
@@ -200,6 +223,7 @@ export default class PersonalInfo extends Component {
                 textStyle={{ color: 'grey' }}
                 ref='phone'
                 initialCountry="no"/>
+                {/* <FormValidationMessage>{this.state.phoneNumberError}</FormValidationMessage> */}
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', }}>
               <FormLabel labelStyle={styles.genderStyle}>Gender</FormLabel>
@@ -221,14 +245,14 @@ export default class PersonalInfo extends Component {
               </TouchableOpacity>
             </View>
             {this._renderTextInput('Address line 1',
-              (text) => { this.setState({ city: text }) },
-              this.state.textError, false)}
+              (text) => { this.setState({ address1: text }) },
+              this.state.address1Error, false)}
             {this._renderTextInput('Address line 2',
-              (text) => { this.setState({ city: text }) },
-              this.state.textError, false)}
+              (text) => { this.setState({ address2: text }) },
+              this.state.address2Error, false)}
             {this._renderTextInput('City/Region',
               (text) => { this.setState({ city: text }) },
-              this.state.textError, false)}
+              this.state.cityError, false)}
             <FormLabel labelStyle={styles.labelStyle}>Select a Tax Country</FormLabel>
             <TouchableOpacity onPress={() => this.setState({ visible: true })}
               style={{
@@ -260,16 +284,17 @@ export default class PersonalInfo extends Component {
             />
             {this._renderTextInput('Zip Code',
               (text) => { this.setState({ zipcode: text }) },
-              this.state.textError, false)}
+              this.state.zipcodeError, false)}
           </View>
           <View style={{ flexDirection: 'row', width: '100%' }}>
             <View style={{ alignSelf: 'flex-end', bottom: 0, zIndex: 1000, left: '135%', right: 10, marginTop: 30, marginBottom: 110 }}>
               <TouchableOpacity
                 onPress={() => {
-                  if (this.validate()) {
-                    this.saveDetails();
-                    this.props.onNextPressed();
-                  }
+                    this.resetStateVar();
+                    if (this.validate()) {
+                      this.saveDetails();
+                      this.props.onNextPressed();
+                    } 
                 }}>
                 <Icon
                   reverse
@@ -281,7 +306,6 @@ export default class PersonalInfo extends Component {
               </TouchableOpacity>
             </View>
           </View>
-
         </ScrollView>
       </View>
     )

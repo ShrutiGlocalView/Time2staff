@@ -1,8 +1,8 @@
 //first_name,last_name,gender,born,country_id,bank_account,tax_county,tax_percent,address,zipcode,city,phone,description
 var SaveProfile = {
-    personalInfo : async(first_name,last_name,gender,born,country_id,bank_account,tax_county,tax_percent,address,zipcode,city,phone,description) =>{
+    personalInfo : async(id, first_name,last_name,gender,born,country_id,bank_account,tax_county,tax_percent,address,zipcode,city,phone,description) =>{
            try{
-               var url = 'http://time2staff.com/AppAPI/config/editProfileAPI.php';
+               var url = 'https://www.time2staff.in.net/api/business/'+id;
                var body = JSON.stringify({first_name: first_name,
                                            last_name: last_name,
                                            gender:gender,

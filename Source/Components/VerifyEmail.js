@@ -4,7 +4,7 @@ import {
     View,
     Modal,
 } from 'react-native';
-import {Button} from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import EmailController from '../Controller/EmailController';
 
 export default class VerifyEmail extends Component {
@@ -18,8 +18,8 @@ export default class VerifyEmail extends Component {
 
     render() {
         return (
-            <View style={{ margin: 22 }}>
-                <View style={{ width: '100%', margin: 10 }}>
+            <View >
+                <View style={{  }}>
 
                     <Modal
                         animationType="slide"
@@ -29,24 +29,25 @@ export default class VerifyEmail extends Component {
                             this.props.setModalVisible(!this.props.modalVisible);
 
                         }}>
-                        <View style={{ width: '100%', margin: 10 }}>
-                            <Text style={{ fontSize: 20 }}>Verify your email</Text>
-                            <Text style={{ marginTop: 10 }}>Please check your inbox for a verification email.
+                        <View style={{ margin: 22 }}>
+                            <View style={{ width: '100%', margin: 10 }}>
+                                <Text style={{ fontSize: 20 }}>Verify your email</Text>
+                                <Text style={{ marginTop: 10 }}>Please check your inbox for a verification email.
                                 Click the link in the email to verify your email address.</Text>
-                            <Button
-                                fontSize={12}
-                                title='Continue'
-                                onPress={() => {
-                                    this.props.onContinuePress();
-                                }}
-                                buttonStyle={{ backgroundColor: 'orange', marginTop: 20 }} />
+                                <Button
+                                    fontSize={12}
+                                    title='Continue'
+                                    onPress={() => {
+                                        this.props.onContinuePress();
+                                    }}
+                                    buttonStyle={{ backgroundColor: 'orange', marginTop: 20 }} />
+                            </View>
                         </View>
                     </Modal>
                 </View>
             </View>
         )
     }
-
 
     forgotPasssword = async () => {
         response = await EmailController.ForgotPassword(this.state.email);
@@ -74,5 +75,4 @@ export default class VerifyEmail extends Component {
         }
         console.log(response.errors.email);
     }
-
 }
