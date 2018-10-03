@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 
 import {
-  Button,
   FormLabel,
   FormInput,
   FormValidationMessage
@@ -20,16 +19,13 @@ import SaveProfile from '../Controller/SaveProfile';
 import ModalFilterPicker from 'react-native-modal-filter-picker';
 import { Icon } from 'react-native-elements';
 import ProfileImagePicker from '../Components/ProfileImagePicker';
-import CountryPicker from 'react-native-phone-input/lib/countryPicker';
-
-
-
 
 export default class PersonalInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: '',
+      picked: null,
+      bussinessName: '',
       lastName: '',
       email: '',
       phoneNumber: '',
@@ -39,35 +35,53 @@ export default class PersonalInfo extends Component {
       address2: '',
       city: '',
       zipcode: '',
+      state: '',
+      country: '',
+      country_id: '',
       countries: [],
-      visible: false,
+      businessType: '',
+      business_id: '',
+      businessTypes: [],
+      timezone: '',
+      timezone_id: '',
+      timezones: [],
+      visibleCountryModal: false,
+      visibleBusinessModal: false,
+      visibleTimeZoneModal: false,
       textError: '',
-      firstnameError: '',
+      bussinessNameError: '',
+      businessTypeError: '',
       lastnameError: '',
       phoneNumberError: '',
       address1Error: '',
       address2Error: '',
       cityError: '',
       zipcodeError: '',
+      stateError: '',
+      countryError: '',
+      timezoneError: '',
       gender: ['Male', 'Female'],
       checked: 0
     }
   }
 
-  
+
   componentDidMount() {
-    this.loadCountryDetails();
+    this.loadDefaultDetails();
   }
 
   resetStateVar = () => {
     this.setState({
-      firstnameError : '',
-      lastnameError: '',
+      bussinessNameError: '',
+      businessTypeError: '',
       phoneNumberError: '',
       address1Error: '',
       address2Error: '',
       cityError: '',
+      stateError: '',
       zipcodeError: '',
+      countryError: '',
+      timezoneError: ''
     })
   }
 
@@ -75,28 +89,40 @@ export default class PersonalInfo extends Component {
     var validate = true;
     const mailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-    if (this.state.firstName == '') {
-      this.setState({ firstnameError: 'Please enter first name' })
+    if (this.state.bussinessName == '') {
+      this.setState({ bussinessNameError: 'Please enter bussiness name' })
       validate = false;
     }
-    if (this.state.lastName == '') {
-      this.setState({ lastnameError: 'Please enter last name' })
+    if (this.state.businessType == '') {
+      this.setState({ businessTypeError: 'Please select a category' })
       validate = false;
     }
-    if(this.state.address1 == ''){
-      this.setState({address1Error: 'Please enter address line 1'})
+    if (this.state.address1 == '') {
+      this.setState({ address1Error: 'Please enter address line 1' })
       validate = false;
     }
-    if(this.state.address2 == ''){
-      this.setState({address2Error: 'Please enter address line 2'})
+    if (this.state.address2 == '') {
+      this.setState({ address2Error: 'Please enter address line 2' })
       validate = false;
     }
-    if(this.state.city == ''){
-      this.setState({cityError : 'Please enter city or region'})
+    if (this.state.city == '') {
+      this.setState({ cityError: 'Please enter city or region' })
       validate = false;
     }
-    if(this.state.zipcode == ''){
-      this.setState({zipcodeError: 'Please enter zipcode'})
+    if (this.state.state == '') {
+      this.setState({ stateError: 'Please enter state' })
+      validate = false;
+    }
+    if (this.state.zipcode == '') {
+      this.setState({ zipcodeError: 'Please enter zipcode' })
+      validate = false;
+    }
+    if (this.state.country == '') {
+      this.setState({ countryError: 'Please select a country' })
+      validate = false;
+    }
+    if (this.state.timezone == '') {
+      this.setState({ timezoneError: 'Please select a time zone' })
       validate = false;
     }
     return validate;
@@ -116,19 +142,107 @@ export default class PersonalInfo extends Component {
     )
   }
 
-  loadCountryDetails = async () => {
+  loadDefaultDetails = async () => {
     var countriesResponse = await AsyncStorage.getItem('Countries');
-    countriesResponse.forEach(element => {
-        console.log("element[0].title")      
-        console.log(element[0].title)      
-    });
-    console.log("countriesResponse::::");
-    console.log(countriesResponse);
+    var timezonesResponse = await AsyncStorage.getItem('TimeZones');
+    var bussinessCatagoryResponse = await AsyncStorage.getItem('BusinessCategories')
+    console.log("List of Countries are::::::")
+    console.log(countriesResponse)
+    console.log("List of Timezones are::::::")
+    console.log(timezonesResponse)
+    console.log("List of Business categories are::::::")
+    console.log(bussinessCatagoryResponse)
+    var resultCountries = JSON.parse(countriesResponse);
+    var resultTimezones = JSON.parse(timezonesResponse);
+    var resultBusinesses = JSON.parse(bussinessCatagoryResponse);
+    var a = [], b = [], c = [];
+    for (var i = 0; i < resultCountries.length; i++) {
+      a.push({ key: i, label: resultCountries[i].title, country_id: resultCountries[i].id });
     }
 
-  onSelect = () => {
-    alert("pressed...")
+    for (var i = 0; i < resultTimezones.length; i++) {
+      b.push({ key: i, label: resultTimezones[i].zone + " (" + resultTimezones[i].gmt + ")", timezone_id: resultTimezones[i].id });
+    }
+
+    for (var i = 0; i < resultBusinesses.length; i++) {
+      c.push({ key: i, label: resultBusinesses[i].title, business_id: resultBusinesses[i].id });
+    }
+    this.setState({
+      countries: a,
+      timezones: b,
+      businessTypes: c
+    });
   }
+
+  onShowCountries = () => {
+    this.setState({ visibleCountryModal: true });
+  }
+
+  onSelectCountry = (picked) => {
+    this.setState({
+      picked: picked,
+      visibleCountryModal: false,
+      country: this.state.countries[picked].label,
+    })
+    console.log(picked)
+    console.log(this.state.countries[picked].label);
+    this.setState({
+      country_id: this.state.countries[picked].country_id
+    })
+  }
+
+  onCancelCountries = () => {
+    this.setState({
+      visibleCountryModal: false
+    });
+  }
+
+  onShowBusinessTypes = () => {
+    this.setState({ visibleBusinessModal: true });
+  }
+
+  onSelectBusinessType = (pickedBusiness) => {
+    this.setState({
+      pickedBusiness: pickedBusiness,
+      visibleBusinessModal: false,
+      businessType: this.state.businessTypes[pickedBusiness].label
+    })
+    console.log(pickedBusiness)
+    console.log(this.state.businessTypes[pickedBusiness].label);
+    this.setState({
+      business_id: this.state.businessTypes[pickedBusiness].business_id
+    })
+  }
+
+  onCancelBusinessTypes = () => {
+    this.setState({
+      visibleBusinessModal: false
+    });
+  }
+
+  onShowTimezones = () => {
+    this.setState({ visibleTimeZoneModal: true });
+  }
+
+  onSelectTimezone = (pickedTimezone) => {
+    this.setState({
+      pickedTimezone: pickedTimezone,
+      visibleTimeZoneModal: false,
+      timezone: this.state.timezones[pickedTimezone].label
+    })
+    console.log(pickedTimezone)
+    console.log(this.state.timezones[pickedTimezone].label);
+    this.setState({
+      timezone_id: this.state.timezones[pickedTimezone].timezone_id
+    })
+  }
+
+  onCancelTimezones = () => {
+    this.setState({
+      visibleTimeZoneModal: false
+    });
+  }
+
   showDatePicker = async () => {
     try {
       const { action, year, month, day } = await DatePickerAndroid.open({
@@ -143,23 +257,6 @@ export default class PersonalInfo extends Component {
     } catch ({ code, message }) {
       console.warn('Cannot open date picker', message);
     }
-  }
-
-  saveDetails =  async () => {
-    const user_id = this.props.USER_ID();
-
-    var response = await SaveProfile.personalInfo(user_id,
-      this.state.firstName, 
-      this.state.lastName, 
-      this.state.sex, 
-      this.state.dateOfBirth, 
-      this.state.country, 'kjdkjd', 'dhfkefj', 'wjdqwi', 
-      this.state.address, 
-      this.state.zipcode, 
-      this.state.city, 
-      this.state.phoneNumber, 'efhwefhw'
-    )
-    console.log("https://www.time2staff.in.net/api/business/"+user_id);
   }
 
   genderSelection = () => {
@@ -192,57 +289,88 @@ export default class PersonalInfo extends Component {
       ))
   }
 
-  render() {
+  saveDetails = async () => {
     const user_id = this.props.USER_ID();
-    console.log("user_id is: "+ user_id)
+    console.log('user_id:'+user_id)
+    console.log('bussinessName:'+this.state.bussinessName)
+    console.log('business_id:'+this.state.business_id)
+    console.log('phoneNumber:'+this.state.phoneNumber)
+    console.log('phoneNumber:'+this.state.phoneNumber)
+    console.log("address1:"+this.state.address1)
+    console.log("city:"+this.state.city)
+    console.log("zipcode:"+this.state.zipcode)
+    console.log("state:"+this.state.state)
+    console.log("country_id:"+this.state.country_id)
+    console.log("timezone_id:"+this.state.timezone_id)
+
+    var response = await SaveProfile.personalInfo(user_id,
+      this.state.bussinessName,
+      this.state.business_id,
+      this.state.phoneNumber,
+      this.state.address1,
+      this.state.city,
+      this.state.zipcode,
+      this.state.state,
+      this.state.country_id,
+      this.state.timezone_id
+    )
+    console.log("https://www.time2staff.in.net/api/business/" + user_id);
+    console.log(response);
+  }
+
+  render() {
     return (
       <View Style={styles.container}>
         <Text style={styles.header}>Personal Info</Text>
         <ScrollView >
           <View>
             <ProfileImagePicker />
-            {this._renderTextInput('First name',
-              (text) => { this.setState({ firstName: text }) },
-              this.state.firstnameError, false)}
-            {this._renderTextInput('Last Name',
-              (text) => { this.setState({ lastName: text }) },
-              this.state.lastnameError, false)}
-            
-            <FormLabel labelStyle={styles.labelStyle}>Email</FormLabel>
-            <FormInput onChangeText={(text) => { onChangeText(text) }}
-              placeholder="Email"
-              placeholderTextColor='grey'
-              value={this.props.USER_EMAIL()}
-              editable={false}
-              containerStyle={styles.textInputStyle} />
+            {this._renderTextInput('Business Name',
+              (text) => { this.setState({ bussinessName: text }) },
+              this.state.bussinessNameError, false)}
 
+            <FormLabel labelStyle={styles.labelStyle}>Businesss Category</FormLabel>
+            <TouchableOpacity onPress={this.onShowBusinessTypes}
+              style={{
+                width: '95%', borderBottomColor: '#265b91',
+                borderBottomWidth: 2,
+                padding: 0,
+                marginLeft: 10
+              }}>
+              <FormInput
+                editable={false}
+                placeholder='Select Category'
+                placeholderTextColor='grey'
+                borderBottomColor='blue'
+                value={this.state.businessType}
+              // containerStyle = {{backgroundColor:'transparent', borderColor: 'blue'}}
+              />
+            </TouchableOpacity>
+            <FormValidationMessage>{this.state.businessTypeError}</FormValidationMessage>
+            <ModalFilterPicker
+              options={this.state.businessTypes}
+              visible={this.state.visibleBusinessModal}
+              onSelect={this.onSelectBusinessType}
+              onCancel={this.onCancelBusinessTypes}
+            />
             <View>
-              < FormLabel labelStyle={styles.labelStyle}>Contact</FormLabel>
+              < FormLabel labelStyle={styles.labelStyle}>Phone</FormLabel>
               <PhoneInput
                 style={styles.phoneInputStyle}
                 textStyle={{ color: 'grey' }}
                 ref='phone'
-                initialCountry="no"/>
-                {/* <FormValidationMessage>{this.state.phoneNumberError}</FormValidationMessage> */}
+                initialCountry="no"
+                value={this.state.phoneNumber} />
+              {/* <FormValidationMessage>{this.state.phoneNumberError}</FormValidationMessage> */}
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-              <FormLabel labelStyle={styles.genderStyle}>Gender</FormLabel>
-              <this.genderSelection />
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-              <FormLabel labelStyle={styles.labelStyle}>DOB</FormLabel>
-              <TouchableOpacity onPress={() => this.showDatePicker()} style={{ height: '100%', }}>
-                <View style={{ flexDirection: 'row', }}>
-                  <FormInput onChangeText={(text) => { this.setState({ dateOfBirth: text }) }}
-                    containerStyle={{ marginTop: 14, width: '45%', paddingRight: 8, }}
-                    editable={false}
-                    placeholder='yyyy-mm-dd'
-                    placeholderTextColor='grey'
-                    value={this.state.dateOfBirth}
-                  />
-                  <Icon name="calendar" type="simple-line-icon" color="#4F8EF7" style={{ marginTop: 90, paddingLeft: 10 }} />
-                </View>
-              </TouchableOpacity>
+            <View>
+              < FormLabel labelStyle={styles.labelStyle}>Alt. Phone</FormLabel>
+              <PhoneInput
+                style={styles.phoneInputStyle}
+                textStyle={{ color: 'grey' }}
+                ref='phone'
+                initialCountry="no" />
+              {/* <FormValidationMessage>{this.state.phoneNumberError}</FormValidationMessage> */}
             </View>
             {this._renderTextInput('Address line 1',
               (text) => { this.setState({ address1: text }) },
@@ -253,8 +381,14 @@ export default class PersonalInfo extends Component {
             {this._renderTextInput('City/Region',
               (text) => { this.setState({ city: text }) },
               this.state.cityError, false)}
-            <FormLabel labelStyle={styles.labelStyle}>Select a Tax Country</FormLabel>
-            <TouchableOpacity onPress={() => this.setState({ visible: true })}
+            {this._renderTextInput('Zip Code',
+              (text) => { this.setState({ zipcode: text }) },
+              this.state.zipcodeError, false)}
+            {this._renderTextInput('State',
+              (text) => { this.setState({ state: text }) },
+              this.state.stateError, false)}
+            <FormLabel labelStyle={styles.labelStyle}>Country</FormLabel>
+            <TouchableOpacity onPress={this.onShowCountries}
               style={{
                 width: '95%', borderBottomColor: '#265b91',
                 borderBottomWidth: 2,
@@ -263,38 +397,56 @@ export default class PersonalInfo extends Component {
               }}>
               <FormInput
                 editable={false}
-                placeholder='Tax Country'
+                placeholder='Select a country'
                 placeholderTextColor='grey'
                 borderBottomColor='blue'
+                value={this.state.country}
               // containerStyle = {{backgroundColor:'transparent', borderColor: 'blue'}}
               />
             </TouchableOpacity>
+            <FormValidationMessage>{this.state.countryError}</FormValidationMessage>
             <ModalFilterPicker
-              visible={this.state.visible}
-              onSelect={(picked) => {
-                console.log(picked);
-                var selectedValue = this.state.countries[--picked];
-                this.setState({ country: selectedValue });
-                console.log(this.state.country);
-                console.log(this.state.country);
-              }}
-              onCancel={() => this.setState({ visible: false })}
               options={this.state.countries}
-              selectedOption='0'
+              visible={this.state.visibleCountryModal}
+              onSelect={this.onSelectCountry}
+              onCancel={this.onCancelCountries}
             />
-            {this._renderTextInput('Zip Code',
-              (text) => { this.setState({ zipcode: text }) },
-              this.state.zipcodeError, false)}
+
+            <FormLabel labelStyle={styles.labelStyle}>Time Zone</FormLabel>
+            <TouchableOpacity onPress={this.onShowTimezones}
+              style={{
+                width: '95%', borderBottomColor: '#265b91',
+                borderBottomWidth: 2,
+                padding: 0,
+                marginLeft: 10
+              }}>
+              <FormInput
+                editable={false}
+                placeholder='Select a time zone'
+                placeholderTextColor='grey'
+                borderBottomColor='blue'
+                value={this.state.timezone}
+              // containerStyle = {{backgroundColor:'transparent', borderColor: 'blue'}}
+              />
+            </TouchableOpacity>
+            <FormValidationMessage>{this.state.timezoneError}</FormValidationMessage>
+            <ModalFilterPicker
+              options={this.state.timezones}
+              visible={this.state.visibleTimeZoneModal}
+              onSelect={this.onSelectTimezone}
+              onCancel={this.onCancelTimezones}
+            />
+
           </View>
           <View style={{ flexDirection: 'row', width: '100%' }}>
             <View style={{ alignSelf: 'flex-end', bottom: 0, zIndex: 1000, left: '135%', right: 10, marginTop: 30, marginBottom: 110 }}>
               <TouchableOpacity
                 onPress={() => {
-                    this.resetStateVar();
-                    if (this.validate()) {
-                      this.saveDetails();
-                      this.props.onNextPressed();
-                    } 
+                  this.resetStateVar();
+                  if (this.validate()) {
+                    this.saveDetails();
+                    this.props.onNextPressed();
+                  }
                 }}>
                 <Icon
                   reverse

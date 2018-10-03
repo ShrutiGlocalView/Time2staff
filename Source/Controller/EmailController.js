@@ -1,9 +1,5 @@
-import ActivityIndicator from 'react-native';
-
 var EmailController = {
     UserRegistration : async(UserEmail,UserPassword,UserType,FirstName,LastName) =>{
-            // const { UserName }  = this.state ;
-           //console.log('ddgwdkydou',UserEmail+' '+UserPassword+' '+UserRole);
            try{
                var url = 'http://18.191.97.114/api/users/register';
                var body = JSON.stringify({email: UserEmail,
@@ -23,13 +19,11 @@ var EmailController = {
                var responseJson = await response.json();
                console.log(JSON.stringify(responseJson));
                                               
-
            }catch(e){
                console.log(e);
                return e;
            }
-           return responseJson; 
-                                                    
+           return responseJson;         
      },
 
      UserLogin : async(UserEmail,UserPassword) =>{
@@ -49,7 +43,6 @@ var EmailController = {
                });
                var responseJson = await response.json();
                console.log(JSON.stringify(responseJson));
-                                              
 
            }catch(e){
                console.log(e);

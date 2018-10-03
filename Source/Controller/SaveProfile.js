@@ -1,67 +1,65 @@
-//first_name,last_name,gender,born,country_id,bank_account,tax_county,tax_percent,address,zipcode,city,phone,description
 var SaveProfile = {
-    personalInfo : async(id, first_name,last_name,gender,born,country_id,bank_account,tax_county,tax_percent,address,zipcode,city,phone,description) =>{
-           try{
-               var url = 'https://www.time2staff.in.net/api/business/'+id;
-               var body = JSON.stringify({first_name: first_name,
-                                           last_name: last_name,
-                                           gender:gender,
-                                           born:born,
-                                           country_id:country_id,
-                                           bank_account:bank_account,
-                                           tax_county:tax_county,
-                                           tax_percent:tax_percent,
-                                           address:address,
-                                           zipcode:zipcode,
-                                           city:city,
-                                           phone:phone,
-                                           description:description,
-                                           user_id:'00001',
-                                           role:'0'
-                          });      
-               var response = await fetch(url, { method: 'POST',
-                                                 headers: {
-                                                   'Accept': 'application/json',
-                                                   'Content-Type': 'application/json',
-                                                 },
-                                                 body: body
-               });
-               console.log(response);
-               var responseJson = await response.json();
-               //console.log(JSON.stringify(responseJson));
-                                              
+    personalInfo: async (id, bussinessName, business_id, phoneNumber, address1, city, zipcode, state, country_id, timezone_id) => {
+        try {
+            var url = 'https://www.time2staff.in.net/api/business/' + id;
+            var body = JSON.stringify({
+                name: bussinessName,
+                business_category_id: business_id,
+                contact1: phoneNumber,
+                address1: address1,
+                city: city,
+                zipcode: zipcode,
+                state: state,
+                country_id: country_id,
+                timezone_id: timezone_id
+            });
+            console.log(body);
+            var response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjE2MjM1ODZiYTFmMWZiMDMyZTc2YzRjMTliMmY1MDYzMzllM2I3YTAxZmFlOGU4MDBjNzJkNTM3NDc2MWRhM2FkYjU5NmY2NjQ0MzYxOGU2In0.eyJhdWQiOiIyIiwianRpIjoiMTYyMzU4NmJhMWYxZmIwMzJlNzZjNGMxOWIyZjUwNjMzOWUzYjdhMDFmYWU4ZTgwMGM3MmQ1Mzc0NzYxZGEzYWRiNTk2ZjY2NDQzNjE4ZTYiLCJpYXQiOjE1Mzg1NjU0NjcsIm5iZiI6MTUzODU2NTQ2NywiZXhwIjoxNTcwMTAxNDY3LCJzdWIiOiIxIiwic2NvcGVzIjpbIioiXX0.R1jKoDhrAt4syAk2nDd9gfURxEkiAxMr-CLbYuUmH4FPexF0d7DBdIXfXIb5pV87qtJ9Lq0md1uEJMbm5VY7L01rVw3Ghs1yIyhwoORvlhByKfJuXEymZhDv8oJd_ccgRfdf2OCOGP24xDfDJGUVUnuuA_i8Is2E-z9pdzMSi1KBhFadiRw5sNTYQoOOmZ6UrWuuK2mykQ76N-ci6nJhG2wOLSy8-VmyglHxwH10oqNrL0GBzDEEJuNTuK_EapzHH2zx50LVbiGtJUwoNKJ8uWOPffkzFpffM_XBHF61s6XjxOyNGxmq9mEvwU6fK_CgjpqjtQLsJoxPpRyI1ImVm8On8Eh1_HVaUZcPRPWHUiluF6hwyphLG37ogafQQrNO40m1sPAA19cO4D-diPyNm5RVUN3zL-PDBoyDA8Pwjxk7mWmscfU7oTmo6ywHjs02uomA_KqcA01t9AMJP8KpKB8Gog9Lrd9joMzMD5N6O4-JWpuYQSoIILA2B4V5Iq44ZZkZXA0Vy7r2zaNYKlajkSdSWEQtXwQnxJmMF_dFMzpNnOJg2Q4_CGZ6sxuaVPwiMhmQEUUh1sJN2a_jXW0jz6cKdyjh5WPrIdUJk8WBYc5MEN-AHpuzjT9kwR3qgUcgFF8ZK9CJGiME_r0_LR3SXLLPS4QJUbuoCIeq6Ek9uxs',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: body
+            });
+            console.log(response);
+            var responseJson = await response.json();
+            //console.log(JSON.stringify(responseJson));
 
-           }catch(e){
-               console.log(e);
-               return e;
-           }
-           return responseJson; 
-                                                    
-     },
 
-     getCountries : async() =>{
-         var url = 'http://18.191.97.114/api/defaults';
-           try{
-                     
-               var response = await fetch(url, { method: 'GET',
-                                                 headers: {
-                                                   'Accept': 'application/json',
-                                                   'Content-Type': 'application/json',
-                                                 }
-               });
-               
-               var responseJson = await response.json();
+        } catch (e) {
+            console.log(e);
+            return e;
+        }
+        return responseJson;
+
+    },
+
+    getDefaults: async () => {
+        var url = 'http://18.191.97.114/api/defaults';
+        try {
+
+            var response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            var responseJson = await response.json();
             //    console.log(JSON.stringify(responseJson));
-                                              
 
-           }catch(e){
-              
-               return e;
-           }
-           return responseJson; 
-                                                    
-     }
-          
- }
 
-    export {SaveProfile as default}; 
+        } catch (e) {
+
+            return e;
+        }
+        return responseJson;
+
+    }
+
+}
+
+export { SaveProfile as default }; 
