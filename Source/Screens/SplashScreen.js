@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
 import {
     View,
-    Text,
     Image,
     StyleSheet,
     AsyncStorage
 } from 'react-native';
-import { createStackNavigator } from 'react-navigation';
-import IntroductionPage from './IntroductionPage';
-import jobTitlesController from '../Controller/jobTitlesController';
+
 import SaveProfile from '../Controller/SaveProfile';
 import requestLocationPermission, { getLocation } from '../Controller/Location';
-//const job_titles_request = new Request("http://dev.time2staff.com/api/job_titles");
 
 export default class SplashScreen extends Component {
 
@@ -44,47 +40,26 @@ export default class SplashScreen extends Component {
         }
     }
 
-    getJobDetails = async () => {
-        var response = jobTitlesController.job_titles();
-    }
+    // getJobDetails = async () => {
+    //     var response = jobTitlesController.job_titles();
+    // }
 
     getDefaults = async () => {
         try {
             var response = await SaveProfile.getDefaults();
-            console.log("List of Countries::::::")
-            console.log(JSON.stringify(response.countries));
+            // console.log("List of Countries::::::")
+            // console.log(JSON.stringify(response.countries));
             await AsyncStorage.setItem('Countries', JSON.stringify(response.countries));
-            console.log("List of Timezones::::::")
-            console.log(JSON.stringify(response.timezones));            
+            // console.log("List of Timezones::::::")
+            // console.log(JSON.stringify(response.timezones));            
             await AsyncStorage.setItem('TimeZones', JSON.stringify(response.timezones));
-            console.log("List of Business categories::::::")
-            console.log(JSON.stringify(response.business_categories));            
+            // console.log("List of Business categories::::::")
+            // console.log(JSON.stringify(response.business_categories));            
             await AsyncStorage.setItem('BusinessCategories', JSON.stringify(response.business_categories));
         } catch (e) {
             console.log(e)
         }
     }
-    // getCountries = async () => {
-    //     try {
-    //         var response = await SaveProfile.getDefaults();
-    //         console.log("bfdfdfjkdjgkdjgkd::::::")
-    //         console.log(JSON.stringify(response.countries));
-    //         await AsyncStorage.setItem('Countries', JSON.stringify(response.countries));
-    //     } catch (e) {
-    //         console.log(e)
-    //     }
-    // }
-
-    // getBusinessTypes = async () => {
-    //     try {
-    //         var response = await SaveProfile.getDefaults();
-    //         console.log("Business Types::::")
-    //         console.log(JSON.stringify(response.business_categories))
-    //         await AsyncStorage.setItem('Business_Types', JSON.stringify(response.business_categories));
-    //     } catch (e) {
-    //         console.log(e)
-    //     }
-    // }
 
     render() {
         return (
@@ -98,7 +73,6 @@ export default class SplashScreen extends Component {
         );
     }
 }
-
 
 const styles = StyleSheet.create({
     container: {

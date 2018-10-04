@@ -52,6 +52,7 @@ export default class PersonalInfo extends Component {
       bussinessNameError: '',
       businessTypeError: '',
       lastnameError: '',
+      isValidPhone: true,
       phoneNumberError: '',
       address1Error: '',
       address2Error: '',
@@ -64,7 +65,6 @@ export default class PersonalInfo extends Component {
       checked: 0
     }
   }
-
 
   componentDidMount() {
     this.loadDefaultDetails();
@@ -146,12 +146,12 @@ export default class PersonalInfo extends Component {
     var countriesResponse = await AsyncStorage.getItem('Countries');
     var timezonesResponse = await AsyncStorage.getItem('TimeZones');
     var bussinessCatagoryResponse = await AsyncStorage.getItem('BusinessCategories')
-    console.log("List of Countries are::::::")
-    console.log(countriesResponse)
-    console.log("List of Timezones are::::::")
-    console.log(timezonesResponse)
-    console.log("List of Business categories are::::::")
-    console.log(bussinessCatagoryResponse)
+    // console.log("List of Countries are::::::")
+    // console.log(countriesResponse)
+    // console.log("List of Timezones are::::::")
+    // console.log(timezonesResponse)
+    // console.log("List of Business categories are::::::")
+    // console.log(bussinessCatagoryResponse)
     var resultCountries = JSON.parse(countriesResponse);
     var resultTimezones = JSON.parse(timezonesResponse);
     var resultBusinesses = JSON.parse(bussinessCatagoryResponse);
@@ -291,31 +291,12 @@ export default class PersonalInfo extends Component {
 
   saveDetails = async () => {
     const user_id = this.props.USER_ID();
-    console.log('user_id:'+user_id)
-    console.log('bussinessName:'+this.state.bussinessName)
-    console.log('business_id:'+this.state.business_id)
-    console.log('phoneNumber:'+this.state.phoneNumber)
-    console.log('phoneNumber:'+this.state.phoneNumber)
-    console.log("address1:"+this.state.address1)
-    console.log("city:"+this.state.city)
-    console.log("zipcode:"+this.state.zipcode)
-    console.log("state:"+this.state.state)
-    console.log("country_id:"+this.state.country_id)
-    console.log("timezone_id:"+this.state.timezone_id)
+    response = await SaveProfile.personalInfo(user_id, this.state.bussinessName, this.state.business_id, this.state.phoneNumber, this.state.address1, this.state.city, this.state.zipcode, this.state.state, this.state.country_id, this.state.timezone_id)
+    console.log(response.status)
+    if (response.status == 200) {
+      this.props.onNextPressed();
+    }
 
-    var response = await SaveProfile.personalInfo(user_id,
-      this.state.bussinessName,
-      this.state.business_id,
-      this.state.phoneNumber,
-      this.state.address1,
-      this.state.city,
-      this.state.zipcode,
-      this.state.state,
-      this.state.country_id,
-      this.state.timezone_id
-    )
-    console.log("https://www.time2staff.in.net/api/business/" + user_id);
-    console.log(response);
   }
 
   render() {
@@ -358,10 +339,16 @@ export default class PersonalInfo extends Component {
               <PhoneInput
                 style={styles.phoneInputStyle}
                 textStyle={{ color: 'grey' }}
-                ref='phone'
+                // ref='phone'
+                ref={ref => {
+                  this.phone = ref;
+                }}
                 initialCountry="no"
-                value={this.state.phoneNumber} />
-              {/* <FormValidationMessage>{this.state.phoneNumberError}</FormValidationMessage> */}
+                value={this.state.phoneNumber}
+                onChangePhoneNumber={(text) => {
+                  this.setState({ phoneNumber: text })
+                }} />
+              <FormValidationMessage>{this.state.phoneNumberError}</FormValidationMessage>
             </View>
             <View>
               < FormLabel labelStyle={styles.labelStyle}>Alt. Phone</FormLabel>
@@ -445,7 +432,6 @@ export default class PersonalInfo extends Component {
                   this.resetStateVar();
                   if (this.validate()) {
                     this.saveDetails();
-                    this.props.onNextPressed();
                   }
                 }}>
                 <Icon

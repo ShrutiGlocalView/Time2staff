@@ -249,8 +249,8 @@ export default class LoginScreen extends Component {
             USER_ID = response.user_data.id;
             this.props.navigation.navigate('CompleteProfileNavigator',
                 { USER_EMAIL: response.user_data.email, USER_ID: USER_ID })
-            console.log(USER_EMAIL);
-            console.log(USER_ID);
+            // console.log(USER_EMAIL);
+            // console.log(USER_ID);
 
         } else {
             console.log(response.error);

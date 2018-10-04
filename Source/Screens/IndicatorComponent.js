@@ -51,8 +51,8 @@ export default class IndicatorComponent extends Component {
 
     render() {
         const USER_EMAIL = this.props.navigation.getParam('USER_EMAIL', 'test email', 'USER_ID', 'NO_ID');
-        console.log("UsEr EmAiL:::" + USER_EMAIL); 
-        console.log("UsEr Id:::" + USER_ID); 
+        // console.log("UsEr EmAiL:::" + USER_EMAIL); 
+        // console.log("UsEr Id:::" + USER_ID); 
         const PAGES = [
             <PersonalInfo
                 USER_EMAIL = {()=> USER_EMAIL}
