@@ -55,11 +55,12 @@ export default class IndicatorComponent extends Component {
         // console.log("UsEr Id:::" + USER_ID); 
         const PAGES = [
             <PersonalInfo
-                USER_EMAIL = {()=> USER_EMAIL}
-                USER_ID = {() => USER_ID}
+                USER_EMAIL={() => USER_EMAIL}
+                USER_ID={() => USER_ID}
                 onNextPressed={() => this.viewPager.setPage(1)}
             />,
             <BillingInfo
+                USER_ID={() => USER_ID}
                 onNextPressed={() => { this.viewPager.setPage(2) }}
                 onPrevPressed={() => { this.viewPager.setPage(0) }}
             />,

@@ -7,86 +7,70 @@ import {
   Text,
   AsyncStorage
 } from 'react-native';
-import {
-  FormLabel,
-  FormInput,
-  FormValidationMessage
-} from 'react-native-elements';
-import ModalFilterPicker from 'react-native-modal-filter-picker';
 import { Icon } from 'react-native-elements';
+import { CreditCardInput, LiteCreditCardInput } from "react-native-credit-card-input";
+import SaveProfile from '../Controller/SaveProfile';
 
 export default class BillingInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      taxCountry: '',
-      taxPercent: '',
-      idNumber: '',
-      bankAccount: '',
-      textError: '',
-      visible: false,
-      countries: []
+      cardData: [],
+      cardNumber: '',
+      cardExpiry: '',
+      cardType: '',
+      holderName: '',
+      cardCVC: '',
     }
   }
+
+  _onChange = (formData) => {
+    console.log(JSON.stringify(formData));
+    console.log(JSON.stringify(formData.valid));
+    let cardData = formData.values;
+    console.log(cardData);
+    this.setState({ cardData: cardData });
+  };
+  _onFocus = (field) => console.log("focusing", field);
 
   componentDidMount() {
-    this.loadCountryDetails();
-
   }
 
-  _renderTextInput = (label, onChangeText, errorMessage, secureTextEntry) => {
-    //console.log(label,errorMessage);
-    return (<View>
-      <FormLabel labelStyle={styles.labelStyle}>{label}</FormLabel>
-      <FormInput onChangeText={(text) => { onChangeText(text) }}
-        placeholder={label}
-        placeholderTextColor='grey'
-        containerStyle={styles.textInputStyle} />
-      <FormValidationMessage>{errorMessage}</FormValidationMessage>
-
-    </View>
-    )
-  }
-
-  validate = (text) => {
+  validate = () => {
     var validate = true;
-    if (this.state.taxCountry == '') {
-
-      this.setState({ textError: 'Mandatory Field' });
+    if (!this.state.cardData.valid) {
+      console.log("number is not updated...")
       validate = false
     }
-    if (this.state.taxPercent == '') {
-      this.setState({ textError: 'Invalid Number' });
-      validate = false
-    }
-    if (this.state.idNumber == '') {
-
-      this.setState({ textError: 'Mandatory Field' });
-      validate = false
-    }
-    if (this.state.bankAccount == '') {
-
-      this.setState({ textError: 'Mandatory Field' });
-      validate = false
-    }
-
     return validate
   }
 
-  saveDetails = () => {
-    // alert("you pressed it!!!")
-    // this.props.navigation.navigate('professionalInfo')
-    this.props.onNextPressed();
-  }
-
-  loadCountryDetails = async () => {
-    var list = [];
-    var countries = await AsyncStorage.getItem('Countries');
-    countries = JSON.parse(countries);
-    countries.forEach((item, index) => {
-      list.push({ key: item.id, label: item.name })
-    })
-    this.setState({ countries: list });
+  saveDetails = async () => {
+    const user_id = this.props.USER_ID();
+    console.log("Form data is: ")
+    let yearprefix = '20';
+    let cardCVC = this.state.cardData.cvc;
+    let cardNumber = this.state.cardData.number;
+    let cardExpiry = this.state.cardData.expiry;
+    let holderName = this.state.cardData.name;
+    let cardType = this.state.cardData.type;
+    let date = [] = cardExpiry.split('/',2) 
+    let month = date[0];
+    let year = yearprefix + date[1]
+    // console.log("hfjdgdgdgdbh::::")
+    // console.log(cardCVC)
+    // console.log(cardNumber)
+    // console.log(cardExpiry)
+    // console.log(holderName)
+    // console.log(cardType)
+    // // console.log(cardExpiry.split('/',2));
+    // console.log(month);
+    // console.log(year);
+     response = await SaveProfile.cardDetails(user_id, cardCVC, cardNumber, month, year);
+     console.log(response);
+     if (response.status == 200) {
+      this.props.onNextPressed();
+    }
   }
 
   render() {
@@ -94,54 +78,33 @@ export default class BillingInfo extends Component {
       <View Style={styles.container}>
         <Text style={styles.header}>Billing Info</Text>
         <ScrollView>
-          <FormLabel labelStyle={styles.labelStyle}>Select a Tax Country</FormLabel>
-          <TouchableOpacity onPress={() => this.setState({ visible: true })}
-            style={{
-              width: '95%', borderBottomColor: '#265b91',
-              borderBottomWidth: 2,
-              padding: 0,
-              marginLeft: 10
-            }}>
-            <FormInput
-              editable={false}
-              placeholder='Tax Country'
-              placeholderTextColor='grey'
-              borderBottomColor='blue'
-            // containerStyle = {{backgroundColor:'transparent', borderColor: 'blue'}}
-            />
-          </TouchableOpacity>
-          <ModalFilterPicker
-            visible={this.state.visible}
-            onSelect={(picked) => {
-              console.log(picked);
-              var selectedValue = this.state.countries[--picked];
-              this.setState({ country: selectedValue });
-              console.log(this.state.country);
-              alert(this.state.country);
-            }}
-            onCancel={() => this.setState({ visible: false })}
-            options={this.state.countries}
-            selectedOption='0'
-          />
-          {this._renderTextInput('Tax Percentage',
-            (text) => {
-              this.setState({ taxPercent: text })
-            },
-            this.state.percentError,
-            false)
-          }
-          {this._renderTextInput('ID number',
-            (text) => {
-              this.setState({ idNumber: text })
-            },
-            this.state.textError,
-            false)}
-          {this._renderTextInput('Bank Account',
-            (text) => {
-              this.setState({ bankAccount: text })
-            },
-            this.state.textError,
-            false)}
+
+          <CreditCardInput
+            autoFocus
+            requiresName
+            requiresCVC
+
+            horizontalScroll={false}
+            cardScale={0.85}
+            labelStyle={styles.labelStyle}
+            inputStyle={styles.inputStyle}
+            validColor={"black"}
+            invalidColor={"red"}
+            placeholderColor={"darkgray"}
+            allowScroll={true}
+            onFocus={this._onFocus}
+            onChange={this._onChange} />
+
+          {/* <LiteCreditCardInput
+              autoFocus
+              
+              // inputStyle={s.input}
+              validColor={"black"}
+              invalidColor={"red"}
+              placeholderColor={"darkgray"}
+
+              onFocus={this._onFocus}
+              onChange={this._onChange} /> */}
 
         </ScrollView>
         <View style={{ flexDirection: 'row' }}>
@@ -160,11 +123,13 @@ export default class BillingInfo extends Component {
               />
             </TouchableOpacity>
           </View>
-          <View style={{ alignSelf: 'flex-end', bottom: 0, zIndex: 1000, left: 210, right: 10, marginTop: 30,  }}>
+          <View style={{ alignSelf: 'flex-end', bottom: 0, zIndex: 1000, left: 210, right: 10, marginTop: 30, }}>
             <TouchableOpacity
               onPress={() => {
-                // if (this.validate())
                 this.saveDetails()
+                // if (this.validate()){
+                //   this.saveDetails()
+                // }
               }}>
               <Icon
                 reverse
@@ -183,8 +148,8 @@ export default class BillingInfo extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ffffff', 
-    height: '100%' 
+    backgroundColor: '#ffffff',
+    height: '100%'
   },
   header: {
     fontSize: 25,
@@ -226,6 +191,15 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     padding: 0,
     margin: 0
+  },
+
+  label: {
+    color: "black",
+    fontSize: 12,
+  },
+  input: {
+    fontSize: 16,
+    color: "black",
   },
 
 });
