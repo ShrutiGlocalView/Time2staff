@@ -1,7 +1,7 @@
 var EmailController = {
     UserRegistration : async(UserEmail,UserPassword,UserType,FirstName,LastName) =>{
            try{
-               var url = 'http://18.191.97.114/api/users/register';
+               var url = 'https://time2staffdev.azurewebsites.net/backend/public/api/users/register';
                var body = JSON.stringify({email: UserEmail,
                                            password: UserPassword,
                                            user_type:UserType,
@@ -28,7 +28,7 @@ var EmailController = {
 
      UserLogin : async(UserEmail,UserPassword) =>{
            try{
-               var url = 'http://18.191.97.114/api/login';
+               var url = 'https://time2staffdev.azurewebsites.net/backend/public/api/login';
                var body = JSON.stringify({username: UserEmail,
                                            password: UserPassword,
                                          });  
@@ -53,7 +53,7 @@ var EmailController = {
 
     ForgotPassword: async (UserEmail) => {
         try {
-            var url = 'http://18.191.97.114/api/users/forgot-password';
+            var url = 'https://time2staffdev.azurewebsites.net/backend/public/api/users/forgot-password';
             var body = JSON.stringify({ email: UserEmail });
             console.log(body);
             var response = await fetch(url, {
@@ -78,7 +78,7 @@ var EmailController = {
      
     ResendEmail: async (UserEmail) => {
         try {
-            var url = 'https://www.time2staff.in.net/api/users/send-verification-mail';
+            var url = 'https://time2staffdev.azurewebsites.net/backend/public/api/users/send-verification-mail';
             var body = JSON.stringify({ email: UserEmail });
             console.log(body);
             var response = await fetch(url, {

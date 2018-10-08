@@ -183,8 +183,9 @@ export default class LoginScreen extends Component {
     }
 
     signup = async () => {
+        console.log("HELLO THERE>>>")
         var response;
-        response = await EmailController.UserRegistration(this.state.email, this.state.password, this.state.userRole, this.state.firstname, this.state.lastname);
+        response = await EmailController.UserRegistration(this.state.registerEmail, this.state.registerPassword, this.state.userRole, this.state.firstname, this.state.lastname);
         this.setState({
             signupButtonPressed: false
         })
@@ -200,14 +201,14 @@ export default class LoginScreen extends Component {
         this.validate();
         if (emailErrorVar != '') {
             this.setState({
-                emailError: emailErrorVar
+                registerEmailError: emailErrorVar
             })
         }
         // this.validate();
         console.log(response.errors.email);
         if (passwordErrorVar != '') {
             this.setState({
-                passwordError: passwordErrorVar
+                registerPasswordError: passwordErrorVar
             })
         }
         // this.validate();
@@ -346,7 +347,7 @@ export default class LoginScreen extends Component {
             validate = false
         }
         if (this.state.repeatPassword != this.state.registerPassword) {
-            this.setState({ passwordError: 'Password does not match' });
+            this.setState({ confirmPasswordError: 'Password does not match' });
             validate = false
         }
         return validate;
@@ -387,6 +388,7 @@ export default class LoginScreen extends Component {
         return (
             <View>
                 <TextInput onChangeText={(text) => { onChangeText(text) }}
+                    // editable = {this.state.loginButtonPressed ? false : true}
                     secureTextEntry={secureTextEntry}
                     placeholder={label}
                     placeholderTextColor='grey'
@@ -413,6 +415,7 @@ export default class LoginScreen extends Component {
                     fontSize={18}
                     title='Login'
                     loading={this.state.loginButtonPressed ? true : false}
+                    disabled = {this.state.loginButtonPressed ? true : false}
                     buttonStyle={{ backgroundColor: 'orange', marginBottom: 20, marginTop: 20 }}
                     onPress={() => {
                         this.resetStateVar();
@@ -461,6 +464,7 @@ export default class LoginScreen extends Component {
                     <Button
                         fontSize={12}
                         title='Sign up'
+                        disabled={this.state.signupButtonPressed ? true: false}
                         loading={this.state.signupButtonPressed ? true : false}
                         buttonStyle={{ backgroundColor: 'orange' }}
                         onPress={() => {
@@ -503,6 +507,7 @@ export default class LoginScreen extends Component {
                         <Button
                             fontSize={12}
                             title='Send now'
+                            disabled={this.state.forgotPasswordButtonPressed ? true : false}
                             loading={this.state.forgotPasswordButtonPressed ? true : false}
                             onPress={() => {
                                 this.setState({

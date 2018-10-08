@@ -47,14 +47,14 @@ export default class BillingInfo extends Component {
 
   saveDetails = async () => {
     const user_id = this.props.USER_ID();
-    console.log("Form data is: ")
+    // console.log("Form data is: ")
     let yearprefix = '20';
     let cardCVC = this.state.cardData.cvc;
     let cardNumber = this.state.cardData.number;
     let cardExpiry = this.state.cardData.expiry;
     let holderName = this.state.cardData.name;
     let cardType = this.state.cardData.type;
-    let date = [] = cardExpiry.split('/',2) 
+    let date = [] = cardExpiry.split('/', 2)
     let month = date[0];
     let year = yearprefix + date[1]
     // console.log("hfjdgdgdgdbh::::")
@@ -66,9 +66,9 @@ export default class BillingInfo extends Component {
     // // console.log(cardExpiry.split('/',2));
     // console.log(month);
     // console.log(year);
-     response = await SaveProfile.cardDetails(user_id, cardCVC, cardNumber, month, year);
-     console.log(response);
-     if (response.status == 200) {
+    response = await SaveProfile.cardDetails(user_id, cardCVC, cardNumber, month, year);
+    console.log(response);
+    if (response.status == 200) {
       this.props.onNextPressed();
     }
   }
@@ -94,17 +94,6 @@ export default class BillingInfo extends Component {
             allowScroll={true}
             onFocus={this._onFocus}
             onChange={this._onChange} />
-
-          {/* <LiteCreditCardInput
-              autoFocus
-              
-              // inputStyle={s.input}
-              validColor={"black"}
-              invalidColor={"red"}
-              placeholderColor={"darkgray"}
-
-              onFocus={this._onFocus}
-              onChange={this._onChange} /> */}
 
         </ScrollView>
         <View style={{ flexDirection: 'row' }}>

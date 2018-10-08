@@ -18,7 +18,7 @@ export default class ForgotPasswordDialog extends Component{
         super(props);
         this.state = {
            forgotPasswordMessage:'',
-           email : props.email 
+           email : props.email
         }
     }
 
@@ -59,6 +59,9 @@ export default class ForgotPasswordDialog extends Component{
     forgotPasssword = async () =>{
         response = await EmailController.ForgotPassword(this.state.email);
         if(response.hasOwnProperty('status')){
+            this.setState({
+                buttonPressed: false,
+            })
             Snackbar.show({
                 title: 'Reset password mail is sent.',
                 duration: Snackbar.LENGTH_INDEFINITE,

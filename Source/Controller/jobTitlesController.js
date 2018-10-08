@@ -1,6 +1,6 @@
 var jobTitlesController = {
   job_titles: async() => { 
-    var url = 'http://dev.time2staff.com/api/job_titles';
+    var url = 'https://time2staffdev.azurewebsites.net/backend/public/api/job_titles';
       try{
                 
           var response = await fetch(url, { method: 'POST',
