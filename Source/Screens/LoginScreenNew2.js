@@ -55,13 +55,15 @@ export default class LoginScreen extends Component {
             registerEmailError: '',
             passwordError: '',
             registerPasswordError: '',
-            confirmPasswordError: '' ,
+            confirmPasswordError: '',
             userType: ['Staff', 'Client'],
             userRole: 'staff',
             selectedButton: 'login',
             loginErrorMessage: '',
             forgotPasswordMessage: '',
             verifyEmailVisibility: false,
+            hidePasswordLogin: true,
+            hidePasswordSignup: true,
         }
     }
 
@@ -183,7 +185,6 @@ export default class LoginScreen extends Component {
     }
 
     signup = async () => {
-        console.log("HELLO THERE>>>")
         var response;
         response = await EmailController.UserRegistration(this.state.registerEmail, this.state.registerPassword, this.state.userRole, this.state.firstname, this.state.lastname);
         this.setState({
@@ -343,7 +344,7 @@ export default class LoginScreen extends Component {
             validate = false
         }
         if (this.state.repeatPassword == '') {
-            this.setState({ confirmPasswordError: 'Please reconfirm password'});
+            this.setState({ confirmPasswordError: 'Please reconfirm password' });
             validate = false
         }
         if (this.state.repeatPassword != this.state.registerPassword) {
@@ -400,22 +401,91 @@ export default class LoginScreen extends Component {
         )
     }
 
+    _renderPasswordInputLogin = (label, onChangeText, errorMessage, secureTextEntry, inlineImage) => {
+        return (
+            <View>
+                <View style={styles.textBoxBtnHolder}>
+                    <TextInput
+                        style={{ borderColor: 'gray', borderBottomWidth: 1, margin: 0, borderBottomColor: 'orange' }}
+                        onChangeText={(text) => { onChangeText(text) }}
+                        // editable = {this.state.loginButtonPressed ? false : true}
+                        secureTextEntry={secureTextEntry}
+                        placeholder={label}
+                        placeholderTextColor='grey'
+                        inlineImageLeft={inlineImage}
+                        inlineImagePadding={10}
+                        secureTextEntry={this.state.hidePasswordLogin} />
+                    <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.manageLoginPasswordVisibility}>
+                        <Icon name={(this.state.hidePasswordLogin) ? 'visibility' : 'visibility-off'} />
+                    </TouchableOpacity>
+                </View>
+                {/* <TextInput onChangeText={(text) => { onChangeText(text) }}
+                    // editable = {this.state.loginButtonPressed ? false : true}
+                    secureTextEntry={secureTextEntry}
+                    placeholder={label}
+                    placeholderTextColor='grey'
+                    inlineImageLeft={inlineImage}
+                    inlineImagePadding={10}
+                    style={{ borderColor: 'gray', borderBottomWidth: 1, margin: 0, borderBottomColor: 'orange' }} />
+                    <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.managePasswordVisibility}>
+                    <Icon name={(this.state.hidePassword) ? 'visibility' : 'visibility-off'} />
+                </TouchableOpacity> */}
+                <FormValidationMessage>{errorMessage}</FormValidationMessage>
+            </View>
+        )
+    }
+
+    _renderPasswordInputSignup = (label, onChangeText, errorMessage, secureTextEntry, inlineImage) => {
+        return (
+            <View>
+                <View style={styles.textBoxBtnHolder}>
+                    <TextInput
+                        style={{ borderColor: 'gray', borderBottomWidth: 1, margin: 0, borderBottomColor: 'orange' }}
+                        onChangeText={(text) => { onChangeText(text) }}
+                        // editable = {this.state.loginButtonPressed ? false : true}
+                        secureTextEntry={secureTextEntry}
+                        placeholder={label}
+                        placeholderTextColor='grey'
+                        inlineImageLeft={inlineImage}
+                        inlineImagePadding={10}
+                        secureTextEntry={this.state.hidePasswordSignup} />
+                    <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.manageSignupPasswordVisibility}>
+                        <Icon name={(this.state.hidePasswordSignup) ? 'visibility' : 'visibility-off'} />
+                    </TouchableOpacity>
+                </View>
+                {/* <TextInput onChangeText={(text) => { onChangeText(text) }}
+                    // editable = {this.state.loginButtonPressed ? false : true}
+                    secureTextEntry={secureTextEntry}
+                    placeholder={label}
+                    placeholderTextColor='grey'
+                    inlineImageLeft={inlineImage}
+                    inlineImagePadding={10}
+                    style={{ borderColor: 'gray', borderBottomWidth: 1, margin: 0, borderBottomColor: 'orange' }} />
+                    <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.managePasswordVisibility}>
+                    <Icon name={(this.state.hidePassword) ? 'visibility' : 'visibility-off'} />
+                </TouchableOpacity> */}
+                <FormValidationMessage>{errorMessage}</FormValidationMessage>
+            </View>
+        )
+    }
+
+
+
     renderLoginModule = () => {
         return (
             <View style={{ width: '100%', margin: 10 }}>
                 {this._renderTextInput('Email*',
                     (text) => { this.setState({ email: text }) },
                     this.state.emailError, false, 'email')}
-                {this._renderTextInput('Password*',
+                {this._renderPasswordInputLogin('Password*',
                     (text) => { this.setState({ password: text }) },
-                    this.state.passwordError, true, 'lock')}
+                    this.state.passwordError, this.state.hidePasswordLogin, 'lock')}
                 <FormValidationMessage>{this.state.loginErrorMessage}</FormValidationMessage>
-
                 <Button
                     fontSize={18}
                     title='Login'
                     loading={this.state.loginButtonPressed ? true : false}
-                    disabled = {this.state.loginButtonPressed ? true : false}
+                    disabled={this.state.loginButtonPressed ? true : false}
                     buttonStyle={{ backgroundColor: 'orange', marginBottom: 20, marginTop: 20 }}
                     onPress={() => {
                         this.resetStateVar();
@@ -457,14 +527,14 @@ export default class LoginScreen extends Component {
                         this.state.registerEmailError, false, 'email')}
                     {this._renderTextInput('Password',
                         (text) => { this.setState({ registerPassword: text }) },
-                        this.state.registerPasswordError, true, 'lock')}
-                    {this._renderTextInput('Confirm Password',
+                        this.state.registerPasswordError, this.state.hidePasswordSignup, 'lock')}
+                    {this._renderPasswordInputSignup('Confirm Password',
                         (text) => { this.setState({ repeatPassword: text }) },
                         this.state.confirmPasswordError, true, 'lock')}
                     <Button
                         fontSize={12}
                         title='Sign up'
-                        disabled={this.state.signupButtonPressed ? true: false}
+                        disabled={this.state.signupButtonPressed ? true : false}
                         loading={this.state.signupButtonPressed ? true : false}
                         buttonStyle={{ backgroundColor: 'orange' }}
                         onPress={() => {
@@ -522,6 +592,13 @@ export default class LoginScreen extends Component {
         )
     }
 
+    manageLoginPasswordVisibility = () => {
+        this.setState({ hidePasswordLogin: !this.state.hidePasswordLogin });
+    }
+
+    manageSignupPasswordVisibility = () => {
+        this.setState({ hidePasswordSignup: !this.state.hidePasswordSignup });
+    }
 }
 
 const styles = StyleSheet.create({
@@ -568,5 +645,38 @@ const styles = StyleSheet.create({
         padding: 0,
         margin: 0
 
-    }
+    },
+    visibilityBtn:
+    {
+        position: 'absolute',
+        right: 3,
+        height: 25,
+        width: 35,
+        padding: 5
+    },
+
+    btnImage:
+    {
+        resizeMode: 'contain',
+        height: '100%',
+        width: '100%'
+    },
+    textBoxBtnHolder:
+    {
+        position: 'relative',
+        alignSelf: 'stretch',
+        justifyContent: 'center'
+    },
+    textBox:
+    {
+        fontSize: 18,
+        alignSelf: 'stretch',
+        height: 45,
+        paddingRight: 45,
+        paddingLeft: 8,
+        borderWidth: 1,
+        paddingVertical: 0,
+        borderColor: 'grey',
+        borderRadius: 5
+    },
 })
