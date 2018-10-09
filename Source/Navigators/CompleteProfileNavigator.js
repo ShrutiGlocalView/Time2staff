@@ -5,12 +5,13 @@ import BillingInfo from '../Screens/BillingInfo';
 import ProfessionalInfo from '../Screens/ProfessionalInfo';
 import PersonalInfo from '../Screens/PersonalInfo';
 import IndicatorComponent from '../Screens/IndicatorComponent';
+import privacyPolicyScreen from '../Screens/PrivacyPolicyScreen';
 
 var CompleteProfileNavigator = createStackNavigator({
     // personalInfo: PersonalInfo,
     personalInfo: IndicatorComponent,
     billingInfo: BillingInfo,
-    professionalInfo: ProfessionalInfo,
+    privacyPolicy: privacyPolicyScreen
 },{
     headerMode: 'none'
 });

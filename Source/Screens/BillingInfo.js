@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Text,
-  AsyncStorage
+  AsyncStorage,
+  ActivityIndicator,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { CreditCardInput, LiteCreditCardInput } from "react-native-credit-card-input";
@@ -21,6 +22,7 @@ export default class BillingInfo extends Component {
       cardType: '',
       holderName: '',
       cardCVC: '',
+      isLoading: false,
     }
   }
 
@@ -68,12 +70,20 @@ export default class BillingInfo extends Component {
     // console.log(year);
     response = await SaveProfile.cardDetails(user_id, cardCVC, cardNumber, month, year);
     console.log(response);
+    this.setState({isLoading: false});
     if (response.status == 200) {
       this.props.onNextPressed();
     }
   }
 
   render() {
+    if (this.state.isLoading) {
+      return (
+        <View styles={[styles.ActivityIndicatorContainer, styles.horizontal]}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      )
+    }
     return (
       <View Style={styles.container}>
         <Text style={styles.header}>Billing Info</Text>
@@ -115,6 +125,7 @@ export default class BillingInfo extends Component {
           <View style={{ alignSelf: 'flex-end', bottom: 0, zIndex: 1000, left: 210, right: 10, marginTop: 30, }}>
             <TouchableOpacity
               onPress={() => {
+                this.setState({isLoading: true});
                 this.saveDetails()
                 // if (this.validate()){
                 //   this.saveDetails()
@@ -139,6 +150,15 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
     height: '100%'
+  },
+  ActivityIndicatorContainer: {
+    flex:1,
+    justifyContent: 'center'
+  },
+  horizontal: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 10
   },
   header: {
     fontSize: 25,

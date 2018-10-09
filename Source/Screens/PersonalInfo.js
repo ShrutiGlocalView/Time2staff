@@ -6,7 +6,8 @@ import {
   DatePickerAndroid,
   ScrollView,
   Text,
-  AsyncStorage
+  AsyncStorage,
+  ActivityIndicator,
 } from 'react-native';
 
 import {
@@ -62,7 +63,8 @@ export default class PersonalInfo extends Component {
       countryError: '',
       timezoneError: '',
       gender: ['Male', 'Female'],
-      checked: 0
+      checked: 0,
+      isLoading: false,
     }
   }
 
@@ -293,6 +295,7 @@ export default class PersonalInfo extends Component {
     const user_id = this.props.USER_ID();
     response = await SaveProfile.personalInfo(user_id, this.state.bussinessName, this.state.business_id, this.state.phoneNumber, this.state.address1, this.state.city, this.state.zipcode, this.state.state, this.state.country_id, this.state.timezone_id)
     console.log(response.status)
+    this.setState({ isLoading: false });
     if (response.status == 200) {
       this.props.onNextPressed();
     }
@@ -300,6 +303,14 @@ export default class PersonalInfo extends Component {
   }
 
   render() {
+    if (this.state.isLoading) {
+      return (
+        <View styles={[styles.ActivityIndicatorContainer, styles.horizontal]}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      )
+    }
+
     return (
       <View Style={styles.container}>
         <Text style={styles.header}>Personal Info</Text>
@@ -431,6 +442,7 @@ export default class PersonalInfo extends Component {
                 onPress={() => {
                   this.resetStateVar();
                   if (this.validate()) {
+                    this.setState({ isLoading: true });
                     this.saveDetails();
                   }
                 }}>
@@ -453,6 +465,15 @@ export default class PersonalInfo extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
+  },
+  ActivityIndicatorContainer: {
+    flex:1,
+    justifyContent: 'center'
+  },
+  horizontal: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 10
   },
   header: {
     fontSize: 25,

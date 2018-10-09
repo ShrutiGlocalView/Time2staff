@@ -7,6 +7,7 @@ import StepIndicator from 'react-native-step-indicator';
 import PersonalInfo from './PersonalInfo';
 import BillingInfo from './BillingInfo';
 import ProfessionalInfo from './ProfessionalInfo';
+import PrivacyPolicyScreen from './PrivacyPolicyScreen';
 
 
 
@@ -64,30 +65,30 @@ export default class IndicatorComponent extends Component {
                 onNextPressed={() => { this.viewPager.setPage(2) }}
                 onPrevPressed={() => { this.viewPager.setPage(0) }}
             />,
-            <ProfessionalInfo
-                onNextPressed={() => { console.log("pressed successfully...") }}
-                onPrevPressed={() => { this.viewPager.setPage(1) }}
+            // <ProfessionalInfo
+            //     onNextPressed={() => { console.log("pressed successfully...") }}
+            //     onPrevPressed={() => { this.viewPager.setPage(1) }}
+            // />
+            <PrivacyPolicyScreen 
+            onNextPressed={() => { console.log("pressed successfully...") }}
+            onPrevPressed={() => { this.viewPager.setPage(1) }}
             />
         ];
         return (
             <View style={styles.container}>
                 <View style={styles.stepIndicator}>
-                    <StepIndicator customStyles={firstIndicatorStyles}
+                    <StepIndicator
+                        customStyles={firstIndicatorStyles}
                         currentPosition={this.state.currentPage}
-                        labels={["Profile", "Billing\nDetails", "Professional\nDetails"]}
+                        labels={["Profile", "Billing\nDetails", "Agreement"]}
                         stepCount={3} />
                 </View>
                 <ViewPager
                     style={{ flexGrow: 1 }}
                     ref={(viewPager) => { this.viewPager = viewPager }}
                     onPageSelected={(page) => { this.setState({ currentPage: page.position }) }}
+                    onPageScroll={() => { console.log("sbcsbcsdb") }}
                 >
-                    {/* <View>
-                        {[<PersonalInfo onNextPressed={() => this.viewPager.setPage(1)} />,
-                        <BillingInfo />,
-                        <ProfessionalInfo />]}
-                    </View> */}
-
                     {PAGES.map((page) => this.renderViewPagerPage(page))}
                 </ViewPager>
             </View>

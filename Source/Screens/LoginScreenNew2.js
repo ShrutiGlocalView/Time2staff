@@ -64,6 +64,7 @@ export default class LoginScreen extends Component {
             verifyEmailVisibility: false,
             hidePasswordLogin: true,
             hidePasswordSignup: true,
+            checked: 0
         }
     }
 
@@ -242,18 +243,24 @@ export default class LoginScreen extends Component {
                         response = EmailController.ResendEmail(this.state.email);
                     }
                 })
+                
             });
         } else if (response.status == 'success') {
             this.setState({
                 loginButtonPressed: false
             })
-            USER_EMAIL = response.user_data.email;
-            USER_ID = response.user_data.id;
-            this.props.navigation.navigate('CompleteProfileNavigator',
-                { USER_EMAIL: response.user_data.email, USER_ID: USER_ID })
-            // console.log(USER_EMAIL);
-            // console.log(USER_ID);
-
+            // console.log("===========================================");
+            // console.log(response.user_data.roles[0].title);
+            if (response.user_data.roles[0].title == 'Staff') {
+                console.log("comig sooon...");
+            } else {
+                USER_EMAIL = response.user_data.email;
+                USER_ID = response.user_data.id;
+                this.props.navigation.navigate('CompleteProfileNavigator',
+                    { USER_EMAIL: response.user_data.email, USER_ID: USER_ID })
+                // console.log(USER_EMAIL);
+                // console.log(USER_ID);
+            }
         } else {
             console.log(response.error);
         }
@@ -419,17 +426,6 @@ export default class LoginScreen extends Component {
                         <Icon name={(this.state.hidePasswordLogin) ? 'visibility' : 'visibility-off'} />
                     </TouchableOpacity>
                 </View>
-                {/* <TextInput onChangeText={(text) => { onChangeText(text) }}
-                    // editable = {this.state.loginButtonPressed ? false : true}
-                    secureTextEntry={secureTextEntry}
-                    placeholder={label}
-                    placeholderTextColor='grey'
-                    inlineImageLeft={inlineImage}
-                    inlineImagePadding={10}
-                    style={{ borderColor: 'gray', borderBottomWidth: 1, margin: 0, borderBottomColor: 'orange' }} />
-                    <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.managePasswordVisibility}>
-                    <Icon name={(this.state.hidePassword) ? 'visibility' : 'visibility-off'} />
-                </TouchableOpacity> */}
                 <FormValidationMessage>{errorMessage}</FormValidationMessage>
             </View>
         )
@@ -453,17 +449,6 @@ export default class LoginScreen extends Component {
                         <Icon name={(this.state.hidePasswordSignup) ? 'visibility' : 'visibility-off'} />
                     </TouchableOpacity>
                 </View>
-                {/* <TextInput onChangeText={(text) => { onChangeText(text) }}
-                    // editable = {this.state.loginButtonPressed ? false : true}
-                    secureTextEntry={secureTextEntry}
-                    placeholder={label}
-                    placeholderTextColor='grey'
-                    inlineImageLeft={inlineImage}
-                    inlineImagePadding={10}
-                    style={{ borderColor: 'gray', borderBottomWidth: 1, margin: 0, borderBottomColor: 'orange' }} />
-                    <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.managePasswordVisibility}>
-                    <Icon name={(this.state.hidePassword) ? 'visibility' : 'visibility-off'} />
-                </TouchableOpacity> */}
                 <FormValidationMessage>{errorMessage}</FormValidationMessage>
             </View>
         )
