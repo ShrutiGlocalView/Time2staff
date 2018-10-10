@@ -65,6 +65,7 @@ export default class PrivacyPolicyScreen extends Component {
                             checkedColor='#ff7f2a'
                             checked={this.state.checked}
                             onPress={() => this.setState({ checked: !this.state.checked })}
+                            iconRight= {true}
                         />
 
                 </ScrollView>

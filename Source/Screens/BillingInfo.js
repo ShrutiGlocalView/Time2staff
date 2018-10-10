@@ -5,10 +5,9 @@ import {
   TouchableOpacity,
   ScrollView,
   Text,
-  AsyncStorage,
   ActivityIndicator,
 } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { Icon, FormValidationMessage } from 'react-native-elements';
 import { CreditCardInput, LiteCreditCardInput } from "react-native-credit-card-input";
 import SaveProfile from '../Controller/SaveProfile';
 
@@ -23,25 +22,37 @@ export default class BillingInfo extends Component {
       holderName: '',
       cardCVC: '',
       isLoading: false,
+      isCardDataValid: false,
+      errorMessage: '',
     }
   }
 
   _onChange = (formData) => {
     console.log(JSON.stringify(formData));
-    console.log(JSON.stringify(formData.valid));
     let cardData = formData.values;
+    let isCardDataValid = formData.valid;
     console.log(cardData);
-    this.setState({ cardData: cardData });
+    this.setState({
+      cardData: cardData,
+      isCardDataValid: isCardDataValid
+    });
   };
   _onFocus = (field) => console.log("focusing", field);
 
   componentDidMount() {
   }
 
+  resetStateVar = () => {
+    this.setState({ errorMessage: '' })
+  }
+
   validate = () => {
     var validate = true;
-    if (!this.state.cardData.valid) {
-      console.log("number is not updated...")
+    console.log("validation message is:::")
+    console.log(this.state.isCardDataValid)
+    if (!this.state.isCardDataValid) {
+      console.log("Invalid inputs")
+      this.setState({ errorMessage: 'Invalid inputs' })
       validate = false
     }
     return validate
@@ -70,7 +81,7 @@ export default class BillingInfo extends Component {
     // console.log(year);
     response = await SaveProfile.cardDetails(user_id, cardCVC, cardNumber, month, year);
     console.log(response);
-    this.setState({isLoading: false});
+    this.setState({ isLoading: false });
     if (response.status == 200) {
       this.props.onNextPressed();
     }
@@ -93,54 +104,63 @@ export default class BillingInfo extends Component {
             autoFocus
             requiresName
             requiresCVC
-
             horizontalScroll={false}
             cardScale={0.85}
             labelStyle={styles.labelStyle}
-            inputStyle={styles.inputStyle}
+            // inputStyle={styles.inputStyle}
             validColor={"black"}
             invalidColor={"red"}
             placeholderColor={"darkgray"}
             allowScroll={true}
             onFocus={this._onFocus}
             onChange={this._onChange} />
+          <FormValidationMessage>{this.state.errorMessage}</FormValidationMessage>
 
+
+          <View style={styles.bottomStyle}>
+            <View style={styles.buttonLeft}>
+              <TouchableOpacity
+                onPress={() => {
+                  this.resetStateVar();
+                  this.props.onPrevPressed();
+                }}>
+                <Icon
+                  reverse
+                  name='arrow-left'
+                  type='material-community'
+                  color='#ff7f2a'
+                  size={25}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.buttonCenter}>
+              <TouchableOpacity
+                onPress={() => {
+                  this.props.onNextPressed();
+                }}>
+                <Text style={styles.buttonCenterText}>Skip this step</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.buttonRigth}>
+              <TouchableOpacity
+                onPress={() => {
+                  this.resetStateVar();
+                  if (this.validate()) {
+                    this.setState({ isLoading: true });
+                    this.saveDetails()
+                  }
+                }}>
+                <Icon
+                  reverse
+                  name='arrow-right'
+                  type='material-community'
+                  color='#ff7f2a'
+                  size={25}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
         </ScrollView>
-        <View style={{ flexDirection: 'row' }}>
-          <View style={{ alignSelf: 'flex-start', bottom: 0, zIndex: 1000, left: 10, marginTop: 30, marginBottom: 0 }}>
-            <TouchableOpacity
-              onPress={() => {
-                // this.props.navigation.goBack();
-                this.props.onPrevPressed();
-              }}>
-              <Icon
-                reverse
-                name='arrow-left'
-                type='material-community'
-                color='#ff7f2a'
-                size={25}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={{ alignSelf: 'flex-end', bottom: 0, zIndex: 1000, left: 210, right: 10, marginTop: 30, }}>
-            <TouchableOpacity
-              onPress={() => {
-                this.setState({isLoading: true});
-                this.saveDetails()
-                // if (this.validate()){
-                //   this.saveDetails()
-                // }
-              }}>
-              <Icon
-                reverse
-                name='arrow-right'
-                type='material-community'
-                color='#ff7f2a'
-                size={25}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
       </View>
     )
   }
@@ -149,10 +169,9 @@ export default class BillingInfo extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
-    height: '100%'
   },
   ActivityIndicatorContainer: {
-    flex:1,
+    flex: 1,
     justifyContent: 'center'
   },
   horizontal: {
@@ -164,51 +183,40 @@ const styles = StyleSheet.create({
     fontSize: 25,
     margin: 10
   },
-  logo: {
-    height: '40%',
-    width: '40%',
-  },
-  button: {
-    height: 60,
-    borderRadius: 30,
-    marginBottom: 50
-  },
-  buttonContainer: {
-    backgroundColor: "transparent",
-    marginTop: 20,
-    width: '90%'
-  },
-  signIn: {
-    color: '#265b91',
-    fontSize: 20,
-    textDecorationLine: 'underline'
-  },
-  picker: {
-    width: '25%',
-    backgroundColor: 'white',
-    marginHorizontal: 0,
-    marginVertical: 0
-  },
   labelStyle: {
     margin: 0,
     padding: 0,
     color: '#265b91',
     fontSize: 18
   },
-  textInputStyle: {
-    borderBottomColor: '#265b91',
-    borderBottomWidth: 2,
-    padding: 0,
-    margin: 0
+  bottomStyle: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginBottom: 110
   },
-
-  label: {
-    color: "black",
-    fontSize: 12,
+  buttonLeft: {
+    alignSelf: 'flex-start',
+    bottom: 0,
+    zIndex: 1000,
+    marginTop: 30,
+    marginBottom: 0
   },
-  input: {
-    fontSize: 16,
-    color: "black",
+  buttonCenter: {
+    alignSelf: 'center',
+    bottom: 0,
+    zIndex: 1000,
+    marginTop: 30,
   },
-
+  buttonRigth: {
+    alignSelf: 'flex-end',
+    bottom: 0,
+    zIndex: 1000,
+    marginTop: 30,
+  },
+  buttonCenterText: {
+    backgroundColor: '#ff7f2a',
+    padding: 15,
+    color: '#ffffff',
+    borderRadius: 25
+  }
 });

@@ -51,7 +51,7 @@ export default class IndicatorComponent extends Component {
     }
 
     render() {
-        const USER_EMAIL = this.props.navigation.getParam('USER_EMAIL', 'test email', 'USER_ID', 'NO_ID');
+        const USER_EMAIL = this.props.navigation.getParam('USER_EMAIL', 'test email', 'USER_ID', 'NO_ID',);
         // console.log("UsEr EmAiL:::" + USER_EMAIL); 
         // console.log("UsEr Id:::" + USER_ID); 
         const PAGES = [
@@ -69,7 +69,7 @@ export default class IndicatorComponent extends Component {
             //     onNextPressed={() => { console.log("pressed successfully...") }}
             //     onPrevPressed={() => { this.viewPager.setPage(1) }}
             // />
-            <PrivacyPolicyScreen 
+            <PrivacyPolicyScreen
             onNextPressed={() => { console.log("pressed successfully...") }}
             onPrevPressed={() => { this.viewPager.setPage(1) }}
             />
