@@ -78,7 +78,7 @@ export default class BillingInfo extends Component {
     // console.log(cardType)
     // // console.log(cardExpiry.split('/',2));
     // console.log(month);
-    // console.log(year);
+    // console.log(year);react-native sta
     response = await SaveProfile.cardDetails(user_id, cardCVC, cardNumber, month, year);
     console.log(response);
     this.setState({ isLoading: false });

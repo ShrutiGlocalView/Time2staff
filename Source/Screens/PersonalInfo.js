@@ -111,10 +111,10 @@ export default class PersonalInfo extends Component {
       this.setState({ cityError: 'Please enter city or region' })
       validate = false;
     }
-    if (this.state.state == '') {
-      this.setState({ stateError: 'Please enter state' })
-      validate = false;
-    }
+    // if (this.state.state == '') {
+    //   this.setState({ stateError: 'Please enter state' })
+    //   validate = false;
+    // }
     if (this.state.zipcode == '') {
       this.setState({ zipcodeError: 'Please enter zipcode' })
       validate = false;
@@ -122,7 +122,7 @@ export default class PersonalInfo extends Component {
     if (this.state.country == '') {
       this.setState({ countryError: 'Please select a country' })
       validate = false;
-    }
+    } 
     if (this.state.timezone == '') {
       this.setState({ timezoneError: 'Please select a time zone' })
       validate = false;

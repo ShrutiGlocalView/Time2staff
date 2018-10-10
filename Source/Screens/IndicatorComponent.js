@@ -51,9 +51,10 @@ export default class IndicatorComponent extends Component {
     }
 
     render() {
-        const USER_EMAIL = this.props.navigation.getParam('USER_EMAIL', 'test email', 'USER_ID', 'NO_ID',);
+        const USER_EMAIL = this.props.navigation.getParam('USER_EMAIL', 'test email', 'USER_ID', 'NO_ID', 'TERMS', 'test terms');
         // console.log("UsEr EmAiL:::" + USER_EMAIL); 
-        // console.log("UsEr Id:::" + USER_ID); 
+        // console.log("UsEr Id:::" + USER_ID);
+        // console.log("Terms are:::" + TERMS);
         const PAGES = [
             <PersonalInfo
                 USER_EMAIL={() => USER_EMAIL}
@@ -70,8 +71,9 @@ export default class IndicatorComponent extends Component {
             //     onPrevPressed={() => { this.viewPager.setPage(1) }}
             // />
             <PrivacyPolicyScreen
-            onNextPressed={() => { console.log("pressed successfully...") }}
-            onPrevPressed={() => { this.viewPager.setPage(1) }}
+                TERMS={() => TERMS}
+                onNextPressed={() => { console.log("pressed successfully...") }}
+                onPrevPressed={() => { this.viewPager.setPage(1) }}
             />
         ];
         return (

@@ -7,7 +7,9 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { Icon, CheckBox } from 'react-native-elements';
+// import HTML from 'react-native-render-html';
 
+// const terms = this.props.TERMS();
 
 export default class PrivacyPolicyScreen extends Component {
     constructor(props) {
@@ -18,11 +20,28 @@ export default class PrivacyPolicyScreen extends Component {
         }
     }
 
+    componentDidMount() {
+        console.log("Hello ComponentDidMount...")
+        const terms = this.props.TERMS();
+        console.log(terms);
+        this.setState({policyText: terms});
+    }
+
+    saveDetails = () => {
+        if(this.state.checked){
+            console.log("Hello world...")
+        alert("Thank you for registrating with us.")
+        }else{
+            alert("You need to agree our terms and conditions first.")
+        }
+    }
+
     render() {
         return (
             <View style={{ backgroundColor: '#ffffff', height: '100%' }}>
                 <Text style={styles.header}>Terms and Conditions</Text>
                 <ScrollView>
+                {/* <HTML html={this.state.policyText} /> */}
                     {/* <Text>{this.state.policyText}</Text> */}
                     <Text style={{ margin: 10, padding: 10 }}>
                         1. The Parties.
@@ -57,16 +76,16 @@ export default class PrivacyPolicyScreen extends Component {
 
     "Shift Service Fee" means the total fee to be paid by the Customer for the Shift Services;
                     </Text>
-                    
-                        <CheckBox
-                            title='I accept the Terms and Conditions'
-                            textStyle= {{marginLeft: 20, paddingLeft: 10}}
-                            containerStyle ={{borderWidth: 1,}}
-                            checkedColor='#ff7f2a'
-                            checked={this.state.checked}
-                            onPress={() => this.setState({ checked: !this.state.checked })}
-                            iconRight= {true}
-                        />
+
+                    <CheckBox
+                        title='I accept the Terms and Conditions'
+                        textStyle={{ marginLeft: 20, paddingLeft: 10 }}
+                        containerStyle={{ borderWidth: 1, }}
+                        checkedColor='#ff7f2a'
+                        checked={this.state.checked}
+                        onPress={() => this.setState({ checked: !this.state.checked })}
+                        iconRight={true}
+                    />
 
                 </ScrollView>
                 <View style={{ flexDirection: 'row' }}>
@@ -89,8 +108,8 @@ export default class PrivacyPolicyScreen extends Component {
                         <TouchableOpacity
                             onPress={() => {
                                 // if (this.validate())
-                                // this.saveDetails()
-                                this.props.onNextPressed();
+                                this.saveDetails()
+                                // this.props.onNextPressed();
                             }}>
                             <Icon
                                 reverse
