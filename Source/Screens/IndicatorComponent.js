@@ -8,7 +8,7 @@ import PersonalInfo from './PersonalInfo';
 import BillingInfo from './BillingInfo';
 import ProfessionalInfo from './ProfessionalInfo';
 import PrivacyPolicyScreen from './PrivacyPolicyScreen';
-
+import HomeStack from '../Navigators/HomeStack';
 
 
 const firstIndicatorStyles = {
@@ -72,7 +72,10 @@ export default class IndicatorComponent extends Component {
             // />
             <PrivacyPolicyScreen
                 TERMS={() => TERMS}
-                onNextPressed={() => { console.log("pressed successfully...") }}
+                onNextPressed={() => {
+                    console.log("pressed successfully...")
+                    this.props.navigation.navigate('thankyouScreen')
+                }}
                 onPrevPressed={() => { this.viewPager.setPage(1) }}
             />
         ];

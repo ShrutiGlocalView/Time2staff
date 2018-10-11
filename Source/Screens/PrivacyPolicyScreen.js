@@ -7,7 +7,9 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { Icon, CheckBox } from 'react-native-elements';
-// import HTML from 'react-native-render-html';
+import HTML from 'react-native-render-html';
+import HomeStack from '../Navigators/HomeStack';
+
 
 // const terms = this.props.TERMS();
 
@@ -21,17 +23,24 @@ export default class PrivacyPolicyScreen extends Component {
     }
 
     componentDidMount() {
-        console.log("Hello ComponentDidMount...")
-        const terms = this.props.TERMS();
-        console.log(terms);
-        this.setState({policyText: terms});
+        console.log("Hello ComponentDidMount...");
+        // var terms = `this.props.TERMS()`;
+        // console.log(typeof terms);
+        //     const terms = `
+        //     <h1 style="color: red">This HTML snippet is now rendered with native components !</h1>
+        //     <h2>Enjoy a webview-free and blazing fast application</h2>
+        //     <em style="textAlign: center;">Look at how happy this native cat is</em>
+        // `;
+        // console.log(terms);
+        // this.setState({policyText: terms});
     }
 
     saveDetails = () => {
-        if(this.state.checked){
+        if (this.state.checked) {
             console.log("Hello world...")
-        alert("Thank you for registrating with us.")
-        }else{
+            // alert("Thank you for registrating with us.")
+            this.props.onNextPressed();
+        } else {
             alert("You need to agree our terms and conditions first.")
         }
     }
@@ -41,7 +50,8 @@ export default class PrivacyPolicyScreen extends Component {
             <View style={{ backgroundColor: '#ffffff', height: '100%' }}>
                 <Text style={styles.header}>Terms and Conditions</Text>
                 <ScrollView>
-                {/* <HTML html={this.state.policyText} /> */}
+                    {/* <HTML html={this.state.policyText}
+                decodeEntities= {false} /> */}
                     {/* <Text>{this.state.policyText}</Text> */}
                     <Text style={{ margin: 10, padding: 10 }}>
                         1. The Parties.
@@ -109,7 +119,7 @@ export default class PrivacyPolicyScreen extends Component {
                             onPress={() => {
                                 // if (this.validate())
                                 this.saveDetails()
-                                // this.props.onNextPressed();
+                                
                             }}>
                             <Icon
                                 reverse
