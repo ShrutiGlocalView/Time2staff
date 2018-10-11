@@ -18,7 +18,7 @@ export default class ThankYouScreen extends Component {
         {
             setTimeout( ()=> {
             this.stateChange();       
-            }, 1git000);
+            }, 1000);
         }
     }
 
