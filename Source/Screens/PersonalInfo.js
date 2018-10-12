@@ -9,7 +9,7 @@ import {
   AsyncStorage,
   ActivityIndicator,
 } from 'react-native';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   FormLabel,
   FormInput,
@@ -314,7 +314,7 @@ export default class PersonalInfo extends Component {
     return (
       <View Style={styles.container}>
         <Text style={styles.header}>Personal Info</Text>
-        <ScrollView >
+        <ScrollView>
           <View>
             <ProfileImagePicker />
             {this._renderTextInput('Business Name',

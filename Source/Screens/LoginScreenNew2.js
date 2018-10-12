@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     Modal,
     ScrollView,
+    AsyncStorage,
 } from 'react-native';
 import {
     Button,
@@ -243,7 +244,7 @@ export default class LoginScreen extends Component {
                         response = EmailController.ResendEmail(this.state.email);
                     }
                 })
-                
+
             });
         } else if (response.status == 'success') {
             this.setState({
@@ -253,15 +254,16 @@ export default class LoginScreen extends Component {
             // console.log(response.user_data.roles[0].title);
             if (response.user_data.roles[0].title == 'Staff') {
                 console.log("comig sooon...");
+                alert("You are logged in as a staff. Staff role is under development.")
             } else {
                 USER_EMAIL = response.user_data.email;
                 USER_ID = response.user_data.id;
                 TERMS = response.user_data.terms;
-                this.props.navigation.navigate('CompleteProfileNavigator',
-                    { USER_EMAIL: response.user_data.email, USER_ID: USER_ID, TERMS: TERMS})
+                this.props.navigation.navigate('App',
+                    { USER_EMAIL: response.user_data.email, USER_ID: USER_ID, TERMS: TERMS });
                 // console.log(USER_EMAIL);
                 // console.log(USER_ID);
-                console.log("Terms:" + TERMS)
+                // console.log("Terms:" + TERMS)
             }
         } else {
             console.log(response.error);

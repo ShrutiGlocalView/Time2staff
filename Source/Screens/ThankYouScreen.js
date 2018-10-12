@@ -8,30 +8,30 @@ import { Icon, Button } from 'react-native-elements'
 // import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class ThankYouScreen extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { isFinished: false }
-    }
+    // constructor(props) {
+    //     super(props);
+    //     this.state = { isFinished: false }
+    // }
 
-    componentWillMount(){
-        if (1) //something we can check to show splash screen
-        {
-            setTimeout( ()=> {
-            this.stateChange();       
-            }, 1000);
-        }
-    }
+    // componentWillMount(){
+    //     if (1) //something we can check to show splash screen
+    //     {
+    //         setTimeout( ()=> {
+    //         this.stateChange();       
+    //         }, 1000);
+    //     }
+    // }
 
-    stateChange = () => {
-        this.setState({isFinished: true})
-    }
+    // stateChange = () => {
+    //     this.setState({isFinished: true})
+    // }
 
     render() {
         return (
             <View style={styles.container}>
                 <Icon
-                    name={this.state.isFinished ? 'check' : 'circle'}
-                    type={this.state.isFinished ? 'simple-line-icon' : 'feather'}
+                    name='check'
+                    type='simple-line-icon'
                     color='#ef820d'
                     size={100} />
                 <View>
@@ -45,6 +45,7 @@ export default class ThankYouScreen extends Component {
                         backgroundColor='#ef820d'
                         buttonStyle={{width: 200, height: 40, }}
                         onPress={()=> {
+                            this.props.navigation.pop();
                             this.props.navigation.navigate('homeStack')
                         }} />
             </View>

@@ -12,9 +12,9 @@ import CompleteProfileNavigator from './CompleteProfileNavigator'
     LoginScreen:{
       screen:LoginScreen
     },
-    CompleteProfileNavigator: {
-      screen: CompleteProfileNavigator
-    }
+    // CompleteProfileNavigator: {
+    //   screen: CompleteProfileNavigator
+    // }
    },{
     initialRouteName:'LoginScreen', 
     headerMode:'none'

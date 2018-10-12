@@ -13,7 +13,8 @@
       android:icon="@mipmap/ic_launcher"
       android:allowBackup="false"
       android:theme="@style/AppTheme"
-      android:name="com.time2staff.MainApplication">
+      android:name="com.time2staff.MainApplication"
+      android:windowSoftInputMode="stateVisible|adjustPan">
 
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"
@@ -23,8 +24,7 @@
             android:value="AIzaSyBrTbJZrbH7t3lLN23O_IpHOz5Pm1d6GcA"/>
 
         <activity android:name="com.facebook.FacebookActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            
             android:label="@string/app_name" />
         <activity
             android:name="com.facebook.CustomTabActivity"
