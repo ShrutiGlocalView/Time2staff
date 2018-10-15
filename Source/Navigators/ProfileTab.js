@@ -2,10 +2,10 @@ import React from 'react';
 import { createMaterialTopTabNavigator } from 'react-navigation';
 import CompleteLogin from '../Screens/CompleteLogin';
 import BillingInfo from '../Screens/BillingInfo';
-import ProfessionalInfo from '../Screens/ProfessionalInfo';
+//import ProfessionalInfo from '../Screens/ProfessionalInfo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import AddNewSkills from '../Screens/AddNewSkills';
-import ProfessionalInfoTab from '../Screens/ProfessionalInfoTab';
+import ProfessionalInfoTab from './ProfessionalInfoTab';
+
 
 var ProfileTab = createMaterialTopTabNavigator(
   {

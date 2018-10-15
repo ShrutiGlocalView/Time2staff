@@ -11,11 +11,11 @@ var jobTitlesController = {
           });
           
           var responseJson = await response.json();
-          console.log(JSON.stringify(responseJson));
+          //console.log(JSON.stringify(responseJson));
                                          
 
       }catch(e){
-        console.log(e);
+        console.log('error '+e);
           return e;
       }
       return responseJson; 
