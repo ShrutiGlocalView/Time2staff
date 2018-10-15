@@ -4,11 +4,18 @@ import {
 import BillingInfo from '../Screens/BillingInfo';
 import ProfessionalInfo from '../Screens/ProfessionalInfo';
 import PersonalInfo from '../Screens/PersonalInfo';
+import IndicatorComponent from '../Screens/IndicatorComponent';
+import privacyPolicyScreen from '../Screens/PrivacyPolicyScreen';
+import ThankyouScreen from '../Screens/ThankYouScreen';
+import HomeStack from './HomeStack';
 
 var CompleteProfileNavigator = createStackNavigator({
-    personalInfo: PersonalInfo,
+    // personalInfo: PersonalInfo,
+    personalInfo: IndicatorComponent,
     billingInfo: BillingInfo,
-    professionalInfo: ProfessionalInfo,
+    privacyPolicy: privacyPolicyScreen,
+    thankyouScreen: ThankyouScreen,
+    homeStack: HomeStack
 },{
     headerMode: 'none'
 });

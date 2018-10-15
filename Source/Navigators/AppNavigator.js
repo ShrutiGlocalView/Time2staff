@@ -4,11 +4,10 @@ import {
   StyleSheet
 } from 'react-native';
 import {
-  createBottomTabNavigator,
+  
   createDrawerNavigator
 } from 'react-navigation';
 import IntroductionPage from '../Screens/IntroductionPage';
-import LoginPage from '../Screens/LoginPage';
 import HomePage from '../Screens/HomePage';
 import Profile from '../Screens/Profile';
   const AppNavigator = createDrawerNavigator({

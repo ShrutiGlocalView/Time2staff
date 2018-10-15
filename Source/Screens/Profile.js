@@ -7,7 +7,7 @@ import {Avatar} from 'react-native-elements';
 import ProfileTab from '../Navigators/ProfileTab';
 //import ImagePicker from 'react-native-image-picker';
 var ImagePicker = require('react-native-image-picker');
-
+//Not in use right now but can be used in future for 
 export default class IntroductionPage extends Component {
   constructor(props) {
     super(props);

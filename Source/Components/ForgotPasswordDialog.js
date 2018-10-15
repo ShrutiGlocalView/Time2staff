@@ -12,74 +12,91 @@ import {
 import EmailController from '../Controller/EmailController';
 import { Button, Icon, FormInput, FormValidationMessage, FormLabel,SocialIcon } from 'react-native-elements';
 import Snackbar from 'react-native-snackbar';
+import LoginService from '../Controller/LoginCalls';
 
 export default class ForgotPasswordDialog extends Component{
     constructor(props){
         super(props);
         this.state = {
            forgotPasswordMessage:'',
-           email : props.email 
+           linkedEmail:props.email,
+           sendLinkButtonPressed:false 
         }
     }
 
     render(){
-        return( <Modal
-                    animationType="slide"
-                    transparent={false}
-                    visible={this.props.modalVisible}
-                    onRequestClose={() => {
-                        this.props.setModalVisible(!this.props.modalVisible);
-                        this.setState({forgotPasswordMessage: ''})
-                    }}>
-                    <View style={{margin: 22}}>
+        return(<View style={{margin: 22}}>
                             <View style={{ width: '100%', margin: 10 }}>
                                 <Text style={{fontSize: 20}}>Forgot Password</Text>
                                 <Text style={{marginTop: 10}}>Please enter your email address. You will receive a link to create a new password via email.</Text>
                                 <TextInput
                                     style={{ borderColor: 'gray', borderBottomWidth: 1, margin: 10, marginBottom: 2 }}
-                                    onChangeText={(email) => this.setState({ email })}
-                                    value={this.props.email}
+                                    onChangeText={(text) => this.setState({ linkedEmail:text})}
+                                    value={this.state.linkedEmail}
                                     placeholder='Email address'
                                     inlineImageLeft='email'
                                     inlineImagePadding={10} />
                                 <FormValidationMessage>{this.state.forgotPasswordMessage}</FormValidationMessage>
                                 <Button
+                                    loading = {this.state.sendLinkButtonPressed}
                                     fontSize={12}
                                     title='Send now'
-                                    onPress={() => {
-                                        this.forgotPasssword();
-                                    }}
+                                    onPress={() => {this.forgotPasssword()}}
                                     buttonStyle={{ backgroundColor: 'orange',  marginTop: 20 }} />
                             </View>
                         </View>
-                </Modal>)
+                )
     }
 
 
     forgotPasssword = async () =>{
-        response = await EmailController.ForgotPassword(this.state.email);
-        if(response.hasOwnProperty('status')){
-            Snackbar.show({
+        this.setState({sendLinkButtonPressed:true})
+        LoginService.ForgotPassword(this.state.linkedEmail)
+        .then((response)=>{
+          console.log('ok');
+          Snackbar.show({
                 title: 'Reset password mail is sent.',
                 duration: Snackbar.LENGTH_INDEFINITE,
                 action: ({
                     title: 'Dismiss',
                     color: 'orange',
                     onPress: () => {
-                        this.setModalVisible(!this.state.modalVisible);
+                        this.props.setModalVisible(false);
                     }
                 })
-              });
-        }
-        if (this.state.email == ''){
-            forgotPasswordMessage = this.setState({
-                forgotPasswordMessage: response.errors.email,
-            })
-        }else{
-        forgotPasswordMessage = this.setState({
-            forgotPasswordMessage: response.errors.email[1],
-        })}
-        console.log(response.errors.email);
+              });  
+          })
+        .catch((error)=>{
+            console.log(error),
+            this.setState({forgotPasswordMessage:"error"})
+          })
+        .finally(()=>{
+            console.log('finally')
+            this.setState({sendLinkButtonPressed:false})
+        })    
+//         response = await EmailController.ForgotPassword(this.state.email);
+//         if(response.hasOwnProperty('status')){
+//             Snackbar.show({
+//                 title: 'Reset password mail is sent.',
+//                 duration: Snackbar.LENGTH_INDEFINITE,
+//                 action: ({
+//                     title: 'Dismiss',
+//                     color: 'orange',
+//                     onPress: () => {
+//                         this.setModalVisible(!this.state.modalVisible);
+//                     }
+//                 })
+//               });
+//         }
+//         if (this.state.email == ''){
+//             forgotPasswordMessage = this.setState({
+//                 forgotPasswordMessage: response.errors.email,
+//             })
+//         }else{
+//         forgotPasswordMessage = this.setState({
+//             forgotPasswordMessage: response.errors.email[1],
+//         })}
+//         console.log(response.errors.email);
     }
 
 }
