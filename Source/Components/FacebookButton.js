@@ -16,50 +16,40 @@ export default class FacebookButton extends Component {
     }
 
     render() {
-        return (<SocialIcon type='facebook'
-            onPress={() => {
-                console.log("ButtonPressed....")
-                this.facebookLogin();
-            }}
-            onLongPress={() => this.facebookLogin()} />
+        return (
+            <SocialIcon type='facebook'
+                onPress={() => {
+                    console.log("ButtonPressed....")
+                    this.facebookLogin();
+                }}
+                onLongPress={() => this.facebookLogin()} />
+
         )
     }
 
 
     facebookLogin = () => {
-
+        console.log("entered in facebookLogin()");
         LoginManager.logInWithReadPermissions(['public_profile'])
             .then((result) => {
+                console.log(result);
+                console.log("entered in loginManager");
                 if (result.isCancelled) {
                     alert('Login was cancelled');
                 } else {
-                    this.props.onLoginSuccess();
+                    console.log("result is:::")
+                    // console.log(result);
+                    // this.props.onLoginSuccess();
+                    console.log('Login was successful with permissions: '
+                    + result.grantedPermissions.toString());
+                    
                 }
             }).catch((error) => {
                 alert('Login failed with error: ' + error);
             });
     }
 
-    onLoginFinished = (error, result) => {
-        if (error) {
-            console.log(error.toString());
-            alert("login has error: " + result.error);
-        } else if (result.isCancelled) {
-            alert("login is cancelled.");
-        } else {
-            console.log(JSON.stringify(result));
-            AccessToken.getCurrentAccessToken().then(
-                (data) => {
-                    var accessToken = data.accessToken.toString();
-                    this.initUser(accessToken);
-                    console.log('-------------------');
-                    console.log(accessToken);
-                }
-            )
-        }
-
-    }
-
+    
 
     initUser = async (token) => {
         console.log('initUser');

@@ -46,10 +46,11 @@ export default class LoginScreen extends Component {
     }
 
     onLoginSuccess = (response) => {
+        console.log("hello, world!!!");
         console.log(response);
-        console.log("DAta:::")
-        console.log(response.data.access_token);
-        AsyncStorage.setItem('ACCESS_TOKEN', response.data.access_token);
+        // console.log("DAta:::")
+        // console.log(response.data.access_token);
+        // AsyncStorage.setItem('ACCESS_TOKEN', response.data.access_token);
         
         this.setState({
             loginErrorMessage: '',
