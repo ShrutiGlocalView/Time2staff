@@ -22,6 +22,9 @@ export default class SplashScreen extends Component {
         // this.getJobDetails();
         // this.getBusinessTypes();
         this.getPermission();
+        // var access_token = await AsyncStorage.getItem('ACCESS_TOKEN');
+        // console.log("AccessToken is::")
+        // // console.log(access_token);
         const { navigate } = this.props.navigation;
         if (1) //something we can check to show splash screen
         {
