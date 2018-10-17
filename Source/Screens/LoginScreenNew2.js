@@ -45,13 +45,17 @@ export default class LoginScreen extends Component {
         }
     }
 
-    onLoginSuccess = (response) => {
-        console.log("hello, world!!!");
-        console.log(response);
-        // console.log("DAta:::")
-        // console.log(response.data.access_token);
-        // AsyncStorage.setItem('ACCESS_TOKEN', response.data.access_token);
-        
+    onLoginSuccess = (response)=>{
+
+        this.setState({
+          loginErrorMessage: '',
+          loginButtonPressed: false
+         })
+          USER_EMAIL = response.data.user_data.email;
+          USER_ID = response.data.user_data.id;
+          TERMS = response.data.user_data.terms;
+          this.props.navigation.navigate('App',{ USER_EMAIL: USER_EMAIL, USER_ID: USER_ID, TERMS: TERMS });
+
         this.setState({
             loginErrorMessage: '',
             loginButtonPressed: false
