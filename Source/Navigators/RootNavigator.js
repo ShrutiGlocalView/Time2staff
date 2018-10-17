@@ -9,12 +9,11 @@ import {
 import AppNavigator from './AppNavigator';
 import AuthNavigator from './AuthNavigator';
 import SplashScreen from '../Screens/SplashScreen';
-import CompleteProfileNavigator from './CompleteProfileNavigator';
+import ProfileNavigator from './ProfileNavigator';
 
   const RootNavigator = createSwitchNavigator({
       AuthLoading:SplashScreen,
-      // App:AppNavigator,
-      App:CompleteProfileNavigator,
+      App:ProfileNavigator,
       Auth:AuthNavigator
     },{
       initialRouteName:'AuthLoading'

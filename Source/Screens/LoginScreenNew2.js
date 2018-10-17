@@ -45,16 +45,15 @@ export default class LoginScreen extends Component {
     }
 
     onLoginSuccess = (response)=>{
-        console.log(response);
+        
         this.setState({
           loginErrorMessage: '',
           loginButtonPressed: false
          })
-          let USER_EMAIL = response.data.user_data.email;
-          let USER_ID = response.data.user_data.id;
-          let TERMS = response.data.user_data.terms;
-          this.props.navigation.navigate('App',
-                    { USER_EMAIL: USER_EMAIL, USER_ID: USER_ID, TERMS: TERMS });
+          USER_EMAIL = response.data.user_data.email;
+          USER_ID = response.data.user_data.id;
+          TERMS = response.data.user_data.terms;
+          this.props.navigation.navigate('App',{ USER_EMAIL: USER_EMAIL, USER_ID: USER_ID, TERMS: TERMS });
         
     }
 
@@ -95,9 +94,7 @@ export default class LoginScreen extends Component {
                         <View style={styles.line}></View>
                     </View>
                     <View style={{ flexDirection: 'row', marginTop: 20 }}>
-                        <FacebookButton onLoginSuccess={()=>
-                                            this.props.navigation.navigate('CompleteProfileNavigator')
-                                        }/>
+                        <FacebookButton onLoginSuccess={()=>this.onLoginSuccess()}/>
 
                         <GoogleButton/>
                     </View>
