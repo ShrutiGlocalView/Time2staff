@@ -4,7 +4,7 @@ import {
   StyleSheet
 } from 'react-native';
 import {
-  
+
   createDrawerNavigator
 } from 'react-navigation';
 import IntroductionPage from '../Screens/IntroductionPage';
