@@ -4,37 +4,40 @@ import {
     AccessToken,
     LoginManager
 } from 'react-native-fbsdk';
-import{StyleSheet,View} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import {
     SocialIcon
 } from 'react-native-elements';
 
-export default class FacebookButton extends Component{
-    constructor(props){
+export default class FacebookButton extends Component {
+    constructor(props) {
         super(props);
         console.log(props);
     }
 
-    render(){
-        return(<SocialIcon type='facebook'
-                           onPress = {()=>this.facebookLogin()}
-                           onLongPress = {()=>this.facebookLogin()}/>
-              )
+    render() {
+        return (<SocialIcon type='facebook'
+            onPress={() => {
+                console.log("ButtonPressed....")
+                this.facebookLogin();
+            }}
+            onLongPress={() => this.facebookLogin()} />
+        )
     }
 
-    
-    facebookLogin=()=>{
-        
-          LoginManager.logInWithReadPermissions(['public_profile'])
-          .then((result)=> {
+
+    facebookLogin = () => {
+
+        LoginManager.logInWithReadPermissions(['public_profile'])
+            .then((result) => {
                 if (result.isCancelled) {
-                  alert('Login was cancelled');
+                    alert('Login was cancelled');
                 } else {
-                  this.props.onLoginSuccess();
+                    this.props.onLoginSuccess();
                 }
-          }).catch((error)=>{
-            alert('Login failed with error: ' + error);  
-          });
+            }).catch((error) => {
+                alert('Login failed with error: ' + error);
+            });
     }
 
     onLoginFinished = (error, result) => {
@@ -58,8 +61,8 @@ export default class FacebookButton extends Component{
     }
 
 
-     initUser = async (token) => {
-         console.log('initUser');
+    initUser = async (token) => {
+        console.log('initUser');
         var response = await fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + token);
         var responseJson = await response.json();
         //var loginResponse = await EmailController.UserLogin(responseJson.email, responseJson.id);
