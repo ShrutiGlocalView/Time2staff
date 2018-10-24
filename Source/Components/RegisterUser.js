@@ -18,36 +18,65 @@ import {
     SocialIcon
 } from 'react-native-elements';
 import LoginService from '../Controller/LoginCalls';
-export default class RegisterUser extends Component{
+export default class RegisterUser extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state = {
-             firstname:'',
-             lastname:'',
-             email:'',
-             password:'',
-             repeatPassword: '',
-             firstnameError:'',
-             lastnameError:'',
-             emailError:'',
-             passwordError:'',
-             repeatPasswordError:'',
-             signupButtonPressed: false,
-             checked:0,
-             userRole:'Buisness'
-         }
+            firstname: '',
+            lastname: '',
+            email: '',
+            password: '',
+            repeatPassword: '',
+            firstnameError: '',
+            lastnameError: '',
+            emailError: '',
+            passwordError: '',
+            repeatPasswordError: '',
+            signupButtonPressed: false,
+            checked: 0,
+            userRole: 'Buisness',
+            hidePasswordSignup: true,
+        }
     }
 
-    userType = ['Staff','Buisness'];
+    userType = ['Staff', 'Buisness'];
 
-    render(){
-        return(<View style={{ margin: 22 }}>
-                  <Text style={{ fontSize: 40, fontWeight: '300' }}>Register</Text>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+    manageSignupPasswordVisibility = () => {
+        this.setState({ hidePasswordSignup: !this.state.hidePasswordSignup });
+    }
+
+    _renderPasswordInputSignup = (label, onChangeText, errorMessage, secureTextEntry, inlineImage) => {
+        return (
+            <View>
+                <View style={styles.textBoxBtnHolder}>
+                    <TextInput
+                        style={{ borderColor: 'gray', borderBottomWidth: 1, margin: 0, borderBottomColor: 'orange' }}
+                        onChangeText={(text) => { onChangeText(text) }}
+                        // editable = {this.state.loginButtonPressed ? false : true}
+                        secureTextEntry={secureTextEntry}
+                        placeholder={label}
+                        placeholderTextColor='grey'
+                        inlineImageLeft={inlineImage}
+                        inlineImagePadding={10}
+                        secureTextEntry={this.state.hidePasswordSignup} />
+                    <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.manageSignupPasswordVisibility}>
+                        <Icon name={(this.state.hidePasswordSignup) ? 'visibility' : 'visibility-off'} />
+                    </TouchableOpacity>
+                </View>
+                <FormValidationMessage>{errorMessage}</FormValidationMessage>
+            </View>
+        )
+    }
+
+    render() {
+        return (
+            <View style={{ margin: 22 }}>
+                <Text style={{ fontSize: 40, fontWeight: '300' }}>Register</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                     <FormLabel labelStyle={styles.userTypeStyle}>User type</FormLabel>
                     {this._renderUserTypeSelection()}
-                    </View>
+                </View>
                 {this._renderTextInput('First name',
                     (text) => { this.setState({ firstname: text }) },
                     this.state.firstnameError, false, 'face')}
@@ -60,16 +89,16 @@ export default class RegisterUser extends Component{
                 {this._renderTextInput('Password',
                     (text) => { this.setState({ password: text }) },
                     this.state.passwordError, true, 'lock')}
-                {this._renderTextInput('Repeat Password',
+                {this._renderPasswordInputSignup('Confirm Password',
                     (text) => { this.setState({ repeatPassword: text }) },
                     this.state.confirmPasswordError, true, 'lock')}
                 <Button
                     fontSize={12}
-                    title = 'Sign up'
-                    loading = {this.state.signupButtonPressed ? true : false}
-                    disabled = {this.state.signupButtonPressed ? true : false}
-                    buttonStyle = {{ backgroundColor: 'orange' }}
-                    onPress = {() => {
+                    title='Sign up'
+                    loading={this.state.signupButtonPressed ? true : false}
+                    disabled={this.state.signupButtonPressed ? true : false}
+                    buttonStyle={{ backgroundColor: 'orange' }}
+                    onPress={() => {
                         if (this.validate()) {
                             this.signup();
                             this.setState({
@@ -111,16 +140,15 @@ export default class RegisterUser extends Component{
             ))
     }
 
-     _renderTextInput = (label, onChangeText, errorMessage, secureTextEntry, inlineImage) => {
-
+    _renderTextInput = (label, onChangeText, errorMessage, secureTextEntry, inlineImage) => {
         return (<View>
-                <TextInput onChangeText={ (text) => { onChangeText(text) }}
-                    secureTextEntry={secureTextEntry}
-                    placeholder={label}
-                    placeholderTextColor='grey'
-                    inlineImageLeft={inlineImage}
-                    inlineImagePadding={10}
-                    style={{ borderColor: 'gray', borderBottomWidth: 1, margin: 0, borderBottomColor: 'orange' }} />
+            <TextInput onChangeText={(text) => { onChangeText(text) }}
+                secureTextEntry={secureTextEntry}
+                placeholder={label}
+                placeholderTextColor='grey'
+                inlineImageLeft={inlineImage}
+                inlineImagePadding={10}
+                style={{ borderColor: 'gray', borderBottomWidth: 1, margin: 0, borderBottomColor: 'orange' }} />
             <FormValidationMessage>{errorMessage}</FormValidationMessage>
         </View>
         )
@@ -151,7 +179,6 @@ export default class RegisterUser extends Component{
             this.setState({ lastnameError: '' });
             validate = true
         }
-
         if (this.state.email == '') {
             this.setState({ emailError: 'Mandatory Field' });
             validate = false;
@@ -176,31 +203,27 @@ export default class RegisterUser extends Component{
         return validate;
     }
 
-
     signup = async () => {
         var response;
         LoginService.Register(this.state.email, this.state.password, this.state.userRole, this.state.firstname, this.state.lastname)
-        .then((response)=>{
-                //console.log("ok"); 
-                this.props.onSuccess();            
-
-        }).catch((error)=>{
-                console.log("error");
+            .then((response) => {
+                console.log(response); 
+                this.props.onSuccess();
+            }).catch((error) => {
+                console.log(error);
                 emailErrorVar = response.errors.email;
                 passwordErrorVar = response.errors.password;
                 this.validate();
                 if (emailErrorVar != '') {
-                    this.setState({emailError: emailErrorVar})
+                    this.setState({ emailError: emailErrorVar })
                 }
                 if (passwordErrorVar != '') {
-                    this.setState({passwordError: passwordErrorVar})
+                    this.setState({ passwordError: passwordErrorVar })
                 }
-        }).finally(()=>{
-            console.log('finally');
-            this.setState({signupButtonPressed: false,})
-        })
-
-
+            }).finally(() => {
+                console.log('finally');
+                this.setState({ signupButtonPressed: false, })
+            })
     }
 }
 
@@ -215,5 +238,19 @@ const styles = StyleSheet.create({
     btn: {
         flexDirection: 'row',
         marginRight: 10
+    },
+    visibilityBtn:
+    {
+        position: 'absolute',
+        right: 3,
+        height: 25,
+        width: 35,
+        padding: 5
+    },
+    textBoxBtnHolder:
+    {
+        position: 'relative',
+        alignSelf: 'stretch',
+        justifyContent: 'center'
     },
 })

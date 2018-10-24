@@ -13,7 +13,8 @@ import ProfileNavigator from './ProfileNavigator';
 
   const RootNavigator = createSwitchNavigator({
       AuthLoading:SplashScreen,
-      App:ProfileNavigator,
+      // App:ProfileNavigator,
+      App:AppNavigator,
       Auth:AuthNavigator
     },{
       initialRouteName:'AuthLoading'

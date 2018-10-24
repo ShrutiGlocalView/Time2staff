@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Button } from 'react-native';
 import { ViewPager } from 'rn-viewpager';
-
 import StepIndicator from 'react-native-step-indicator';
-
 import PersonalInfo from './PersonalInfo';
 import BillingInfo from './BillingInfo';
 import ProfessionalInfo from './ProfessionalInfo';
@@ -53,10 +51,11 @@ export default class Profile extends Component {
     }
 
     render() {
-        USER_EMAIL = this.props.navigation.getParam('USER_EMAIL', 'test email', 
-                                                        'USER_ID', 'NO_ID', 
-                                                        'TERMS', 'test terms');
-        console.log(USER_EMAIL);
+        // USER_EMAIL = this.props.navigation.getParam('USER_EMAIL', 'test email');
+        // console.log(USER_EMAIL);
+        const USER_EMAIL = this.props.navigation.getParam('USER_EMAIL', 'test email', 'USER_ID', 'NO_ID');
+        console.log("UsEr EmAiL:::" + USER_EMAIL); 
+        console.log("UsEr Id:::" + USER_ID); 
         var PAGES = [
             <PersonalInfo
                 USER_EMAIL={() => USER_EMAIL}

@@ -56,7 +56,7 @@ export default class ForgotPasswordDialog extends Component{
           console.log('ok');
           Snackbar.show({
                 title: 'Reset password mail is sent.',
-                duration: Snackbar.LENGTH_INDEFINITE,
+                duration: Snackbar.LENGTH_LONG,
                 action: ({
                     title: 'Dismiss',
                     color: 'orange',
