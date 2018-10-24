@@ -30,7 +30,7 @@ export default class Loading extends Component {
     this.setState({
       user_role: user_role
     })
-    // console.log(this.state.user_role);
+    console.log(this.state.user_role);
   }
 
   render() {
@@ -39,19 +39,26 @@ export default class Loading extends Component {
         // <View style={styles.container}>
         //   {/* <ActivityIndicator /> */}
         //   {/* {alert("Hello Client...")} */}
-          this.props.navigation.navigate('App')
+        this.props.navigation.navigate('App')
         // </View>
       );
     }
-    // else if(this.state.user_role == "Staff"){
+    else if (this.state.user_role == "Staff") {
+      // else {
+      return (
+        // <View style={styles.container}>
+        //   {/* <ActivityIndicator /> */}
+        //   {alert("Hello Staff...")}
+        this.props.navigation.navigate('Auth')
+        // </View>
+      )
+    }
     else {
       return (
         <View style={styles.container}>
-          {/* <ActivityIndicator /> */}
-          {this.props.navigation.navigate('Auth')}
+          <ActivityIndicator />
         </View>)
     }
-
   }
 }
 
