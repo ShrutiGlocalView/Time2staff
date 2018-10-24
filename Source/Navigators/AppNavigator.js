@@ -11,8 +11,8 @@ import IntroductionPage from '../Screens/IntroductionPage';
 import HomePage from '../Screens/HomePage';
 import Profile from '../Screens/Profile';
 
-import ClientDrawer from '../Navigators/ClientDrawer';
-import StaffDrawer from '../Navigators/StaffDrawer';
+import ClientDrawer from './ClientDrawer';
+import StaffDrawer from './StaffDrawer';
 import Loading from '../Screens/Loading';
 
 // const AppNavigator = createDrawerNavigator({
@@ -25,8 +25,8 @@ import Loading from '../Screens/Loading';
 
 const AppNavigator = createSwitchNavigator({
   AuthLoading: Loading,
-  App: ClientDrawer,
-  Auth: StaffDrawer,
+  ClientDrawer: ClientDrawer,
+  StaffDrawer: StaffDrawer,
 }, {
     initialRouteName: 'AuthLoading'
   });

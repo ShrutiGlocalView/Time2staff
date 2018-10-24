@@ -9,13 +9,14 @@ import {
 import HomePage from '../Screens/HomePage';
 import Profile from '../Screens/Profile';
 import PersonalInfo from '../Screens/PersonalInfo';
+import StaffProfile from '../Screens/StaffProfile';
 
   const StaffDrawer = createDrawerNavigator({
        Home:HomePage,
-       PersonalInfo:PersonalInfo
+       StaffProfile:StaffProfile
     },{
       headerMode:'none',
-      initialRouteName:'PersonalInfo'
+      initialRouteName:'StaffProfile'
     });
 
 export default StaffDrawer;

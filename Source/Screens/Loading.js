@@ -20,13 +20,13 @@ export default class Loading extends Component {
   }
 
   getUserDetails = async () => {
-    const email = await AsyncStorage.getItem('User_Email')
-    const user_id = await AsyncStorage.getItem('User_Id')
-    const user_role = await AsyncStorage.getItem('User_Role')
-    console.log("email here:::");
+    // const email = await AsyncStorage.getItem('User_Email')
+    // const user_id = await AsyncStorage.getItem('User_Id')
+    var user_role = await AsyncStorage.getItem('User_Role')
+    // console.log("email here:::");
     // console.log(email);
     // console.log(user_id);
-    console.log(user_role);
+    // console.log(user_role);
     this.setState({
       user_role: user_role
     })
@@ -34,31 +34,21 @@ export default class Loading extends Component {
   }
 
   render() {
-    if (this.state.user_role == "Client") {
-      return (
-        // <View style={styles.container}>
-        //   {/* <ActivityIndicator /> */}
-        //   {/* {alert("Hello Client...")} */}
-        this.props.navigation.navigate('App')
-        // </View>
-      );
+    switch (this.state.user_role) {
+      case "Client":
+        this.props.navigation.navigate('ClientDrawer')
+        break;
+
+      case "Staff":
+        this.props.navigation.navigate('StaffDrawer')
+        break;
     }
-    else if (this.state.user_role == "Staff") {
-      // else {
-      return (
-        // <View style={styles.container}>
-        //   {/* <ActivityIndicator /> */}
-        //   {alert("Hello Staff...")}
-        this.props.navigation.navigate('Auth')
-        // </View>
-      )
-    }
-    else {
-      return (
-        <View style={styles.container}>
-          <ActivityIndicator />
-        </View>)
-    }
+
+    return (
+      <View>
+        <ActivityIndicator />
+      </View>
+    )
   }
 }
 
