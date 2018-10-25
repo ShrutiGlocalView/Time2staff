@@ -26,11 +26,13 @@ export default class PersonalInfo extends Component {
     super(props);
     this.state = {
       picked: null,
-      bussinessName: '',
+      firstName: '',
       lastName: '',
+      bussinessName: '',
       email: '',
       phoneNumber: '',
-      sex: 'M',
+      altPhoneNumber: '',
+      selectedGender: 'Male',
       dateOfBirth: '',
       address1: '',
       address2: '',
@@ -50,9 +52,11 @@ export default class PersonalInfo extends Component {
       visibleBusinessModal: false,
       visibleTimeZoneModal: false,
       textError: '',
+      firstNameError: '',
+      lastnameError: '',
+      dateOfBirthError: '',
       bussinessNameError: '',
       businessTypeError: '',
-      lastnameError: '',
       isValidPhone: true,
       phoneNumberError: '',
       address1Error: '',
@@ -65,11 +69,14 @@ export default class PersonalInfo extends Component {
       gender: ['Male', 'Female'],
       checked: 0,
       isLoading: false,
+      showComponent: false
     }
   }
 
   componentDidMount() {
     this.loadDefaultDetails();
+    this.getUserDetails();
+
   }
 
   resetStateVar = () => {
@@ -90,42 +97,56 @@ export default class PersonalInfo extends Component {
   validate = () => {
     var validate = true;
     const mailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-
-    if (this.state.bussinessName == '') {
-      this.setState({ bussinessNameError: 'Please enter bussiness name' })
-      validate = false;
+    if (this.state.showComponent) {
+      if (this.state.firstName == '') {
+        this.setState({ firstNameError: 'Please enter first name' });
+        validate = false
+      }
+      if (this.state.lastName == '') {
+        this.setState({ lastnameError: 'Please enter last name' });
+        validate = false
+      }
+      if (this.state.dateOfBirth == '') {
+        this.setState({ dateOfBirthError: 'Please enter date of birth' })
+      }
     }
-    if (this.state.businessType == '') {
-      this.setState({ businessTypeError: 'Please select a category' })
-      validate = false;
-    }
-    if (this.state.address1 == '') {
-      this.setState({ address1Error: 'Please enter address line 1' })
-      validate = false;
-    }
-    if (this.state.address2 == '') {
-      this.setState({ address2Error: 'Please enter address line 2' })
-      validate = false;
-    }
-    if (this.state.city == '') {
-      this.setState({ cityError: 'Please enter city or region' })
-      validate = false;
-    }
-    // if (this.state.state == '') {
-    //   this.setState({ stateError: 'Please enter state' })
-    //   validate = false;
-    // }
-    if (this.state.zipcode == '') {
-      this.setState({ zipcodeError: 'Please enter zipcode' })
-      validate = false;
-    }
-    if (this.state.country == '') {
-      this.setState({ countryError: 'Please select a country' })
-      validate = false;
-    } 
-    if (this.state.timezone == '') {
-      this.setState({ timezoneError: 'Please select a time zone' })
-      validate = false;
+    else {
+      if (this.state.bussinessName == '') {
+        this.setState({ bussinessNameError: 'Please enter bussiness name' })
+        validate = false;
+      }
+      if (this.state.businessType == '') {
+        this.setState({ businessTypeError: 'Please select a category' })
+        validate = false;
+      }
+      if (this.state.address1 == '') {
+        this.setState({ address1Error: 'Please enter address line 1' })
+        validate = false;
+      }
+      if (this.state.address2 == '') {
+        this.setState({ address2Error: 'Please enter address line 2' })
+        validate = false;
+      }
+      if (this.state.city == '') {
+        this.setState({ cityError: 'Please enter city or region' })
+        validate = false;
+      }
+      // if (this.state.state == '') {
+      //   this.setState({ stateError: 'Please enter state' })
+      //   validate = false;
+      // }
+      if (this.state.zipcode == '') {
+        this.setState({ zipcodeError: 'Please enter zipcode' })
+        validate = false;
+      }
+      if (this.state.country == '') {
+        this.setState({ countryError: 'Please select a country' })
+        validate = false;
+      }
+      if (this.state.timezone == '') {
+        this.setState({ timezoneError: 'Please select a time zone' })
+        validate = false;
+      }
     }
     return validate;
   }
@@ -174,6 +195,26 @@ export default class PersonalInfo extends Component {
       timezones: b,
       businessTypes: c
     });
+  }
+
+  getUserDetails = async () => {
+    // const email = await AsyncStorage.getItem('User_Email')
+    // const user_id = await AsyncStorage.getItem('User_Id')
+    var user_role = await AsyncStorage.getItem('User_Role')
+    console.log("Data on personalInfo Screen:::");
+    // console.log(email);
+    // console.log(user_id);
+    // console.log(user_role);
+    this.setState({
+      user_role: user_role
+    })
+    console.log(this.state.user_role);
+    if (this.state.user_role == "Staff") {
+      this.setState({
+        showComponent: true
+      })
+    }
+    console.log(this.state.showComponent);
   }
 
   onShowCountries = () => {
@@ -265,6 +306,7 @@ export default class PersonalInfo extends Component {
       this.state.gender.map((data, key) => {
         return (
           <View style={{ width: 100, }}>
+            {console.log("init gender is " + this.state.selectedGender)}
             {this.state.checked == key ?
               <TouchableOpacity style={styles.btn}>
                 <Icon
@@ -275,7 +317,12 @@ export default class PersonalInfo extends Component {
               </TouchableOpacity>
               :
               <TouchableOpacity
-                onPress={() => { this.setState({ checked: key }) }}
+                onPress={() => {
+                  this.setState({
+                    checked: key,
+                    selectedGender: this.state.gender[key]
+                  })
+                }}
                 style={styles.btn}>
                 <Icon
                   name='radio-button-unchecked'
@@ -290,15 +337,40 @@ export default class PersonalInfo extends Component {
       ))
   }
 
-  saveDetails = async () => {
+  saveClientDetails = async () => {
     const user_id = this.props.USER_ID();
-    response = await SaveProfile.personalInfo(user_id, this.state.bussinessName, this.state.business_id, this.state.phoneNumber, this.state.address1, this.state.city, this.state.zipcode, this.state.state, this.state.country_id, this.state.timezone_id)
+    response = await SaveProfile.clientPersonalInfo(user_id, this.state.bussinessName, this.state.business_id, this.state.phoneNumber, this.state.altPhoneNumber, this.state.address1, this.state.address2, this.state.city, this.state.zipcode, this.state.state, this.state.country_id, this.state.timezone_id)
     console.log(response.status)
     this.setState({ isLoading: false });
     if (response.status == 200) {
       this.props.onNextPressed();
     }
+  }
 
+  saveStaffDetails = async () => {
+    const user_id = this.props.USER_ID();
+    response = await SaveProfile.staffPersonalInfo(user_id, this.state.firstName, this.state.lastName, this.state.dateOfBirth, this.state.selectedGender, this.state.phoneNumber, this.state.altPhoneNumber, this.state.address1, this.state.address2, this.state.city, this.state.zipcode, this.state.state, this.state.country_id, this.state.timezone_id)
+    console.log(response.status)
+    this.setState({ isLoading: false });
+    if (response.status == 200) {
+      this.props.onNextPressed();
+    }
+  }
+
+  showDatePicker = async () => {
+    try {
+      const { action, year, month, day } = await DatePickerAndroid.open({
+        // Use `new Date()` for current date.
+        // May 25 2020. Month 0 is January.
+        date: new Date()
+      });
+      if (action !== DatePickerAndroid.dismissedAction) {
+        var date = year + '-' + (month + 1) + '-' + day;
+        this.setState({ dateOfBirth: date })
+      }
+    } catch ({ code, message }) {
+      console.warn('Cannot open date picker', message);
+    }
   }
 
   render() {
@@ -316,34 +388,74 @@ export default class PersonalInfo extends Component {
         <ScrollView>
           <View>
             <ProfileImagePicker />
-            {this._renderTextInput('Business Name',
-              (text) => { this.setState({ bussinessName: text }) },
-              this.state.bussinessNameError, false)}
 
-            <FormLabel labelStyle={styles.labelStyle}>Businesss Category</FormLabel>
-            <TouchableOpacity onPress={this.onShowBusinessTypes}
-              style={{
-                width: '95%', borderBottomColor: '#265b91',
-                borderBottomWidth: 2,
-                padding: 0,
-                marginLeft: 10
-              }}>
-              <FormInput
-                editable={false}
-                placeholder='Select Category'
-                placeholderTextColor='grey'
-                borderBottomColor='blue'
-                value={this.state.businessType}
-              // containerStyle = {{backgroundColor:'transparent', borderColor: 'blue'}}
-              />
-            </TouchableOpacity>
-            <FormValidationMessage>{this.state.businessTypeError}</FormValidationMessage>
-            <ModalFilterPicker
-              options={this.state.businessTypes}
-              visible={this.state.visibleBusinessModal}
-              onSelect={this.onSelectBusinessType}
-              onCancel={this.onCancelBusinessTypes}
-            />
+            {this.state.showComponent ?
+              this._renderTextInput('First Name',
+                (text) => { this.setState({ firstName: text }) },
+                this.state.firstNameError, false) : null}
+
+            {this.state.showComponent ?
+              this._renderTextInput('Last Name',
+                (text) => { this.setState({ lastName: text }) },
+                this.state.lastnameError, false) : null}
+
+            {this.state.showComponent ? null :
+              this._renderTextInput('Business Name',
+                (text) => { this.setState({ bussinessName: text }) },
+                this.state.bussinessNameError, false)}
+
+            {this.state.showComponent ? null :
+              <View>
+                <FormLabel labelStyle={styles.labelStyle}>Businesss Category</FormLabel>
+                <TouchableOpacity onPress={this.onShowBusinessTypes}
+                  style={{
+                    width: '95%', borderBottomColor: '#265b91',
+                    borderBottomWidth: 2,
+                    padding: 0,
+                    marginLeft: 10
+                  }}>
+                  <FormInput
+                    editable={false}
+                    placeholder='Select Category'
+                    placeholderTextColor='grey'
+                    borderBottomColor='blue'
+                    value={this.state.businessType}
+                  // containerStyle = {{backgroundColor:'transparent', borderColor: 'blue'}}
+                  />
+                </TouchableOpacity>
+                <FormValidationMessage>{this.state.businessTypeError}</FormValidationMessage>
+                <ModalFilterPicker
+                  options={this.state.businessTypes}
+                  visible={this.state.visibleBusinessModal}
+                  onSelect={this.onSelectBusinessType}
+                  onCancel={this.onCancelBusinessTypes}
+                />
+              </View>}
+
+            {this.state.showComponent ?
+              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                <FormLabel labelStyle={styles.genderStyle}>Gender</FormLabel>
+                <this.genderSelection />
+              </View> : null}
+
+            {this.state.showComponent ?
+              <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                <FormLabel labelStyle={styles.labelStyle}>DOB</FormLabel>
+                <TouchableOpacity onPress={() => this.showDatePicker()} style={{ height: '100%', }}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <FormInput onChangeText={(text) => { this.setState({ dateOfBirth: text }) }}
+                      containerStyle={{ marginTop: 14, width: '45%', paddingRight: 8 }}
+                      editable={false}
+                      placeholder='yyyy-mm-dd'
+                      placeholderTextColor='grey'
+                      value={this.state.dateOfBirth}
+                    />
+                    <Icon name="calendar" type="simple-line-icon" color="#4F8EF7" containerStyle={{ marginTop: 14 }} />
+                  </View>
+                  <FormValidationMessage>{this.state.dateOfBirthError}</FormValidationMessage>
+                </TouchableOpacity>
+              </View> : null}
+
             <View>
               < FormLabel labelStyle={styles.labelStyle}>Phone</FormLabel>
               <PhoneInput
@@ -366,7 +478,11 @@ export default class PersonalInfo extends Component {
                 style={styles.phoneInputStyle}
                 textStyle={{ color: 'grey' }}
                 ref='phone'
-                initialCountry="no" />
+                initialCountry="no"
+                value={this.state.altPhoneNumber}
+                onChangePhoneNumber={(text) => {
+                  this.setState({ altPhoneNumber: text })
+                }} />
               {/* <FormValidationMessage>{this.state.phoneNumberError}</FormValidationMessage> */}
             </View>
             {this._renderTextInput('Address line 1',
@@ -442,7 +558,7 @@ export default class PersonalInfo extends Component {
                   this.resetStateVar();
                   if (this.validate()) {
                     this.setState({ isLoading: true });
-                    this.saveDetails();
+                    this.state.showComponent ? this.saveStaffDetails() : this.saveClientDetails();
                   }
                 }}>
                 <Icon
@@ -465,7 +581,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   ActivityIndicatorContainer: {
-    flex:1,
+    flex: 1,
     justifyContent: 'center'
   },
   horizontal: {

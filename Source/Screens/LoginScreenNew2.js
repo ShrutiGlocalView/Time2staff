@@ -41,38 +41,50 @@ export default class LoginScreen extends Component {
             passwordError: '',
             loginErrorMessage: '',
             hidePasswordLogin: true,
-
         }
     }
 
-    onLoginSuccess = (response)=>{
-
-        this.setState({
-          loginErrorMessage: '',
-          loginButtonPressed: false
-         })
-          USER_EMAIL = response.data.user_data.email;
-          USER_ID = response.data.user_data.id;
-          TERMS = response.data.user_data.terms;
-          this.props.navigation.navigate('App',{ USER_EMAIL: USER_EMAIL, USER_ID: USER_ID, TERMS: TERMS });
-
+    onLoginSuccess = async (response) => {
+        // console.log("response is:::");
+        // console.log(response);
         this.setState({
             loginErrorMessage: '',
             loginButtonPressed: false
         })
-        USER_EMAIL = response.data.user_data.email;
-        USER_ID = response.data.user_data.id;
-        let TERMS = response.data.user_data.terms;
-        this.props.navigation.navigate('App',
-            { USER_EMAIL: USER_EMAIL, USER_ID: USER_ID, TERMS: TERMS });
-
+        console.log("===========================================");
+        console.log(response.data.user_data.roles[0]);
+        console.log(response.data.user_data);
+        // if (response.data.user_data.roles[0].title == 'Staff') {
+        //     console.log("comig sooon...");
+        //     alert("You are logged in as a staff. Staff role is under development.")
+        // }
+        // else {
+        try {
+            USER_EMAIL = response.data.user_data.email;
+            USER_ID = response.data.user_data.id;
+            USER_ROLE = response.data.user_data.roles[0].title;
+            // console.log("USER_EMAIL is:::");
+            // console.log(USER_EMAIL);
+            // console.log("USER_ID is:::");
+            // console.log(USER_ID);
+            // console.log("USER_ROLE is :::");
+            console.log(USER_ROLE);
+            await AsyncStorage.setItem('User_Email', USER_EMAIL);
+            await AsyncStorage.setItem('User_Id', JSON.stringify(USER_ID));
+            await AsyncStorage.setItem('User_Role', USER_ROLE);
+        } catch (e) {
+            console.log(e);
+        }
+        this.props.navigation.navigate('App')
+        // }
     }
 
     onLoginFailed = (response) => {
+        console.log(response);
         if (response.status == 'pending') {
             Snackbar.show({
                 title: 'Account is not verified.\nResend verification email?',
-                duration: Snackbar.LENGTH_INDEFINITE,
+                duration: Snackbar.LENGTH_LONG,
                 action: ({
                     title: 'Resend',
                     color: 'orange',
@@ -86,10 +98,6 @@ export default class LoginScreen extends Component {
             loginErrorMessage: response.message,
             loginButtonPressed: false
         })
-    }
-
-    componentDidMount() {
-
     }
 
     render() {
@@ -134,15 +142,17 @@ export default class LoginScreen extends Component {
         );
     }
 
-
     login = async () => {
         let body = { username: this.state.email, password: this.state.password };
+        // what is the use of body here???
         let loginCall = LoginService.EmailLogin(this.state.email, this.state.password)
             .then((data) => { this.onLoginSuccess(data) })
-            .catch((error) => { this.onLoginFailed(error) })
+            .catch((error) => {
+                this.onLoginFailed(error);
+                console.log('error is');
+                console.log(error);
+            })
     }
-
-
 
     renderLoginModule = () => {
         return (
@@ -154,14 +164,19 @@ export default class LoginScreen extends Component {
                     placeholder='Email'
                     inlineImageLeft='email'
                     inlineImagePadding={10} />
-                <TextInput
-                    style={{ alignItems: 'center', borderBottomColor: 'orange', borderBottomWidth: 1, marginBottom: 0 }}
-                    onChangeText={(password) => this.setState({ password })}
-                    value={this.state.password}
-                    placeholder='Password'
-                    secureTextEntry={true}
-                    inlineImageLeft='lock'
-                    inlineImagePadding={10} />
+                <View style={styles.textBoxBtnHolder}>
+                    <TextInput
+                        style={{ alignItems: 'center', borderBottomColor: 'orange', borderBottomWidth: 1, marginBottom: 0 }}
+                        onChangeText={(password) => this.setState({ password })}
+                        value={this.state.password}
+                        placeholder='Password'
+                        secureTextEntry={this.state.hidePasswordLogin}
+                        inlineImageLeft='lock'
+                        inlineImagePadding={10} />
+                    <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.manageLoginPasswordVisibility}>
+                        <Icon name={(this.state.hidePasswordLogin) ? 'visibility' : 'visibility-off'} />
+                    </TouchableOpacity>
+                </View>
                 <FormValidationMessage>{this.state.loginErrorMessage}</FormValidationMessage>
 
                 <Button
@@ -179,20 +194,21 @@ export default class LoginScreen extends Component {
     }
 
     renderRegisterModule = () => {
-        return (<Modal
-            animationType="slide"
-            transparent={false}
-            visible={this.state.registerModalVisible}
-            onRequestClose={() => {
-                this.setState({ registerModalVisible: false });
-            }}>
-            <RegisterUser onSuccess={() => {
-                this.setState({
-                    verifyEmailVisibility: true,
-                    registerModalVisible: false
-                });
-            }} />
-        </Modal>)
+        return (
+            <Modal
+                animationType="slide"
+                transparent={false}
+                visible={this.state.registerModalVisible}
+                onRequestClose={() => {
+                    this.setState({ registerModalVisible: false });
+                }}>
+                <RegisterUser onSuccess={() => {
+                    this.setState({
+                        verifyEmailVisibility: true,
+                        registerModalVisible: false
+                    });
+                }} />
+            </Modal>)
     }
 
     renderForgotPassword = () => {
@@ -209,7 +225,12 @@ export default class LoginScreen extends Component {
         )
     }
 
+    manageLoginPasswordVisibility = () => {
+        this.setState({ hidePasswordLogin: !this.state.hidePasswordLogin });
+    }
+
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -256,5 +277,19 @@ const styles = StyleSheet.create({
     bottomBarText: {
         color: 'black',
         fontSize: 15
+    },
+    visibilityBtn:
+    {
+        position: 'absolute',
+        right: 3,
+        height: 25,
+        width: 35,
+        padding: 5
+    },
+    textBoxBtnHolder:
+    {
+        position: 'relative',
+        alignSelf: 'stretch',
+        justifyContent: 'center'
     },
 })

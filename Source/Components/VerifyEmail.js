@@ -18,18 +18,16 @@ export default class VerifyEmail extends Component {
 
     render() {
         return (
-            <View style={{ margin: 22 }}>  
-                <View style={{ width: '100%', margin: 10 }}>
-
+            <View >  
+                <View style={{  margin: 10 }}>
                     <Modal
                         animationType="slide"
                         transparent={false}
                         visible={this.props.modalVisible}
                         onRequestClose={() => {
                             this.props.setModalVisible(!this.props.modalVisible);
-
                         }}>
-                        <View style={{ width: '100%', margin: 10 }}>
+                        <View style={{  margin: 22 }}>
                             <Text style={{ fontSize: 20 }}>Verify your email</Text>
                             <Text style={{ marginTop: 10 }}>Please check your inbox for a verification email.
                                 Click the link in the email to verify your email address.</Text>
@@ -46,7 +44,6 @@ export default class VerifyEmail extends Component {
             </View>
         )
     }
-
 
     forgotPasssword = async () => {
         response = await EmailController.ForgotPassword(this.state.email);
