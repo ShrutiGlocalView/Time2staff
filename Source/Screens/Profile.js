@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Button } from 'react-native';
+import { StyleSheet, View, Button, AsyncStorage } from 'react-native';
 import { ViewPager } from 'rn-viewpager';
 import StepIndicator from 'react-native-step-indicator';
 import PersonalInfo from './PersonalInfo';
