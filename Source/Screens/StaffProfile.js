@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Button, AsyncStorage } from 'react-native';
+import { StyleSheet, View, Button } from 'react-native';
 import { ViewPager } from 'rn-viewpager';
 import StepIndicator from 'react-native-step-indicator';
 import PersonalInfo from './PersonalInfo';
@@ -31,35 +31,17 @@ const firstIndicatorStyles = {
     currentStepLabelColor: 'orange'
 }
 
-export default class Profile extends Component {
+export default class StaffProfile extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             currentPage: 0,
         }
-        // console.log(props);
+
+        console.log(props);
     }
 
-    componentDidMount() {
-        this.getUserDetails();
-    }
-
-    getUserDetails = async () => {
-        // const email = await AsyncStorage.getItem('User_Email')
-        // const user_id = await AsyncStorage.getItem('User_Id')
-        var user_role = await AsyncStorage.getItem('User_Role')
-        // console.log("email here:::");
-        // console.log(email);
-        // console.log(user_id);
-        console.log(user_role);
-        this.setState({
-            user_role: user_role
-        })
-        console.log(this.state.user_role);
-    }
-
-    
     componentWillReceiveProps(nextProps, nextState) {
         if (nextState.currentPage != this.state.currentPage) {
             if (this.viewPager) {
@@ -72,9 +54,8 @@ export default class Profile extends Component {
         // USER_EMAIL = this.props.navigation.getParam('USER_EMAIL', 'test email');
         // console.log(USER_EMAIL);
         const USER_EMAIL = this.props.navigation.getParam('USER_EMAIL', 'test email', 'USER_ID', 'NO_ID');
-        console.log("UsEr EmAiL:::" + USER_EMAIL);
-        console.log("UsEr Id:::" + USER_ID);
-
+        console.log("UsEr EmAiL:::" + USER_EMAIL); 
+        console.log("UsEr Id:::" + USER_ID); 
         var PAGES = [
             <PersonalInfo
                 USER_EMAIL={() => USER_EMAIL}
@@ -108,8 +89,8 @@ export default class Profile extends Component {
                     ref={(viewPager) => { this.viewPager = viewPager }}
                     onPageSelected={(page) => { this.setState({ currentPage: page.position }) }}
                     onPageScroll={() => { console.log("sbcsbcsdb") }}
-                    scrollEnabled={false}
-                    horizontalScroll={false}
+                    scrollEnabled = {false}
+                    horizontalScroll = {false}
                 >
                     {PAGES.map((page) => this.renderViewPagerPage(page))}
                 </ViewPager>

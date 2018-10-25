@@ -11,13 +11,11 @@
       tools:replace="android:allowBackup"
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
-      android:allowBackup="false"
+      android:allowBackup="true"
       android:theme="@style/AppTheme"
       android:name="com.time2staff.MainApplication">
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"
-            />
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBrTbJZrbH7t3lLN23O_IpHOz5Pm1d6GcA"/>
