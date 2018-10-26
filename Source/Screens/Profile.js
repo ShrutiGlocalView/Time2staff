@@ -49,17 +49,12 @@ export default class Profile extends Component {
         // const email = await AsyncStorage.getItem('User_Email')
         // const user_id = await AsyncStorage.getItem('User_Id')
         var user_role = await AsyncStorage.getItem('User_Role')
-        // console.log("email here:::");
-        // console.log(email);
-        // console.log(user_id);
-        console.log(user_role);
         this.setState({
             user_role: user_role
         })
-        console.log(this.state.user_role);
     }
 
-    
+
     componentWillReceiveProps(nextProps, nextState) {
         if (nextState.currentPage != this.state.currentPage) {
             if (this.viewPager) {
@@ -69,12 +64,7 @@ export default class Profile extends Component {
     }
 
     render() {
-        // USER_EMAIL = this.props.navigation.getParam('USER_EMAIL', 'test email');
-        // console.log(USER_EMAIL);
         const USER_EMAIL = this.props.navigation.getParam('USER_EMAIL', 'test email', 'USER_ID', 'NO_ID');
-        console.log("UsEr EmAiL:::" + USER_EMAIL);
-        console.log("UsEr Id:::" + USER_ID);
-
         var PAGES = [
             <PersonalInfo
                 USER_EMAIL={() => USER_EMAIL}
@@ -107,7 +97,9 @@ export default class Profile extends Component {
                     style={{ flexGrow: 1 }}
                     ref={(viewPager) => { this.viewPager = viewPager }}
                     onPageSelected={(page) => { this.setState({ currentPage: page.position }) }}
-                    onPageScroll={() => { console.log("sbcsbcsdb") }}
+                    onPageScroll={() => { 
+                        // console.log("sbcsbcsdb") 
+                    }}
                     scrollEnabled={false}
                     horizontalScroll={false}
                 >

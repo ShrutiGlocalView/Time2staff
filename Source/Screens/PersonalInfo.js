@@ -69,7 +69,9 @@ export default class PersonalInfo extends Component {
       gender: ['Male', 'Female'],
       checked: 0,
       isLoading: false,
-      showComponent: false
+      showComponent: false,
+      about: '',
+      aboutError: ''
     }
   }
 
@@ -81,6 +83,9 @@ export default class PersonalInfo extends Component {
 
   resetStateVar = () => {
     this.setState({
+      firstNameError: '',
+      lastnameError: '',
+      dateOfBirthError: '',
       bussinessNameError: '',
       businessTypeError: '',
       phoneNumberError: '',
@@ -151,7 +156,7 @@ export default class PersonalInfo extends Component {
     return validate;
   }
 
-  _renderTextInput = (label, onChangeText, errorMessage, secureTextEntry) => {
+  _renderTextInput = (label, value, onChangeText, errorMessage, secureTextEntry) => {
     //console.log(label,errorMessage);
     return (<View>
       <FormLabel labelStyle={styles.labelStyle}>{label}</FormLabel>
@@ -159,6 +164,7 @@ export default class PersonalInfo extends Component {
         placeholder={label}
         secureTextEntry={secureTextEntry}
         placeholderTextColor='grey'
+        value={value}
         containerStyle={styles.textInputStyle} />
       <FormValidationMessage>{errorMessage}</FormValidationMessage>
     </View>
@@ -169,12 +175,6 @@ export default class PersonalInfo extends Component {
     var countriesResponse = await AsyncStorage.getItem('Countries');
     var timezonesResponse = await AsyncStorage.getItem('TimeZones');
     var bussinessCatagoryResponse = await AsyncStorage.getItem('BusinessCategories')
-    // console.log("List of Countries are::::::")
-    // console.log(countriesResponse)
-    // console.log("List of Timezones are::::::")
-    // console.log(timezonesResponse)
-    // console.log("List of Business categories are::::::")
-    // console.log(bussinessCatagoryResponse)
     var resultCountries = JSON.parse(countriesResponse);
     var resultTimezones = JSON.parse(timezonesResponse);
     var resultBusinesses = JSON.parse(bussinessCatagoryResponse);
@@ -198,23 +198,33 @@ export default class PersonalInfo extends Component {
   }
 
   getUserDetails = async () => {
-    // const email = await AsyncStorage.getItem('User_Email')
-    // const user_id = await AsyncStorage.getItem('User_Id')
-    var user_role = await AsyncStorage.getItem('User_Role')
-    console.log("Data on personalInfo Screen:::");
-    // console.log(email);
-    // console.log(user_id);
-    // console.log(user_role);
+    var result = JSON.parse(await AsyncStorage.getItem('User_Data'))
+    var user_role = result.roles[0].title
     this.setState({
       user_role: user_role
     })
-    console.log(this.state.user_role);
+    this.setState({
+      phoneNumber: result.contact1,
+      altPhoneNumber: result.contact2,
+      address1: result.address1,
+      address2: result.address2,
+      city: result.city,
+      state: result.state,
+      zipcode: result.zipcode,
+
+    })
     if (this.state.user_role == "Staff") {
       this.setState({
-        showComponent: true
+        showComponent: true,
+        firstName: result.firstname,
+        lastName: result.lastname,
+        dateOfBirth: result.details.dob,
+      })
+    } else {
+      this.setState({
+        bussinessName: result.name
       })
     }
-    console.log(this.state.showComponent);
   }
 
   onShowCountries = () => {
@@ -306,7 +316,7 @@ export default class PersonalInfo extends Component {
       this.state.gender.map((data, key) => {
         return (
           <View style={{ width: 100, }}>
-            {console.log("init gender is " + this.state.selectedGender)}
+            {/* {console.log("init gender is " + this.state.selectedGender)} */}
             {this.state.checked == key ?
               <TouchableOpacity style={styles.btn}>
                 <Icon
@@ -339,7 +349,7 @@ export default class PersonalInfo extends Component {
 
   saveClientDetails = async () => {
     const user_id = this.props.USER_ID();
-    response = await SaveProfile.clientPersonalInfo(user_id, this.state.bussinessName, this.state.business_id, this.state.phoneNumber, this.state.altPhoneNumber, this.state.address1, this.state.address2, this.state.city, this.state.zipcode, this.state.state, this.state.country_id, this.state.timezone_id)
+    response = await SaveProfile.clientPersonalInfo(user_id, this.state.bussinessName, this.state.business_id, this.state.phoneNumber, this.state.altPhoneNumber, this.state.address1, this.state.address2, this.state.city, this.state.zipcode, this.state.state, this.state.country_id, this.state.timezone_id, this.state.about)
     console.log(response.status)
     this.setState({ isLoading: false });
     if (response.status == 200) {
@@ -349,7 +359,7 @@ export default class PersonalInfo extends Component {
 
   saveStaffDetails = async () => {
     const user_id = this.props.USER_ID();
-    response = await SaveProfile.staffPersonalInfo(user_id, this.state.firstName, this.state.lastName, this.state.dateOfBirth, this.state.selectedGender, this.state.phoneNumber, this.state.altPhoneNumber, this.state.address1, this.state.address2, this.state.city, this.state.zipcode, this.state.state, this.state.country_id, this.state.timezone_id)
+    response = await SaveProfile.staffPersonalInfo(user_id, this.state.firstName, this.state.lastName, this.state.dateOfBirth, this.state.selectedGender, this.state.phoneNumber, this.state.altPhoneNumber, this.state.address1, this.state.address2, this.state.city, this.state.zipcode, this.state.state, this.state.country_id, this.state.timezone_id, this.state.about)
     console.log(response.status)
     this.setState({ isLoading: false });
     if (response.status == 200) {
@@ -390,17 +400,17 @@ export default class PersonalInfo extends Component {
             <ProfileImagePicker />
 
             {this.state.showComponent ?
-              this._renderTextInput('First Name',
+              this._renderTextInput('First Name', this.state.firstName,
                 (text) => { this.setState({ firstName: text }) },
                 this.state.firstNameError, false) : null}
 
             {this.state.showComponent ?
-              this._renderTextInput('Last Name',
+              this._renderTextInput('Last Name', this.state.lastName,
                 (text) => { this.setState({ lastName: text }) },
                 this.state.lastnameError, false) : null}
 
             {this.state.showComponent ? null :
-              this._renderTextInput('Business Name',
+              this._renderTextInput('Business Name', this.state.bussinessName,
                 (text) => { this.setState({ bussinessName: text }) },
                 this.state.bussinessNameError, false)}
 
@@ -485,19 +495,19 @@ export default class PersonalInfo extends Component {
                 }} />
               {/* <FormValidationMessage>{this.state.phoneNumberError}</FormValidationMessage> */}
             </View>
-            {this._renderTextInput('Address line 1',
+            {this._renderTextInput('Address line 1', this.state.address1,
               (text) => { this.setState({ address1: text }) },
               this.state.address1Error, false)}
-            {this._renderTextInput('Address line 2',
+            {this._renderTextInput('Address line 2', this.state.address2,
               (text) => { this.setState({ address2: text }) },
               this.state.address2Error, false)}
-            {this._renderTextInput('City/Region',
+            {this._renderTextInput('City/Region', this.state.city,
               (text) => { this.setState({ city: text }) },
               this.state.cityError, false)}
-            {this._renderTextInput('Zip Code',
+            {this._renderTextInput('Zip Code', this.state.zipcode,
               (text) => { this.setState({ zipcode: text }) },
               this.state.zipcodeError, false)}
-            {this._renderTextInput('State',
+            {this._renderTextInput('State', this.state.state,
               (text) => { this.setState({ state: text }) },
               this.state.stateError, false)}
             <FormLabel labelStyle={styles.labelStyle}>Country</FormLabel>
@@ -542,6 +552,7 @@ export default class PersonalInfo extends Component {
               // containerStyle = {{backgroundColor:'transparent', borderColor: 'blue'}}
               />
             </TouchableOpacity>
+
             <FormValidationMessage>{this.state.timezoneError}</FormValidationMessage>
             <ModalFilterPicker
               options={this.state.timezones}
@@ -549,7 +560,15 @@ export default class PersonalInfo extends Component {
               onSelect={this.onSelectTimezone}
               onCancel={this.onCancelTimezones}
             />
-
+            <FormLabel labelStyle={styles.labelStyle}>About</FormLabel>
+            <FormInput onChangeText={(text) => { this.setState({ about: text }) }}
+              placeholder='About'
+              value={this.state.about}
+              placeholderTextColor='grey'
+              multiline={true}
+              numberOfLines={3}
+              containerStyle={styles.addressInputStyle}
+            />
           </View>
           <View style={{ flexDirection: 'row', width: '100%' }}>
             <View style={{ alignSelf: 'flex-end', bottom: 0, zIndex: 1000, left: '135%', right: 10, marginTop: 30, marginBottom: 110 }}>
@@ -658,12 +677,14 @@ const styles = StyleSheet.create({
     margin: 0
   },
   addressInputStyle: {
-    borderBottomColor: '#265b91',
-    borderBottomWidth: 2,
+    borderColor: '#265b91',
+    // borderBottomWidth: 2,
     padding: 0,
     margin: 0,
-    borderWidth: 0,
-    backgroundColor: '#fff9c4'
+    borderWidth: 1,
+    borderRadius: 6
+    // backgroundColor: '#fff9c4',
+    // backgroundColor: '#666666'
   },
   phoneInputStyle: {
     marginLeft: 18,

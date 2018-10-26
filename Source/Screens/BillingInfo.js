@@ -6,6 +6,7 @@ import {
   ScrollView,
   Text,
   ActivityIndicator,
+  AsyncStorage
 } from 'react-native';
 import { Icon, FormValidationMessage } from 'react-native-elements';
 import { CreditCardInput, LiteCreditCardInput } from "react-native-credit-card-input";
@@ -27,6 +28,10 @@ export default class BillingInfo extends Component {
     }
   }
 
+  componentDidMount() {
+    this.getCardDetils();
+  }
+
   _onChange = (formData) => {
     console.log(JSON.stringify(formData));
     let cardData = formData.values;
@@ -39,11 +44,22 @@ export default class BillingInfo extends Component {
   };
   _onFocus = (field) => console.log("focusing", field);
 
-  componentDidMount() {
-  }
+
 
   resetStateVar = () => {
     this.setState({ errorMessage: '' })
+  }
+  
+  getCardDetils = async () => {
+    var result = JSON.parse(await AsyncStorage.getItem('User_Data'))
+    var cardDetails = result.default_payment
+    let cardData = this.state.cardData;
+    cardData.cvc = cardDetails.cvc;
+    this.setState({
+      cardData : cardData
+    })
+    console.log("this.state.cardData is ------")
+    console.log(this.state.cardData)
   }
 
   validate = () => {
@@ -80,7 +96,7 @@ export default class BillingInfo extends Component {
     // // console.log(cardExpiry.split('/',2));
     // console.log(month);
     // console.log(year);react-native sta
-    response = await SaveProfile.cardDetails(user_id, cardCVC, cardNumber, month, year);
+    response = await SaveProfile.cardDetails(user_id, holderName, cardCVC, cardNumber, month, year);
     console.log(response);
     this.setState({ isLoading: false });
     if (response.status == 200) {

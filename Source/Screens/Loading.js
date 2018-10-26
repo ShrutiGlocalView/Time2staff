@@ -20,13 +20,8 @@ export default class Loading extends Component {
   }
 
   getUserDetails = async () => {
-    // const email = await AsyncStorage.getItem('User_Email')
-    // const user_id = await AsyncStorage.getItem('User_Id')
-    var user_role = await AsyncStorage.getItem('User_Role')
-    // console.log("email here:::");
-    // console.log(email);
-    // console.log(user_id);
-    // console.log(user_role);
+    var result = JSON.parse(await AsyncStorage.getItem('User_Data'))
+    var user_role = result.roles[0].title
     this.setState({
       user_role: user_role
     })
@@ -45,8 +40,8 @@ export default class Loading extends Component {
     }
 
     return (
-      <View>
-        <ActivityIndicator />
+      <View style = {styles.container}>
+        <ActivityIndicator size='large'/>
       </View>
     )
   }
@@ -54,9 +49,7 @@ export default class Loading extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    // height: '100%',
-    // backgroundColor: '#D4cdb1',
-    // justifyContent: 'center',
-    // alignItems: 'center'
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });

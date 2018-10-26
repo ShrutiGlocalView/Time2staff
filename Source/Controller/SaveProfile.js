@@ -1,4 +1,5 @@
 var SaveProfile = {
+
     getDefaults: async () => {
         var url = 'https://time2staffdev.azurewebsites.net/backend/public/api/defaults';
         try {
@@ -17,7 +18,7 @@ var SaveProfile = {
         return responseJson;
     },
 
-    clientPersonalInfo: (id, bussinessName, business_id, phoneNumber, address1, city, zipcode, state, country_id, timezone_id) => {
+    clientPersonalInfo: (id, bussinessName, business_id, phoneNumber, altPhoneNumber, address1, address2, city, zipcode, state, country_id, timezone_id, about) => {
         responseTemp = axios({
             method: 'put',
             url: 'https://time2staffdev.azurewebsites.net/backend/public/api/business/' + id,
@@ -25,12 +26,15 @@ var SaveProfile = {
                 name: bussinessName,
                 business_category_id: business_id,
                 contact1: phoneNumber,
+                contact2: altPhoneNumber,
                 address1: address1,
+                address2: address2,
                 city: city,
                 zipcode: zipcode,
                 state: state,
                 country_id: country_id,
-                timezone_id: timezone_id
+                timezone_id: timezone_id,
+                about: about
             },
             headers: {
                 'Accept': 'application/json',
@@ -49,7 +53,7 @@ var SaveProfile = {
         return responseTemp;
     },
 
-    staffPersonalInfo: (id, firstName, lastName, dob, gender,  phoneNumber, altPhoneNumber,  address1, address2, city, zipcode, state, country_id, timezone_id) => {
+    staffPersonalInfo: (id, firstName, lastName, dob, gender, phoneNumber, altPhoneNumber, address1, address2, city, zipcode, state, country_id, timezone_id, about) => {
         responseTemp = axios({
             method: 'put',
             url: 'https://time2staffdev.azurewebsites.net/backend/public/api/staff/' + id,
@@ -66,16 +70,8 @@ var SaveProfile = {
                 zipcode: zipcode,
                 state: state,
                 country_id: country_id,
-                timezone_id: timezone_id
-                // name: bussinessName,
-                // business_category_id: business_id,
-                // contact1: phoneNumber,
-                // address1: address1,
-                // city: city,
-                // zipcode: zipcode,
-                // state: state,
-                // country_id: country_id,
-                // timezone_id: timezone_id
+                timezone_id: timezone_id,
+                about: about
             },
             headers: {
                 'Accept': 'application/json',
@@ -95,11 +91,12 @@ var SaveProfile = {
     },
 
 
-    cardDetails: (user_id, cardCVC, cardNumber, month, year) => {
+    cardDetails: (user_id, card_holder_name, cardCVC, cardNumber, month, year) => {
         responseTemp = axios({
             method: 'put',
             url: 'https://time2staffdev.azurewebsites.net/backend/public/api/users/cards/store',
             params: {
+                card_holder_name: card_holder_name,
                 cvc: cardCVC,
                 expiration_year: year,
                 expiration_month: month,

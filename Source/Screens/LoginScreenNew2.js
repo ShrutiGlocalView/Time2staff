@@ -7,7 +7,8 @@ import {
     Image,
     TouchableOpacity,
     Modal,
-    AsyncStorage
+    AsyncStorage,
+    ActivityIndicator
 } from 'react-native';
 import {
     Button,
@@ -25,7 +26,7 @@ import VerifyEmail from '../Components/VerifyEmail'
 import EmailController from '../Controller/EmailController';
 import ForgotPasswordDialog from '../Components/ForgotPasswordDialog';
 import LoginService from '../Controller/LoginCalls';
-import { defaultPostCall } from '../Controller/AxioController';
+import UserCalls from '../Controller/UserCalls';
 
 export default class LoginScreen extends Component {
     constructor(props) {
@@ -41,42 +42,37 @@ export default class LoginScreen extends Component {
             passwordError: '',
             loginErrorMessage: '',
             hidePasswordLogin: true,
+            isLoading: false,
         }
     }
 
     onLoginSuccess = async (response) => {
-        // console.log("response is:::");
-        // console.log(response);
         this.setState({
             loginErrorMessage: '',
-            loginButtonPressed: false
+            loginButtonPressed: false,
+            isLoading: true
         })
-        console.log("===========================================");
-        console.log(response.data.user_data.roles[0]);
+        console.log(response);
         console.log(response.data.user_data);
-        // if (response.data.user_data.roles[0].title == 'Staff') {
-        //     console.log("comig sooon...");
-        //     alert("You are logged in as a staff. Staff role is under development.")
-        // }
-        // else {
         try {
             USER_EMAIL = response.data.user_data.email;
             USER_ID = response.data.user_data.id;
             USER_ROLE = response.data.user_data.roles[0].title;
-            // console.log("USER_EMAIL is:::");
-            // console.log(USER_EMAIL);
-            // console.log("USER_ID is:::");
-            // console.log(USER_ID);
-            // console.log("USER_ROLE is :::");
-            console.log(USER_ROLE);
+
             await AsyncStorage.setItem('User_Email', USER_EMAIL);
             await AsyncStorage.setItem('User_Id', JSON.stringify(USER_ID));
             await AsyncStorage.setItem('User_Role', USER_ROLE);
+
+            await this.showUserDetails();
+
         } catch (e) {
             console.log(e);
         }
+
+        this.setState({
+            isLoading: false
+        })
         this.props.navigation.navigate('App')
-        // }
     }
 
     onLoginFailed = (response) => {
@@ -100,7 +96,30 @@ export default class LoginScreen extends Component {
         })
     }
 
+    showUserDetails = async () => {
+        console.log("I am in...")
+        var role = await AsyncStorage.getItem('User_Role')
+        var user_id = await AsyncStorage.getItem('User_Id')
+
+        var role = await AsyncStorage.getItem('User_Role')
+        var user_id = await AsyncStorage.getItem('User_Id')
+        if (role == "Staff") {
+            var response = await UserCalls.getStaffDetails(user_id)
+            console.log(response);
+            await AsyncStorage.setItem('User_Data', JSON.stringify(response));
+        } else {
+            var response = await UserCalls.getClientDetails(user_id)
+            console.log(response);
+            await AsyncStorage.setItem('User_Data', JSON.stringify(response));
+        }
+    }
+
     render() {
+        if(this.state.isLoading){
+            return(
+                <ActivityIndicator size='large'/>
+            )
+        }
         return (
             <View style={styles.container}>
                 <Image
